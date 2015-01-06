@@ -487,7 +487,7 @@ var gameLayer = cc.Layer.extend({
                 var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+level[i][j]+".png");
                 var sprite = new cc.Sprite(spriteFrame);
                     sprite.attr({x: (j*sizeOfSprite), y:((level.length-i-1)*sizeOfSprite), scale: scaleFactor});
-                spriteSheet.addChild(sprite,0,1000*i+j); // only Javascript with name
+                spriteSheet.addChild(sprite,0,1000*i+j); // only Javascript with name with string, now we have tags with Integer also supports iOS !!Attention to only 1000 height!!
                 
                 }
             }
@@ -503,10 +503,7 @@ var gameLayer = cc.Layer.extend({
         }
         //====================================================================
         //this.addChild(spriteBatchNode);
-        
-         //10=zOrder
-        
-        
+
         /*var testsLabel = new cc.LabelTTF(eval("res.rail_"+level[1][1]), "Arial", 50);
 		testsLabel.x = winsize.width / 2;
 		testsLabel.y = 100;

@@ -493,15 +493,8 @@ var gameLayer = cc.Layer.extend({
             }
         }
         this.spriteSheet.x = -((level[y][0])-(n/2-0.5))*sizeOfSprite;//-2 wägä arrayOutOfBound am rand ä rahmä vo 1 und denn -0.5 wäg mitti, old version wenn genau mitti level[0].length-2)/2
-        //this.spriteSheet.y = sizeOfSprite;
         //return controlling(sizeOfSprite);
-        cc.log(level.length);
-        
-        var spriteinfo = spriteSheet.getChildByTag(1000*level[y][1]+level[y][0]);
-		spriteSheet.y += sizeOfSprite/2; //AnchorPoint (0,5,0,5) fuu
-        cc.log(spriteinfo.y);
-        cc.log(spriteSheet.y);
-		cc.log(2*sizeOfSprite);
+		spriteSheet.y += sizeOfSprite/2; //AnchorPoint (0,5,0,5) 
         }
         //====================================================================
         //this.addChild(spriteBatchNode);

@@ -62,7 +62,7 @@ var gameLayer = cc.Layer.extend({
             };
         localStorage.setObject('test',level_big);*/
         //level = level_big;
-        var seed = 154545;
+        var seed = 100;
         cc.log("seed = "+seed);
         //====================================================================
         //Random Numbers with Seed
@@ -446,18 +446,19 @@ var gameLayer = cc.Layer.extend({
         var texture = cc.textureCache.addImage("res/rails.png");
         this.spriteSheet = /*new cc.SpriteBatchNode(texture, 50);*/new cc.Node; //runs faster on iOS heard of depriceated since JSB V3.0 not sure about this
         spriteSheet = this.spriteSheet; 
-        
+        this.spriteSheet.y = 0;
         this.spriteSheet.retain();
-        this.addChild(this.spriteSheet);
+        this.addChild(this.spriteSheet,0);
         //====================================================================
         //TouchNode and Stuff further implementation in setUp()
         touchNode = new cc.DrawNode();
-        
+        touchNode.y = 0;
+		touchNode.x = 0;
         //cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
         //touchNode.drawRect(cc.p(0,0),cc.p(winsize.width,winsize.height),null,null,null);
         //touchNode.drawRect(cc.p(winsize.width/2-5,25+2*sizeOfSprite),cc.p(winsize.width/2+5,35+2*sizeOfSprite),cc.color(150,150,150,150),null,null);
         //touchNode.d
-        this.addChild(touchNode, -10);
+        this.addChild(touchNode, 10);
         //====================================================================
         //====================================================================
         //Zoom Buttons
@@ -471,18 +472,17 @@ var gameLayer = cc.Layer.extend({
         zoomOutLabel.setColor(cc.color(0,0,0));
 		touchNode.addChild(zoomOutLabel, 5);*/
         //====================================================================
-        railsPerRow = 10;
+        railsPerRow = 8;
         
         setUp(railsPerRow);
         function setUp(railsPerRow){
         var n = railsPerRow; //railsPerRow
-        scaleFactor = winsize.width/n/500;      //180 size of sprite ursprünglich :-P
+        scaleFactor = winsize.width/n/500;      //500 size of sprite ursprünglich :-P
         sizeOfSprite = winsize.width/n;
-        touchNode.drawRect(cc.p(winsize.width/2-5,(2*sizeOfSprite)-5),cc.p(winsize.width/2+5,(2*sizeOfSprite)+5),cc.color(255,0,0,255),null,null);
+        touchNode.drawRect(cc.p(winsize.width/2-5,2*sizeOfSprite-5),cc.p(winsize.width/2+5,2*sizeOfSprite+5),cc.color(255,0,0,255),null,null);
         for (i = level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
             for (j = 0; j < level[0].length; j++) { //level[0].length = level[][x] j=column
                 if (level[i][j]!==0) {
-                //TODO this.spriteSheet with rail_1... then level loading is complete not for multifloor but that will be later on
                 //var sprite = new cc.Sprite('#rail_'+((level[i][j]%2+1)%2+1)+'.png');/*first try :eval("res.rail_"+level[i][j]) rails-png nur zwei aber bis 6 nummeriert also modulo --> verkehrt den hatl modulo modulo --> epic ((level[i][j]%2+1)%2+1)= alli richtig*/
                 var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+level[i][j]+".png");
                 var sprite = new cc.Sprite(spriteFrame);
@@ -496,10 +496,12 @@ var gameLayer = cc.Layer.extend({
         //this.spriteSheet.y = sizeOfSprite;
         //return controlling(sizeOfSprite);
         cc.log(level.length);
-        this.spriteSheet.y = 0;
-        //var spriteinfo = spriteSheet.getChildByName(""+level[y][1]+level[y][0]+"");
-        //cc.log(spriteinfo.y);
+        
+        var spriteinfo = spriteSheet.getChildByTag(1000*level[y][1]+level[y][0]);
+		spriteSheet.y += sizeOfSprite/2; //AnchorPoint (0,5,0,5) fuu
+        cc.log(spriteinfo.y);
         cc.log(spriteSheet.y);
+		cc.log(2*sizeOfSprite);
         }
         //====================================================================
         //this.addChild(spriteBatchNode);

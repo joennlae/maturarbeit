@@ -452,12 +452,13 @@ var gameLayer = cc.Layer.extend({
         //====================================================================
         //TouchNode and Stuff further implementation in setUp()
         touchNode = new cc.DrawNode();
-        touchNode.y = 0;
-		touchNode.x = 0;
+        touchNode.retain();
         //cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
         //touchNode.drawRect(cc.p(0,0),cc.p(winsize.width,winsize.height),null,null,null);
         //touchNode.drawRect(cc.p(winsize.width/2-5,25+2*sizeOfSprite),cc.p(winsize.width/2+5,35+2*sizeOfSprite),cc.color(150,150,150,150),null,null);
         //touchNode.d
+        sprite = new cc.Sprite(res.quad_1);
+        spriteSheet.addChild(sprite);
         this.addChild(touchNode, 10);
         //====================================================================
         //====================================================================
@@ -605,13 +606,16 @@ var gameLayer = cc.Layer.extend({
                     }
                     return false;
                 }
+                   
                 }
+                
                 else return false;
              }
         });
             
         function infos(){
             cc.log("Aktuelle Optionen:" + level[row][column] + "|" + level[row][column+1] + "||"  + level[row+1][column] + "|" + level[row+1][column+1]);
+            cc.log("y="+row+" x="+column);
         };
             /*onTouchEnded: function (touch, event) {
             var corX = touch.getLocationX();
@@ -674,6 +678,7 @@ var gameLayer = cc.Layer.extend({
                         //spriteBatchNode.y -= sizeOfSprite;
                         spriteSheet.runAction(rightUp);
                         changeRails(row,column+1);
+                        checkForQuad(row,column+1,1);
                         row -= 1;
                         column +=1;
                         infos();
@@ -686,6 +691,7 @@ var gameLayer = cc.Layer.extend({
                         spriteSheet.runAction(leftUp);
                         //cc.log(spriteSheet.getChildByName(""+row+column+""));
                         changeRails(row,column);
+                        checkForQuad(row,column,4);
                         row -=1;
                         column -=1;
                         infos();
@@ -697,6 +703,7 @@ var gameLayer = cc.Layer.extend({
                     if(level[row+1][column]==2 || level[row+1][column]==4){
                         spriteSheet.runAction(leftDown);
                         changeRails(row+1,column);
+                        checkForQuad(row+1,column,3);
                         row +=1;
                         column -=1;
                         infos();
@@ -708,6 +715,7 @@ var gameLayer = cc.Layer.extend({
                     if(level[row+1][column+1]==1 || level[row+1][column+1]==3){
                         spriteSheet.runAction(rightDown);
                         changeRails(row+1,column+1);
+                        checkForQuad(row+1,column+1,2);
                         row +=1;
                         column +=1;
                         infos();
@@ -760,7 +768,100 @@ var gameLayer = cc.Layer.extend({
             }
             
         };
-        
+		
+		function checkForQuad(pY,pX,lm){ // get Position and lastmove. 1:Up-Right, 2: Down-Right, 3:Down-Left, 4:Up-Left
+			//sizeOfSprite = winsize.width/railsPerRow;
+            //check for Quad, only two possibilities
+            //cc.log(sizeOfSprite);
+            cc.log("checking");
+            switch (lm) { //14 when circle, 12 when destroyed with last move
+                    case 1 : case 3:
+                        if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var sprite = new cc.Sprite(res.quad_1);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
+                                sprite.setRotation(45);
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            var sprite_n = new cc.Sprite(res.quad_1);
+                                sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
+                                sprite_n.setRotation(45);
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var sprite = new cc.Sprite(res.quad_1);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
+                            var sprite = new cc.Sprite(res.quad_1);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            break;
+                        }
+                        else break;
+                        
+                     case 2 : case 4:
+                        if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var sprite = new cc.Sprite(res.quad_1);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
+                                sprite.setRotation(45);
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
+                            var sprite_n = new cc.Sprite(res.quad_1);
+                                sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
+                                sprite_n.setRotation(45);
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14){
+                            var sprite = new cc.Sprite(res.quad_1);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            break;
+                        }
+                        else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var sprite = new cc.Sprite(res.quad_1);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            break;
+                        }
+                        else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            break;
+                        }
+                        else break;
+
+                    
+                        
+                        
+            }
+		};
 
 
                        

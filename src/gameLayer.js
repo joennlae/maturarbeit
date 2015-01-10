@@ -1,6 +1,6 @@
 var gameLayer = cc.Layer.extend({
     spriteSheet:null,
-	seed: 100,
+	seed: 50,
 	level: null,
 	railsPerRow: 8,
 	columns: 200,

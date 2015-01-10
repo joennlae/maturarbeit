@@ -30,4 +30,5 @@ var PlayScene = cc.Scene.extend({
         this.addChild(new statusLayer());
         
     }
+
 });

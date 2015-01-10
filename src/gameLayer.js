@@ -5,10 +5,29 @@ var gameLayer = cc.Layer.extend({
 	railsPerRow: 8,
 	columns: 200,
 	rows: 250,
+	winsize: 0,
+	standart: 8,
+    factor: 0,
+	scaleFactor: 0,
+	sizeOfSprite: 0,
+	touchNode: null,
+	row: 0,
+	column: 0,
+	rightUp: null,
+	rightDown: null,
+	leftDown: null,
+	leftUp: null,
     ctor:function () {
         this._super();
+		//Variables
+		this.winsize = cc.director.getWinSize();
+		this.scaleFactor = this.winsize.width/this.railsPerRow/500;      //500 size of sprite ursprünglich :-P
+        this.sizeOfSprite = this.winsize.width/this.railsPerRow;
+
 		this.generateLvl(); //returns this.init();
-    
+    	
+		//Variables
+		
         /*cc.loader.loadJson(res.levels_json,function(err,data){
             if (err) {
                 return false;
@@ -32,86 +51,47 @@ var gameLayer = cc.Layer.extend({
     },
     init:function() {
         this._super();
-
-        var winsize = cc.director.getWinSize();
-        //====================================================================
-        
-        //Local Storage not a good idea because 2dArray's also must be JSON.parse which is better with local files because i'd need a plugin in javascript or i would have to write one which i think is not compatible with JSB
-        //var localStorage = cc.sys.localStorage;
-        /*localStorage.prototype.setObject = function(key, value) {
-            this.setItem(key, JSON.stringify(value));
-            };
-
-        localStorage.prototype.getObject = function(key) {
-            return JSON.parse(this.getItem(key));
-            };
-        localStorage.setObject('test',level_big);*/
-		var level = this.level;
-        //====================================================================
-        //SpriteSheet and Stuff
-        cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
-        var texture = cc.textureCache.addImage("res/rails.png");
+		cc.log(this.level);
+		
+		//Nodes
+		cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
+        /*var texture =*/ cc.textureCache.addImage("res/rails.png");
         this.spriteSheet = /*new cc.SpriteBatchNode(texture, 50);*/new cc.Node; //runs faster on iOS heard of depriceated since JSB V3.0 not sure about this
-        spriteSheet = this.spriteSheet; 
+        //var spriteSheet = this.spriteSheet; 
         this.spriteSheet.y = 0;
         this.spriteSheet.retain();
         this.addChild(this.spriteSheet);
         //====================================================================
         //TouchNode and Stuff further implementation in setUp()
-        touchNode = new cc.DrawNode();
-        touchNode.retain();
+        this.touchNode = new cc.DrawNode();
+        this.touchNode.retain();
         //cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
-        this.addChild(touchNode);
-        //====================================================================
-        //====================================================================
+        this.addChild(this.touchNode);
+		//Variables for controlling
+		this.row = this.level[this.level.length-1][1]; //muss Global sein , old level.length-2
+        this.column = this.getStartColumn();//old level[0].length/2-1
+        //var level = this.level;
         
-        setUp(this.railsPerRow);
-        function setUp(n){
-        scaleFactor = winsize.width/n/500;      //500 size of sprite ursprünglich :-P
-        sizeOfSprite = winsize.width/n;
-        touchNode.drawRect(cc.p(winsize.width/2-5,2*sizeOfSprite-5),cc.p(winsize.width/2+5,2*sizeOfSprite+5),cc.color(255,0,0,255),null,null);
-        for (i = level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
-            for (j = 0; j < level[0].length; j++) { //level[0].length = level[][x] j=column
-                if (level[i][j]!==0) {
-                //var sprite = new cc.Sprite('#rail_'+((level[i][j]%2+1)%2+1)+'.png');/*first try :eval("res.rail_"+level[i][j]) rails-png nur zwei aber bis 6 nummeriert also modulo --> verkehrt den hatl modulo modulo --> epic ((level[i][j]%2+1)%2+1)= alli richtig*/
-                var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+level[i][j]+".png");
-                var sprite = new cc.Sprite(spriteFrame);
-                    sprite.attr({x: (j*sizeOfSprite), y:((level.length-i-1)*sizeOfSprite), scale: scaleFactor});
-                spriteSheet.addChild(sprite,0,1000*i+j); // only Javascript with name with string, now we have tags with Integer also supports iOS !!Attention to only 1000 height!!
-                
-                }
-            }
-        }
-        this.spriteSheet.x = -((level[level.length-1][0])-(n/2-0.5))*sizeOfSprite;//-2 wägä arrayOutOfBound am rand ä rahmä vo 1 und denn -0.5 wäg mitti, old version wenn genau mitti level[0].length-2)/2
-        //return controlling(sizeOfSprite);
-		spriteSheet.y += sizeOfSprite/2; //AnchorPoint (0,5,0,5) 
-        }
-        //====================================================================
-        //====================================================================
-        //Controlling
-        //function controlling(sizeOfSprite){
-        var row = level[level.length-1][1]; //muss Global sein , old level.length-2
-        var column = getStartColumn();//old level[0].length/2-1
-        
-        function getStartColumn(){
-            if (level[level[level.length-1][1]][level[level.length-1][0]]==1) return level[level.length-1][0]
-            else {
-            spriteSheet.x += sizeOfSprite;
-            return level[level.length-1][0]-1
-            }
-        };
-        
-        var rightUp = cc.moveBy(0.1, cc.p(-sizeOfSprite, -sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
-        rightUp.retain();
-        var leftUp = cc.moveBy(0.1, cc.p(+sizeOfSprite, -sizeOfSprite));
-        leftUp.retain();
-        var rightDown = cc.moveBy(0.1, cc.p(-sizeOfSprite, +sizeOfSprite));
-        rightDown.retain();
-        var leftDown = cc.moveBy(0.1, cc.p(+sizeOfSprite, +sizeOfSprite));
-        leftDown.retain();
-        
-        //cc.log(spriteSheet);
-        var listener1 = cc.EventListener.create({
+		cc.log(this.spriteSheet.x);
+		this.setUp();
+		//Load controlling
+		//Variables
+		winsize = this.winsize;
+		spriteSheet = this.spriteSheet;
+		level = this.level;
+		row = this.row;
+		column = this.column;
+		rightUp = this.rightUp;
+		rightDown = this.rightDown;
+		leftDown = this.leftDown;
+		leftUp = this.leftUp;
+		spriteSheet = this.spriteSheet;
+		touchNode = this.touchNode;
+		railsPerRow = this.railsPerRow;
+		sizeOfSprite = this.sizeOfSprite;
+		scaleFactor = this.scaleFactor;
+
+		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
             swallowTouches: true,
             onTouchBegan: function (touch, event) {
@@ -412,11 +392,261 @@ var gameLayer = cc.Layer.extend({
          
             }
 		};
+		 //LoadLevel
+        
+        //====================================================================
+        
+        //Local Storage not a good idea because 2dArray's also must be JSON.parse which is better with local files because i'd need a plugin in javascript or i would have to write one which i think is not compatible with JSB
+        //var localStorage = cc.sys.localStorage;
+        /*localStorage.prototype.setObject = function(key, value) {
+            this.setItem(key, JSON.stringify(value));
+            };
+
+        localStorage.prototype.getObject = function(key) {
+            return JSON.parse(this.getItem(key));
+            };
+        localStorage.setObject('test',level_big);*/
+		
+        //====================================================================
+        //====================================================================
+        
+        /*setUp(this.railsPerRow);
+        function setUp(n){
+        scaleFactor = winsize.width/n/500;      //500 size of sprite ursprünglich :-P
+        sizeOfSprite = winsize.width/n;
+        touchNode.drawRect(cc.p(winsize.width/2-5,2*sizeOfSprite-5),cc.p(winsize.width/2+5,2*sizeOfSprite+5),cc.color(255,0,0,255),null,null);
+        for (i = level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
+            for (j = 0; j < level[0].length; j++) { //level[0].length = level[][x] j=column
+                if (level[i][j]!==0) {
+                //var sprite = new cc.Sprite('#rail_'+((level[i][j]%2+1)%2+1)+'.png');/*first try :eval("res.rail_"+level[i][j]) rails-png nur zwei aber bis 6 nummeriert also modulo --> verkehrt den hatl modulo modulo --> epic ((level[i][j]%2+1)%2+1)= alli richtig*/
+                /*var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+level[i][j]+".png");
+                var sprite = new cc.Sprite(spriteFrame);
+                    sprite.attr({x: (j*sizeOfSprite), y:((level.length-i-1)*sizeOfSprite), scale: scaleFactor});
+                spriteSheet.addChild(sprite,0,1000*i+j); // only Javascript with name with string, now we have tags with Integer also supports iOS !!Attention to only 1000 height!!
+                
+                }
+            }
+        }
+        this.spriteSheet.x = -((level[level.length-1][0])-(n/2-0.5))*sizeOfSprite;//-2 wägä arrayOutOfBound am rand ä rahmä vo 1 und denn -0.5 wäg mitti, old version wenn genau mitti level[0].length-2)/2
+        //return controlling(sizeOfSprite);
+		spriteSheet.y += sizeOfSprite/2; //AnchorPoint (0,5,0,5) 
+        }*/
+        //====================================================================
+        //====================================================================
+        //Controlling
+        //function controlling(sizeOfSprite){
+        
+        
+            
+        
+
+       
+        
+        
+        //cc.eventManager.addListener(listener_keyboard, this);
+ 		//cc.eventManager.addListener(listener1, touchNode); //Inside Function because of Action Length
+        
+           
+        
+		
 
 
                       
     
     },
+	getStartColumn: function (){
+			var level = this.level;
+            if (level[level[level.length-1][1]][level[level.length-1][0]]==1) return level[level.length-1][0]
+            else {
+            this.spriteSheet.x += this.sizeOfSprite;
+            return level[level.length-1][0]-1
+            }
+    },
+	initAnimations: function(){
+		this.rightUp = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
+        this.rightUp.retain();
+        this.leftUp = cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
+        this.leftUp.retain();
+        this.rightDown = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, +this.sizeOfSprite));
+        this.rightDown.retain();
+        this.leftDown = cc.moveBy(0.1, cc.p(+this.sizeOfSprite, +this.sizeOfSprite));
+        this.leftDown.retain();	
+		return this.init();
+	},
+	setUp: function (){
+        this.touchNode.drawRect(cc.p(this.winsize.width/2-5,2*this.sizeOfSprite-5),cc.p(this.winsize.width/2+5,2*this.sizeOfSprite+5),cc.color(255,0,0,255),null,null);
+        for (i = this.level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
+            for (j = 0; j < this.level[0].length; j++) { //level[0].length = level[][x] j=column
+                if (this.level[i][j]!==0) {
+                //var sprite = new cc.Sprite('#rail_'+((level[i][j]%2+1)%2+1)+'.png');/*first try :eval("res.rail_"+level[i][j]) rails-png nur zwei aber bis 6 nummeriert also modulo --> verkehrt den hatl modulo modulo --> epic ((level[i][j]%2+1)%2+1)= alli richtig*/
+                var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+this.level[i][j]+".png");
+                var sprite = new cc.Sprite(spriteFrame);
+                    sprite.attr({x: (j*this.sizeOfSprite), y:((this.level.length-i-1)*this.sizeOfSprite), scale: this.scaleFactor});
+                this.spriteSheet.addChild(sprite,0,1000*i+j); // only Javascript with name with string, now we have tags with Integer also supports iOS !!Attention to only 1000 height!!
+                
+                }
+            }
+        }
+        this.spriteSheet.x -= (((this.level[this.level.length-1][0])-(this.railsPerRow/2-0.5))*this.sizeOfSprite);//-2 wägä arrayOutOfBound am rand ä rahmä vo 1 und denn -0.5 wäg mitti, old version wenn genau mitti level[0].length-2)/2
+        //return controlling(sizeOfSprite);
+		this.spriteSheet.y += this.sizeOfSprite/2; //AnchorPoint (0,5,0,5) 
+    },
+	onTouchBegan: function (touch, event) {
+                var corX = touch.getLocationX();
+                var corY = touch.getLocationY();
+                cc.log("row="+this.row+"column"+this.column);
+                //cc.log("COrx:" +corX+ " CorY:" +corY);
+                //cc.log("X:"+level.length+"Y:"+level[0].length);
+                 //immer gerade 
+                //cc.log("Aktuelles Feld:" + level[row][column]);
+                if (this.spriteSheet.getNumberOfRunningActions()===0){
+                if(corX >= this.winsize.width/2 && corY >= this.winsize.height/2){ //up-right
+                    if(this.level[this.row][this.column+1]==2 || this.level[this.row][this.column+1]==4){
+                        //spriteBatchNode.x -= sizeOfSprite;
+                        //spriteBatchNode.y -= sizeOfSprite;
+                        this.spriteSheet.runAction(this.rightUp);
+                        this.changeRails(this.row,this.column+1);
+                        this.checkForQuad(this.row,this.column+1,1);
+                        this.row -= 1;
+                        this.column +=1;
+                        this.infos();
+						cc.log("succes");
+                        return true;
+                    }
+                    return false;
+                }
+                else if(corX < this.winsize.width/2 && corY >= this.winsize.height/2){ //up-left
+                    if(this.level[this.row][this.column]==1 || this.level[this.row][this.column]==3 ){
+                        this.spriteSheet.runAction(this.leftUp);
+                        this.changeRails(this.row,this.column);
+                        this.checkForQuad(this.row,this.column,4);
+                        this.row -=1;
+                        this.column -=1;
+                        this.infos();
+                        return true;
+                    }
+                    return false;
+                }
+                else if(corX < this.winsize.width/2 && corY < this.winsize.height/2){ //down-left
+                    if(this.level[this.row+1][this.column]==2 || this.level[this.row+1][this.column]==4 ){
+                        this.spriteSheet.runAction(this.leftDown);
+                        this.changeRails(this.row+1,this.column);
+                        this.checkForQuad(this.row+1,this.column,3);
+                        this.row +=1;
+                        this.column -=1;
+                        this.infos();
+                        return true;
+                    }
+                    return false;
+                }
+                else if(corX >= this.winsize.width/2 && corY < this.winsize.height/2){ //down-right
+                    if(this.level[this.row+1][this.column+1]==1 || this.level[this.row+1][this.column+1]==3){
+                        this.spriteSheet.runAction(this.rightDown);
+                        this.changeRails(this.row+1,this.column+1);
+                        this.checkForQuad(this.row+1,this.column+1,2);
+                        this.row +=1;
+                        this.column +=1;
+                        this.infos();
+                        return true;
+                    }
+                    return false;
+                }
+                   
+                }
+                
+                else return false;
+				
+             },
+	onKeyPressed:  function(keyCode, event){
+            var label = event.getCurrentTarget();
+            var key = keyCode.toString();
+			cc.log("row="+this.row+"column"+this.column);
+            //var standart = 8;
+            //var factor = 0;
+            //label.setString("Key " + (cc.sys.isNative ? that.getNativeKeyName(keyCode) : String.fromCharCode(keyCode) ) + "(" + keyCode.toString()  + ") was pressed!");
+            if(key==107 || key==190){//+ also Zoom
+                this.railsPerRow -= 2;
+                this.spriteSheet.removeAllChildren();
+                this.touchNode.clear();
+                this.setUp();
+                return true;
+            }
+            else if(key==109 || key==189){//-= dezoom
+                this.railsPerRow += 2;
+                cc.log(factor);
+                this.spriteSheet.removeAllChildren();
+                this.touchNode.clear();
+                this.setUp();
+                return true;
+            }
+            else if(key==38){
+                this.spriteSheet.y -=50;
+                return true;
+            }
+            else if(key==37){
+                this.spriteSheet.x +=50;
+                return true;
+            }
+            else if(key==40){
+                this.spriteSheet.y +=50;
+                return true;
+            }
+            else if(key==39){
+                this.spriteSheet.x -=50;
+                return true;
+            }
+            else if (this.spriteSheet.getNumberOfRunningActions()===0){
+                if(key==105 || key==74){ //up-right
+                    if(this.level[this.row][this.column+1]==2 || this.level[this.row][this.column+1]==4){
+                        this.spriteSheet.runAction(this.rightUp);
+                        this.changeRails(this.row,this.column+1);
+                        this.checkForQuad(this.row,this.column+1,1);
+                        this.row -= 1;
+                        this.column +=1;
+                        infos();
+                        return true;
+                    }
+                    return false;
+                }
+                else if(key==103 || key==70){ //up-left
+                    if(this.level[this.row][this.column]==1 || this.level[this.row][this.column]==3){
+                        this.spriteSheet.runAction(this.leftUp);
+                        this.changeRails(this.row,this.column);
+                        this.checkForQuad(this.row,this.column,4);
+                        this.row -=1;
+                        this.column -=1;
+                        this.infos();
+                        return true;
+                    }
+                    return false;
+                }
+                else if(key==97 || key==86){ //down-left
+                    if(this.level[this.row+1][this.column]==2 || this.level[this.row+1][this.column]==4){
+                        this.spriteSheet.runAction(this.leftDown);
+                        this.changeRails(this.row+1,this.column);
+                        this.checkForQuad(this.row+1,this.column,3);
+                        this.row +=1;
+                        this.column -=1;
+                        this.infos();
+                        return true;
+                    }
+                    return false;
+                }
+                else if(key==99 || key==78){ //down-right
+                    if(this.level[this.row+1][this.column+1]==1 || this.level[this.row+1][this.column+1]==3){
+                        this.spriteSheet.runAction(this.rightDown);
+                        this.changeRails(this.row+1,this.column+1);
+                        this.checkForQuad(this.row+1,this.column+1,2);
+                        this.row +=1;
+                        this.column +=1;
+                        this.infos();
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            else return false;
+        },      
 	generateLvl:function(){
         cc.log("seed = "+this.seed);
 		var x = this.columns;
@@ -782,9 +1012,8 @@ var gameLayer = cc.Layer.extend({
             levelArray[y][0]=posX;
             levelArray[y][1]=posY;
 			this.level = levelArray;
-			cc.log(this.level);
 			cc.log("Level Generated");
-			return this.init();
+			return this.initAnimations();
 
             
         //};

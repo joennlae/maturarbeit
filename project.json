@@ -16,8 +16,7 @@
         "src/gameLayer.js",
         "src/backgroundLayer.js",
         "src/statusLayer.js",
-        "src/PlayScene.js",
-        "src/levels.js"
+        "src/PlayScene.js"
     ]
 
 }

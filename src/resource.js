@@ -1,7 +1,6 @@
 var res = {
     start_n_png : "res/start_n.png",
     start_s_png : "res/start_s.png",
-    PlayBG_png  : "res/PlayBG.png",
     rails_plist : "res/rails.plist",
     rails_png   : "res/rails.png",
     quad_1      : "res/quad_1.png"

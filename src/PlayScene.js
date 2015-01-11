@@ -25,9 +25,12 @@ var PlayScene = cc.Scene.extend({
         };
         };*/
 
+
+        //add three layer in the right order
+
         this.addChild(new backgroundLayer());
         this.addChild(new gameLayer());
-        this.addChild(new statusLayer());
+        this.addChild(new statusLayer(),0,3);
         
     }
 

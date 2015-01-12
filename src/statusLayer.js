@@ -14,7 +14,7 @@ var statusLayer = cc.Layer.extend({
 
         this.labelCoin = new cc.LabelTTF("Quads:0", "Helvetica", 100);
         this.labelCoin.setColor(cc.color(0,0,0));//black color
-        this.labelCoin.setPosition(cc.p(100, winsize.height - 100));
+        this.labelCoin.setPosition(cc.p(200, winsize.height - 100));
         this.addChild(this.labelCoin);
 
         this.labelMeter = new cc.LabelTTF("0M", "Helvetica", 100);

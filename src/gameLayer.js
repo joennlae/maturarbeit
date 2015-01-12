@@ -73,7 +73,7 @@ var gameLayer = cc.Layer.extend({
         this.row = {y: 0};
         this.column = {x: 0};
         //this.initAnimations();
-		this.setUp();
+		this.setUp()
         this.scheduleUpdate();
         cc.log("afterschedule");
 		this.quads = {value: 0}; // make it an object not a variable so we can point on it and not copy the value 
@@ -98,6 +98,8 @@ var gameLayer = cc.Layer.extend({
         initAnimations = this.initAnimations;
         getStartColumn = this.getStartColumn;
         quads = this.quads;
+        gameOver = this.gameOver;  
+
 		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
             swallowTouches: true,
@@ -120,6 +122,7 @@ var gameLayer = cc.Layer.extend({
                         row.y -= 1;
                         column.x +=1;
                         infos();
+                        if (row.y==level[level.length-1][3]) return gameOver;
                         return true;
                     }
                     return false;
@@ -166,10 +169,14 @@ var gameLayer = cc.Layer.extend({
                 else return false;
              }
         });
-            
+ 
         function infos(){
             cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y+1][column.x] + "|" + level[row.y+1][column.x+1]);
             //cc.log("y="+row.y+" x="+column.x);
+            /*if (row.y==level[level.length-1][3]){
+                return gameOver();*/
+            //} 
+                
         };
 
        
@@ -887,13 +894,16 @@ var gameLayer = cc.Layer.extend({
         //};
             
 	},
+    finalSequence: function() {
+        this.gameOver();
+    },
     update:function (dt) {
-        cc.log(this.row.y+"  "+this.column.x);
+        //cc.log(this.row.y+"  "+this.column.x);
         // update meter
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updatePoints((-this.spriteSheet.y)+120);
         statusLayer.updateQuads(this.quads.value);
-        if (this.row.y==this.level[this.level.length-1][3] && spriteSheet.getNumberOfRunningActions()==0) return this.gameOver();
+        if (this.row.y==this.level[this.level.length-1][3] && spriteSheet.getNumberOfRunningActions()==0)  this.finalSequence();
 
     },
     onExit:function() {
@@ -905,8 +915,10 @@ var gameLayer = cc.Layer.extend({
     },
     gameOver:function (){
         cc.log("==game over");
+        this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
         cc.director.pause();
         this.addChild(new gameOverLayer());
+        //spriteSheet.getParent().addChild(new gameOverLayer());
     }
 	
 });

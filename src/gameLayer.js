@@ -903,7 +903,7 @@ var gameLayer = cc.Layer.extend({
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updatePoints((-this.spriteSheet.y)+120);
         statusLayer.updateQuads(this.quads.value);
-        if (this.row.y==this.level[this.level.length-1][3] && spriteSheet.getNumberOfRunningActions()==0)  this.finalSequence();
+        if (this.row.y==this.level[this.level.length-1][3]-1 && spriteSheet.getNumberOfRunningActions()==0)  this.gameOver();
 
     },
     onExit:function() {
@@ -915,6 +915,9 @@ var gameLayer = cc.Layer.extend({
     },
     gameOver:function (){
         cc.log("==game over");
+        var ls = cc.sys.localStorage;
+        ls.setItem(1, Math.floor(-this.spriteSheet.y)+120);
+        ls.setItem(2, this.quads.value);
         this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
         cc.director.pause();
         this.addChild(new gameOverLayer());

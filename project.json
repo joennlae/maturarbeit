@@ -8,7 +8,7 @@
     "renderMode" : 0,
     "engineDir":"frameworks/cocos2d-html5",
 
-    "modules" : ["cocos2d"],
+    "modules" : ["cocos2d","editbox"],
 
     "jsList" : [
         "src/resource.js",
@@ -17,7 +17,8 @@
         "src/backgroundLayer.js",
         "src/statusLayer.js",
         "src/PlayScene.js",
-        "src/gameOverLayer.js"
+        "src/gameOverLayer.js",
+        "src/preGameLayer.js"
     ]
 
 }

@@ -1,7 +1,6 @@
 var statusLayer = cc.Layer.extend({
     labelCoin:null,
     labelMeter:null,
-
     ctor:function () {
         this._super();
         this.init();
@@ -9,10 +8,9 @@ var statusLayer = cc.Layer.extend({
 
     init:function () {
         this._super();
-
         var winsize = cc.director.getWinSize();
 
-        this.labelCoin = new cc.LabelTTF("Quads:0", "Helvetica", 100);
+        this.labelCoin = new cc.LabelTTF("Quads: ", "Helvetica", 100);
         this.labelCoin.setColor(cc.color(0,0,0));//black color
         this.labelCoin.setPosition(cc.p(200, winsize.height - 100));
         this.addChild(this.labelCoin);

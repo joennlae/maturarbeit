@@ -1,5 +1,5 @@
 var preGameLayer = cc.Layer.extend({
-    editBox: null,
+    textField: null,
     ctor : function(){
         //1. call super class's ctor function
         this._super();
@@ -12,11 +12,17 @@ var preGameLayer = cc.Layer.extend({
 
         var centerpos = cc.p(winsize.width / 2, winsize.height / 4);
 
-        var batchNode = new cc.SpriteBatchNode("res/quad_1.png");
-        var blocks = new cc.Scale9Sprite();
-        blocks.updateWithBatchNode(batchNode, cc.rect(0, 0, 96, 96), false, cc.rect(0, 0, 96, 96));
-        this.editBox = cc.EditBox.create(cc.p(250,100),blocks,blocks,blocks);
-        this.addChild(this.editBox);
+   		this.textField = new ccui.TextField.create("Yolo","Arial",150);
+		this.textField.setTouchEnabled(true);
+		this.textField.x = winsize.width/2;
+		this.textField.y = winsize.height/2;
+		this.textField.addEventListenerTextField(textFieldListener);
+		function textFieldListener(sender, event){
+			if (event==ccui.TextField.EVENT_ATTACH_WITH_IME){
+					this.textField.setString(sender);			
+				}
+		};
+		this.addChild(this.textField);
 
         cc.MenuItemFont.setFontSize(60);
         var menuItemPlay = new cc.MenuItemSprite(

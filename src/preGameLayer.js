@@ -12,16 +12,16 @@ var preGameLayer = cc.Layer.extend({
 
         var centerpos = cc.p(winsize.width / 2, winsize.height / 4);
 
-   		this.textField = new ccui.TextField.create("Yolo","Arial",150);
+   		this.textField = new ccui.TextField("Yolo","Arial",150);
 		this.textField.setTouchEnabled(true);
 		this.textField.x = winsize.width/2;
 		this.textField.y = winsize.height/2;
-		this.textField.addEventListenerTextField(textFieldListener);
-		function textFieldListener(sender, event){
+		//7this.textField.addEventListenerTextField(textFieldListener);
+		/*function textFieldListener(sender, event){
 			if (event==ccui.TextField.EVENT_ATTACH_WITH_IME){
 					this.textField.setString(sender);			
 				}
-		};
+		};*/
 		this.addChild(this.textField);
 
         cc.MenuItemFont.setFontSize(60);

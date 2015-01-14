@@ -1,6 +1,6 @@
 var gameLayer = cc.Layer.extend({
     spriteSheet:null,
-	seed: 1,
+	seed: 2,
 	level: null,
 	railsPerRow: 12,
 	columns: 15,
@@ -122,7 +122,6 @@ var gameLayer = cc.Layer.extend({
                         row.y -= 1;
                         column.x +=1;
                         infos();
-                        if (row.y==level[level.length-1][3]) return gameOver;
                         return true;
                     }
                     return false;
@@ -481,7 +480,7 @@ var gameLayer = cc.Layer.extend({
             }
     },
 	initAnimations: function(){
-		this.rightUp = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite),1); //fucking shiiit of retain :-P costed me about 8hours
+		this.rightUp = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
         this.rightUp.retain();
         this.leftUp = cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
         this.leftUp.retain();
@@ -520,6 +519,7 @@ var gameLayer = cc.Layer.extend({
 		this.spriteSheet.y = this.sizeOfSprite/2; //AnchorPoint (0,5,0,5) 
     },  
 	generateLvl:function(){
+
         cc.log("seed = "+this.seed);
 		var x = this.columns;
 		var y = this.rows;
@@ -528,14 +528,16 @@ var gameLayer = cc.Layer.extend({
         //Random Numbers with Seed
         Math.seed = function(s) {
             return function() {
-                s = Math.sin(s) * 10000; return s - Math.floor(s);
+                s = Math.sin(s) * 10;
+                return s - Math.floor(s); //auf 8 Nachkommastellen genau, weil unterschiedlich genau Sinuswerte  (Math.floor((s - Math.floor(s))*100000000))/100000000
             };
         };
 
         // Seed:
         var random1 = Math.seed(this.seed);
         var random2 = Math.seed(random1());
-        Math.random = Math.seed(random2());
+        randomWithSeed = Math.seed(random2());
+        cc.log("Numbers"+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed());
         //====================================================================
         //====================================================================
 
@@ -543,10 +545,10 @@ var gameLayer = cc.Layer.extend({
         //cc.log(level);
         //cc.log("Startrail= "+level[startingPosY][startingPosY]);
         //function generateLevelArray(rows, columns){
-            var startingPosX = Math.floor((Math.random()*(this.columns-2)+1));
+            var startingPosX = Math.floor((randomWithSeed()*(this.columns-2)+1));
             //var startingPosX = 13;
             cc.log("Startpunkt x: "+startingPosX);
-            var startingPosY = Math.floor((Math.random())*((this.rows/5)+1));
+            var startingPosY = Math.floor((randomWithSeed())*(this.rows/5)+1);
             //var startingPosY = 89;
             cc.log("Startpunkt y: "+startingPosY);
             
@@ -562,7 +564,7 @@ var gameLayer = cc.Layer.extend({
                 } 
                     return emptyArray;
             }
-            levelArray[startingPosY][startingPosX] = Math.floor((Math.random())*2+1);
+            levelArray[startingPosY][startingPosX] = Math.floor((randomWithSeed())*2+1);
             //4Directions 1=Up_right=UR/2=Down_right=DR/3=Down_left=DL/4=Up_Left=UL
             var posX = startingPosX; //Aktuelle Positionen
             var posY = startingPosY;
@@ -576,7 +578,7 @@ var gameLayer = cc.Layer.extend({
                 
                 if (levelArray[posY][posX]==1){
                     //decide if Up or Down
-                    var d = Math.floor((Math.random())*2+1);
+                    var d = Math.floor((randomWithSeed())*2+1);
                     if (d==1){ //Up
                         upLeft();
                     }
@@ -585,7 +587,7 @@ var gameLayer = cc.Layer.extend({
                     }
                 }
                 else {
-                    var d = Math.floor((Math.random())*2+1);
+                    var d = Math.floor((randomWithSeed())*2+1);
                     if(d==1){//UP
                         upRight();
                     }
@@ -596,7 +598,7 @@ var gameLayer = cc.Layer.extend({
                 return levelSolutionLane();
             };
             function levelSolutionLane(){
-                //var d = Math.floor((Math.random())*4+1); 
+                //var d = Math.floor((randomWithSeed())*4+1); 
                 //if (d=impossibleMove){
                 //    d += 1;
                 //}
@@ -635,7 +637,7 @@ var gameLayer = cc.Layer.extend({
             //4 Direction Functions
             //4:3 für up
             function upLeft(){
-                var d = Math.floor((Math.random())*7+1);
+                var d = Math.floor((randomWithSeed())*7+1);
                 if (d==1 || d==4 || d==5){ //3=DL
                     if (posX-1==0 || posY-1==0){
                         outOfBoundUpLeft();
@@ -673,17 +675,16 @@ var gameLayer = cc.Layer.extend({
             };
             //4:3 für Down
             function downRight(possiblityNumber){
-                
                 if (possiblityNumber<3){ //am linken Rand = 5:1 für rechts, 2:1 für down
-					var d = Math.floor((Math.random())*(6-possiblityNumber)+1); //von 1-6
+					var d = Math.floor((randomWithSeed())*(6-possiblityNumber)+1); //von 1-6
 				}
 				else if (possiblityNumber>7) {//am rechten Rand = 5:2 für links, 6:1 für down, random von 7-13
-					var d = Math.floor((Math.random())*(possiblityNumber-2)+7);
+					var d = Math.floor((randomWithSeed())*(possiblityNumber-2)+7);
 				}
 				else{
-					var d = Math.floor((Math.random())*3+1);
+					var d = Math.floor((randomWithSeed())*3+1);
 				}
-                //var d = Math.floor((Math.random())*3+1);
+                //var d = Math.floor((randomWithSeed())*3+1);
                 if (d==1 || d==5 || d==7){ //1=UR
                     if (posX+1==x || posY+1==y){
                         outOfBoundDownRight();
@@ -721,7 +722,7 @@ var gameLayer = cc.Layer.extend({
             };
             //4:3für up
             function upRight(){
-                var d = Math.floor((Math.random())*7+1);
+                var d = Math.floor((randomWithSeed())*7+1);
                 if (d==1 || d==6){ //4= UL
                     if (posX+1==x || posY-1==0){
                         outOfBoundUpRight();
@@ -761,13 +762,13 @@ var gameLayer = cc.Layer.extend({
             function downLeft(possiblityNumber){
                 
 				if (possiblityNumber<3){ //am linken Rand = 5:2 für rechts, 6:1 für down
-					var d = Math.floor((Math.random())*(7-possiblityNumber)+1); // 1-7
+					var d = Math.floor((randomWithSeed())*(7-possiblityNumber)+1); // 1-7
 				}
 				else if (possiblityNumber>7) {//am rechten Rand = 5:1 für links und 2:1 für down //possibiltyNumber geht nur bis 9 da nur bis posX-1 max row und random function nie 1? dadurch nur d==13 unmöglich
-					var d = Math.floor((Math.random())*(possiblityNumber-3)+7);
+					var d = Math.floor((randomWithSeed())*(possiblityNumber-3)+7);
 				}
 				else{
-					var d = Math.floor((Math.random())*3+1);
+					var d = Math.floor((randomWithSeed())*3+1);
 				}
 				
 				if (d==1 || d==4 || d==5 || d==6 || d==7){ //2= DR
@@ -919,8 +920,9 @@ var gameLayer = cc.Layer.extend({
         ls.setItem(1, Math.floor(-this.spriteSheet.y)+120);
         ls.setItem(2, this.quads.value);
         this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
-        cc.director.pause();
         this.addChild(new gameOverLayer());
+        cc.director.pause();
+        
         //spriteSheet.getParent().addChild(new gameOverLayer());
     }
 	

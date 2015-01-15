@@ -3,8 +3,8 @@ var gameLayer = cc.Layer.extend({
 	seed: 2,
 	level: null,
 	railsPerRow: 12,
-	columns: 15,
-	rows: 8,
+	columns: 100,
+	rows: 25,
 	winsize: 0,
 	standart: 8,
     factor: 0,
@@ -20,6 +20,8 @@ var gameLayer = cc.Layer.extend({
     scaling: null,
     quads: null,
     switcher: null,
+    highest: 0,
+    moves: null,
     ctor:function () {
         this._super();
 		//Variables
@@ -27,6 +29,7 @@ var gameLayer = cc.Layer.extend({
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
         this.switcher = {value: false};
+        this.moves = {value: 0};
 		this.generateLvl(); //returns this.init();
         
 		//Variables
@@ -105,6 +108,8 @@ var gameLayer = cc.Layer.extend({
         finalSequence = this.finalSequence;
         switcher = this.switcher;
         scaling = this.scaling;
+        gameLayer = this;
+        moves = this.moves;
 
 		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -123,6 +128,7 @@ var gameLayer = cc.Layer.extend({
                         //spriteBatchNode.x -= sizeOfSprite;
                         //spriteBatchNode.y -= sizeOfSprite;
                         spriteSheet.runAction(rightUp);
+                        moves.value += 1;
                         changeRails(row.y,column.x+1);
                         checkForQuad(row.y,column.x+1,1);
                         row.y -= 1;
@@ -130,11 +136,18 @@ var gameLayer = cc.Layer.extend({
                         infos();
                         return true;
                     }
+                    else if (level[row.y][column.x+1]==32){
+                        moves.value += 1;
+                        spriteSheet.runAction(cc.moveBy(5,(column.x+0.5)*sizeOfSprite,(level.length-row.y-0.5)*sizeOfSprite));
+                        finalSequence(1);
+                        return true;
+                    }
                     return false;
                 }
                 else if(corX < winsize.width/2 && corY >= winsize.height/2){ //up-left
-                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3 || level[row.y][column.x]==33 || level[row.y][column.x]==31){
+                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3 || level[row.y][column.x]==33){
                         spriteSheet.runAction(leftUp);
+                        moves.value += 1;
                         changeRails(row.y,column.x);
                         checkForQuad(row.y,column.x,4);
                         row.y -=1;
@@ -142,11 +155,18 @@ var gameLayer = cc.Layer.extend({
                         infos();
                         return true;
                     }
+                    else if (level[row.y][column.x]==31) {
+                        moves.value += 1;
+                        spriteSheet.runAction(cc.moveBy(5,(column.x-0.5)*sizeOfSprite,(level.length-row.y-1.5)*sizeOfSprite));
+                        finalSequence(2);
+                        return true;
+                    }
                     return false;
                 }
                 else if(corX < winsize.width/2 && corY < winsize.height/2){ //down-left
                     if(level[row.y+1][column.x]==2 || level[row.y+1][column.x]==4 ){
                         spriteSheet.runAction(leftDown);
+                        moves.value += 1;
                         changeRails(row.y+1,column.x);
                         checkForQuad(row.y+1,column.x,3);
                         row.y +=1;
@@ -159,6 +179,7 @@ var gameLayer = cc.Layer.extend({
                 else if(corX >= winsize.width/2 && corY < winsize.height/2){ //down-right
                     if(level[row.y+1][column.x+1]==1 || level[row.y+1][column.x+1]==3){
                         spriteSheet.runAction(rightDown);
+                        moves.value += 1;
                         changeRails(row.y+1,column.x+1);
                         checkForQuad(row.y+1,column.x+1,2);
                         row.y +=1;
@@ -227,8 +248,9 @@ var gameLayer = cc.Layer.extend({
             }
             else if (spriteSheet.getNumberOfRunningActions()===0){
                 if(key==105 || key==74){ //up-right
-                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34 || level[row.y][column.x+1]==32){
+                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34) {
                         spriteSheet.runAction(rightUp);
+                        moves.value += 1;
                         changeRails(row.y,column.x+1);
                         checkForQuad(row.y,column.x+1,1);
                         row.y -= 1;
@@ -236,11 +258,18 @@ var gameLayer = cc.Layer.extend({
                         infos();
                         return true;
                     }
+                    else if (level[row.y][column.x+1]==32){
+                        moves.value += 1;
+                        spriteSheet.runAction(cc.moveBy(3,(column.x+0.5)*sizeOfSprite,(level.length-row.y-0.5)*sizeOfSprite));
+                        finalSequence(1);
+                        return true;
+                    }
                     return false;
                 }
                 else if(key==103 || key==70){ //up-left
-                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3 || level[row.y][column.x]==31 || level[row.y][column.x]==33){
+                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3  || level[row.y][column.x]==33){
                         spriteSheet.runAction(leftUp);
+                        moves.value += 1;
                         changeRails(row.y,column.x);
                         checkForQuad(row.y,column.x,4);
                         row.y -=1;
@@ -248,11 +277,18 @@ var gameLayer = cc.Layer.extend({
                         infos();
                         return true;
                     }
+                    else if (level[row.y][column.x]==31) {
+                        moves.value += 1;
+                        spriteSheet.runAction(cc.moveBy(3,(column.x-0.5)*sizeOfSprite,(level.length-row.y-1.5)*sizeOfSprite));
+                        finalSequence(2);
+                        return true;
+                    }
                     return false;
                 }
                 else if(key==97 || key==86){ //down-left
                     if(level[row.y+1][column.x]==2 || level[row.y+1][column.x]==4){
                         spriteSheet.runAction(leftDown);
+                        moves.value += 1;
                         changeRails(row.y+1,column.x);
                         checkForQuad(row.y+1,column.x,3);
                         row.y +=1;
@@ -265,6 +301,7 @@ var gameLayer = cc.Layer.extend({
                 else if(key==99 || key==78){ //down-right
                     if(level[row.y+1][column.x+1]==1 || level[row.y+1][column.x+1]==3){
                         spriteSheet.runAction(rightDown);
+                        moves.value += 1;
                         changeRails(row.y+1,column.x+1);
                         checkForQuad(row.y+1,column.x+1,2);
                         row.y +=1;
@@ -324,10 +361,10 @@ var gameLayer = cc.Layer.extend({
                         level[railPosY][railPosX]=2;
                         break;
                     case 31: 
-                        spriteSheet.runAction(cc.moveBy(3,(railPosX-0.5)*sizeOfSprite,(level.length-railPosY-1.5)*sizeOfSprite));
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX-1.5)*sizeOfSprite,(level.length-railPosY-1.5)*sizeOfSprite));
                         finalSequence(1);
                     case 32: 
-                        spriteSheet.runAction(cc.moveBy(3,(railPosX+0.5)*sizeOfSprite,(level.length-railPosY-0.5)*sizeOfSprite));
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX+0.5)*sizeOfSprite,(level.length-railPosY-0.5)*sizeOfSprite));
                         finalSequence(2);
                     default: 
                         break;
@@ -339,12 +376,14 @@ var gameLayer = cc.Layer.extend({
             switch (lm) { //14 when circle, 12 when destroyed with last move
                     case 1 : case 3:
                         if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var sprite = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
-                            var sprite_n = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
@@ -352,7 +391,8 @@ var gameLayer = cc.Layer.extend({
                             break;
                         }
                         else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var sprite = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
@@ -360,7 +400,8 @@ var gameLayer = cc.Layer.extend({
                             break;
                         }
                         else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
-                            var sprite = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
@@ -387,12 +428,14 @@ var gameLayer = cc.Layer.extend({
                         
                      case 2 : case 4:
                         if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var sprite = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
-                            var sprite_n = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
@@ -400,7 +443,8 @@ var gameLayer = cc.Layer.extend({
                             break;
                         }
                         else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14){
-                            var sprite = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
@@ -408,7 +452,8 @@ var gameLayer = cc.Layer.extend({
                             break;
                         }
                         else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var sprite = new cc.Sprite(res.quad_1);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var sprite = new cc.Sprite(spriteFrame);;
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
@@ -609,22 +654,23 @@ var gameLayer = cc.Layer.extend({
                 
                 if (levelArray[posY][posX]==1){
                     //decide if Up or Down
-                    var d = Math.floor((randomWithSeed())*2+1);
+                    /*var d = Math.floor((randomWithSeed())*2+1);
                     if (d==1){ //Up
                         upLeft();
-                    }
-                    else {
+                    }*/
+                    //else {
                         downRight();
-                    }
+                    //}
                 }
                 else {
-                    var d = Math.floor((randomWithSeed())*2+1);
+                    downLeft();
+                    /*var d = Math.floor((randomWithSeed())*2+1);
                     if(d==1){//UP
                         upRight();
                     }
                     else {
                         downLeft();
-                    }
+                    }*/
                 }
                 return levelSolutionLane();
             };
@@ -940,7 +986,7 @@ var gameLayer = cc.Layer.extend({
             
 	},
     finalSequence: function(dir) {
-        cc.log(this.spriteSheet.anchorX+","+this.spriteSheet.anchorY);
+        this.gameLayer.removeChild(touchNode);
         this.spriteSheet.runAction(this.scaling);
         this.switcher.value = true;
         //return gameOver();
@@ -948,8 +994,9 @@ var gameLayer = cc.Layer.extend({
     update:function (dt) {
         //cc.log(this.row.y+"  "+this.column.x);
         // update meter
+        if (-this.spriteSheet.y>this.highest) this.highest = -this.spriteSheet.y;
         var statusLayer = this.getParent().getChildByTag(3);
-        statusLayer.updatePoints((-this.spriteSheet.y)+120);
+        statusLayer.updatePoints(this.highest + this.moves.value*this.sizeOfSprite);
         statusLayer.updateQuads(this.quads.value);
         if (this.switcher.value === true && this.spriteSheet.getNumberOfRunningActions()==0) return this.gameOver();
         
@@ -967,7 +1014,7 @@ var gameLayer = cc.Layer.extend({
     gameOver:function (){
         cc.log("==game over");
         var ls = cc.sys.localStorage;
-        ls.setItem(1, Math.floor(-this.spriteSheet.y)+120);
+        ls.setItem(1, this.highest + this.moves.value*this.sizeOfSprite);
         ls.setItem(2, this.quads.value);
         this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
         this.addChild(new gameOverLayer());

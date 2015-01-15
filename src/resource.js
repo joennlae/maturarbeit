@@ -3,7 +3,6 @@ var res = {
     start_s_png : "res/start_s.png",
     rails_plist : "res/rails.plist",
     rails_png   : "res/rails.png",
-    quad_1      : "res/quad_1.png",
     restart_n	: "res/restart_n.png",
     restart_s	: "res/restart_s.png"
 };

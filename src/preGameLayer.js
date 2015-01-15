@@ -12,16 +12,28 @@ var preGameLayer = cc.Layer.extend({
 
         var centerpos = cc.p(winsize.width / 2, winsize.height / 4);
 
-   		this.textField = new ccui.TextField("Yolo","Arial",150);
+        this.textFieldListener = function (sender, eventType){
+            if (eventType == ccui.TextField.EVENT_ATTACH_WITH_IME){
+            this.textField = sender;
+            //textField.runAction(cc.MoveTo(0.225,cc.p(winsize.width / 2.0, winsize.height / 2.0 + textField.getContentSize().height / 2.0)));
+            this.textField.setPlaceHolder("Type seed (only numbers)");
+            }
+            else if(eventType == ccui.TextField.EVENT_DETACH_WITH_IME){
+            this.textField = sender;
+            //textField:runAction(cc.MoveTo:create(0.175, cc.p(screenSize.width / 2.0, screenSize.height / 2.0)))
+            //this.textField.setString("detach with IME");
+            }
+            else if (eventType == ccui.TextField.EVENT_INSERT_TEXT){
+            /*self._displayValueLabel:setString("insert words")*/}
+            else if (eventType == ccui.TextField.EVENT_DELETE_BACKWARD){
+            /*self._displayValueLabel:setString("delete word")*/}
+        }
+   		this.textField = new ccui.TextField("Touch Me","Arial",150);
 		this.textField.setTouchEnabled(true);
 		this.textField.x = winsize.width/2;
 		this.textField.y = winsize.height/2;
-		//7this.textField.addEventListenerTextField(textFieldListener);
-		/*function textFieldListener(sender, event){
-			if (event==ccui.TextField.EVENT_ATTACH_WITH_IME){
-					this.textField.setString(sender);			
-				}
-		};*/
+		this.textField.addEventListener(this.textFieldListener);
+
 		this.addChild(this.textField);
 
         cc.MenuItemFont.setFontSize(60);
@@ -35,6 +47,8 @@ var preGameLayer = cc.Layer.extend({
     },
 
     onPlay : function(){
+        var ls = cc.sys.localStorage;
+        ls.setItem(3, parseInt(this.textField.getString()));
         cc.log("==onplay clicked");
         cc.director.runScene(new PlayScene());
     }

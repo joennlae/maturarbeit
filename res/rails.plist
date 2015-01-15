@@ -7,54 +7,236 @@
             <key>rail_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{500,500}}</string>
+                <string>{{2,2},{240,240}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{500,500}}</string>
+                <string>{{0,0},{240,240}}</string>
                 <key>sourceSize</key>
-                <string>{500,500}</string>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_10.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{244,2},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_11.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{486,2},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_12.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{728,2},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
             </dict>
             <key>rail_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{504,2},{500,500}}</string>
+                <string>{{970,2},{240,240}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{500,500}}</string>
+                <string>{{0,0},{240,240}}</string>
                 <key>sourceSize</key>
-                <string>{500,500}</string>
+                <string>{240,240}</string>
             </dict>
             <key>rail_3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1006,2},{500,500}}</string>
+                <string>{{1212,2},{240,240}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{500,500}}</string>
+                <string>{{0,0},{240,240}}</string>
                 <key>sourceSize</key>
-                <string>{500,500}</string>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_31.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,244},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_32.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{244,244},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_33.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{486,244},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_34.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{728,244},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
             </dict>
             <key>rail_4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1508,2},{500,500}}</string>
+                <string>{{970,244},{240,240}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{500,500}}</string>
+                <string>{{0,0},{240,240}}</string>
                 <key>sourceSize</key>
-                <string>{500,500}</string>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_5.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1212,244},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_51.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,486},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_52.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{244,486},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_6.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{486,486},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_7.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{728,486},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_8.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{970,486},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
+            </dict>
+            <key>rail_9.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1212,486},{240,240}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{240,240}}</string>
+                <key>sourceSize</key>
+                <string>{240,240}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -64,9 +246,9 @@
             <key>realTextureFileName</key>
             <string>rails.png</string>
             <key>size</key>
-            <string>{2010,504}</string>
+            <string>{1454,728}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:0e2637308baa6fc6e31e37eb4aa57bce:408e1fbdb78fb4d25309982cdc933c46:caed9621f62caa4457675f5811d58564$</string>
+            <string>$TexturePacker:SmartUpdate:2c988ac4b730e29ab9706b9a8641f104:18eb156e315df1056a88f452d8bfdd2f:caed9621f62caa4457675f5811d58564$</string>
             <key>textureFileName</key>
             <string>rails.png</string>
         </dict>

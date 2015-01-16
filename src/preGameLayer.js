@@ -48,7 +48,7 @@ var preGameLayer = cc.Layer.extend({
 
     onPlay : function(){
         var ls = cc.sys.localStorage;
-        ls.setItem(3, parseInt(this.textField.getString()));
+        ls.setItem(3, parseFloat(this.textField.getString()));
         cc.log("==onplay clicked");
         cc.director.runScene(new PlayScene());
     }

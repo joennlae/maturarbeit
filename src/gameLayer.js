@@ -108,7 +108,7 @@ var gameLayer = cc.Layer.extend({
         finalSequence = this.finalSequence;
         switcher = this.switcher;
         scaling = this.scaling;
-        gameLayer = this;
+        gameLayer_copy = this;
         moves = this.moves;
 
 		var listener1 = cc.EventListener.create({
@@ -986,7 +986,7 @@ var gameLayer = cc.Layer.extend({
             
 	},
     finalSequence: function(dir) {
-        this.gameLayer.removeChild(touchNode);
+        this.gameLayer_copy.removeChild(touchNode);
         this.spriteSheet.runAction(this.scaling);
         this.switcher.value = true;
         //return gameOver();
@@ -1014,11 +1014,12 @@ var gameLayer = cc.Layer.extend({
     gameOver:function (){
         cc.log("==game over");
         var ls = cc.sys.localStorage;
-        ls.setItem(1, this.highest + this.moves.value*this.sizeOfSprite);
+        ls.setItem(1, Math.floor(this.highest + this.moves.value*this.sizeOfSprite));
         ls.setItem(2, this.quads.value);
         this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
-        this.addChild(new gameOverLayer());
         cc.director.pause();
+        this.addChild(new gameOverLayer());
+
         
         //spriteSheet.getParent().addChild(new gameOverLayer());
     }

@@ -1,5 +1,6 @@
 var preGameLayer = cc.Layer.extend({
     textField: null,
+	labelTestSave: null,
     ctor : function(){
         //1. call super class's ctor function
         this._super();
@@ -9,9 +10,15 @@ var preGameLayer = cc.Layer.extend({
         this._super();
 
         var winsize = cc.director.getWinSize();
-
+	
         var centerpos = cc.p(winsize.width / 2, winsize.height / 4);
+		var ls = cc.sys.localStorage;
 
+		this.labelTestSave = new cc.LabelTTF("Quads: "+ls.getItem(2), "Helvetica", 80);
+        this.labelTestSave.setColor(cc.color(100,0,0));//black color
+        this.labelTestSave.setPosition(cc.p(winsize.width/2, winsize.height/4*3));
+        this.addChild(this.labelTestSave);
+		
         this.textFieldListener = function (sender, eventType){
             if (eventType == ccui.TextField.EVENT_ATTACH_WITH_IME){
             this.textField = sender;

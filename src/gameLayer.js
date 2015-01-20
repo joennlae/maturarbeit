@@ -18,6 +18,7 @@ var gameLayer = cc.Layer.extend({
 	leftDown: null,
 	leftUp: null,
     scaling: null,
+	scalingreverse: null,
     quads: null,
     switcher: null,
     highest: 0,
@@ -138,7 +139,7 @@ var gameLayer = cc.Layer.extend({
                     }
                     else if (level[row.y][column.x+1]==32){
                         moves.value += 1;
-                        spriteSheet.runAction(cc.moveBy(5,(column.x+0.5)*sizeOfSprite,(level.length-row.y-0.5)*sizeOfSprite));
+                        spriteSheet.runAction(cc.moveBy(3,(column.x+0.5)*sizeOfSprite,(level.length-row.y-0.5)*sizeOfSprite));
                         finalSequence(1);
                         return true;
                     }
@@ -157,7 +158,7 @@ var gameLayer = cc.Layer.extend({
                     }
                     else if (level[row.y][column.x]==31) {
                         moves.value += 1;
-                        spriteSheet.runAction(cc.moveBy(5,(column.x-0.5)*sizeOfSprite,(level.length-row.y-1.5)*sizeOfSprite));
+                        spriteSheet.runAction(cc.moveBy(3,(column.x-0.5)*sizeOfSprite,(level.length-row.y-1.5)*sizeOfSprite));//
                         finalSequence(2);
                         return true;
                     }
@@ -383,7 +384,7 @@ var gameLayer = cc.Layer.extend({
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
-                            var sprite = new cc.Sprite(spriteFrame);
+                            var sprite_n = new cc.Sprite(spriteFrame);
                                 sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
@@ -435,7 +436,7 @@ var gameLayer = cc.Layer.extend({
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
-                            var sprite = new cc.Sprite(spriteFrame);
+                            var sprite_n = new cc.Sprite(spriteFrame);
                                 sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
@@ -548,17 +549,17 @@ var gameLayer = cc.Layer.extend({
             }
     },
 	initAnimations: function(){
-		this.rightUp = new cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
+		this.rightUp =  cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
         this.rightUp.retain();
-        this.leftUp = new cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
+        this.leftUp = cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
         this.leftUp.retain();
-        this.rightDown = new cc.moveBy(0.1, cc.p(-this.sizeOfSprite, +this.sizeOfSprite));
+        this.rightDown = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, +this.sizeOfSprite));
         this.rightDown.retain();
-        this.leftDown = new cc.moveBy(0.1, cc.p(+this.sizeOfSprite, +this.sizeOfSprite));
+        this.leftDown =  cc.moveBy(0.1, cc.p(+this.sizeOfSprite, +this.sizeOfSprite));
         this.leftDown.retain();	
-        this.scaling = new cc.scaleTo(3, 0.01);
+        this.scaling = cc.scaleTo(3, 0.01);
         this.scaling.retain();
-        this.scalingreverse = new cc.scaleTo(3, 1);
+        this.scalingreverse = cc.scaleTo(3, 1);
         this.scalingreverse.retain();
         cc.log(this.sizeOfSprite+"=sizeOfSprite");
         cc.log("initAnimations");

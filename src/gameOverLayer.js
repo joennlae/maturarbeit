@@ -18,7 +18,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.labelCoin.setPosition(cc.p(winsize.width/2, winsize.height/2));
         this.addChild(this.labelCoin);
 
-        this.labelMeter = new cc.LabelTTF(this.points+" Points", "Helvetica", 80);
+        this.labelMeter = new cc.LabelTTF(this.points+" Points", "Quicksand-Light", 80);
         this.labelMeter.setPosition(cc.p(winsize.width/2, winsize.height/2-100));
         this.labelMeter.setColor(cc.color(100,0,0));
         this.addChild(this.labelMeter);

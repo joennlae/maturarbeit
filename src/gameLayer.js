@@ -82,7 +82,6 @@ var gameLayer = cc.Layer.extend({
         //this.initAnimations();
 		this.setUp()
         this.scheduleUpdate();
-        cc.log("afterschedule");
 		this.quads = {value: 0}; // make it an object not a variable so we can point on it and not copy the value 
 
         //Load controlling
@@ -125,7 +124,7 @@ var gameLayer = cc.Layer.extend({
                 //cc.log("Aktuelles Feld:" + level[row][column]);
                 if (spriteSheet.getNumberOfRunningActions()===0){
                 if(corX >= winsize.width/2 && corY >= winsize.height/2){ //up-right
-                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34 || level[row.y][column.x+1]==32){
+                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34){
                         //spriteBatchNode.x -= sizeOfSprite;
                         //spriteBatchNode.y -= sizeOfSprite;
                         spriteSheet.runAction(rightUp);

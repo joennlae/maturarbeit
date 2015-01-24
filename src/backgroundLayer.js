@@ -14,7 +14,8 @@ var backgroundLayer = cc.Layer.extend({
         var spriteBG = new cc.Sprite(res.PlayBG_png);
         spriteBG.setPosition(centerPos);
         this.addChild(spriteBG);*/
-        var background_forFPS = new cc.LayerColor(cc.color(0,0,0), winsize.height/3, winsize.width/6);
-        this.addChild(background_forFPS,1);
+        
+		/*var background_forFPS = new cc.LayerColor(cc.color(0,0,0), winsize.height/3, winsize.width/6);
+        this.addChild(background_forFPS,1);*/
     }
 });

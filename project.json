@@ -18,7 +18,11 @@
         "src/statusLayer.js",
         "src/PlayScene.js",
         "src/gameOverLayer.js",
-        "src/preGameLayer.js"
+        "src/preGameLayer.js",
+		"src/levelMap.js",
+		"src/SimpleRecognizer.js",
+		"src/simpleMoveRecognizer.js",
+		"src/levelSelector.js"
     ]
 
 }

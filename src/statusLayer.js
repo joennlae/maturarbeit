@@ -25,9 +25,9 @@ var statusLayer = cc.Layer.extend({
         this.addChild(this.labelPoints);
     },
         updateQuads:function (quads) {
-        this.labelQuads.setString(quads);
+        this.labelQuads.setString(quads+"/"+levelsArray[this.ls.getItem(99)-1][3]);
     },
         updatePoints:function (points) {
-        this.labelPoints.setString(Math.floor(points));
+        this.labelPoints.setString(Math.floor(points)+"/"+levelsArray[this.ls.getItem(99)-1][5]);
     }
 });

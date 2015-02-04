@@ -31,7 +31,16 @@ SimpleRecognizer.prototype.movePoint = function(x, y) {
     var dx = this.points[len - 1].X - this.points[len - 2].X;
     var dy = this.points[len - 1].Y - this.points[len - 2].Y;
 
-    if (Math.abs(dx) > Math.abs(dy)) {
+    //only left and right
+
+    if (dx > 0) {
+            newRtn = "right";
+        } 
+    else {
+        newRtn = "left";
+    }
+
+    /*if (Math.abs(dx) > Math.abs(dy)) {
         if (dx > 0) {
             newRtn = "right";
         } else {
@@ -43,7 +52,7 @@ SimpleRecognizer.prototype.movePoint = function(x, y) {
         } else {
             newRtn = "down";
         }
-    }
+    }*/
 
     // first set result
     if (this.result == "") {

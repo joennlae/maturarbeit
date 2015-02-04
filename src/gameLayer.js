@@ -1,10 +1,10 @@
 var gameLayer = cc.Layer.extend({
     spriteSheet:null,
-	seed: 2,
+	seed: 0,
 	level: null,
 	railsPerRow: 12,
-	columns: 100,
-	rows: 25,
+	columns: 0,
+	rows: 0,
 	winsize: 0,
 	standart: 8,
     factor: 0,
@@ -23,9 +23,17 @@ var gameLayer = cc.Layer.extend({
     switcher: null,
     highest: 0,
     moves: null,
+    ls: null,
+    levelsArray: null,
     ctor:function () {
         this._super();
 		//Variables
+        this.levelsArray = levelsArray;
+        this.ls = cc.sys.localStorage;
+        //load level variables
+        this.rows = this.levelsArray[this.ls.getItem(99)-1][0];
+        this.columns = this.levelsArray[this.ls.getItem(99)-1][1];
+        this.seed = this.levelsArray[this.ls.getItem(99)-1][2];
 		this.winsize = cc.director.getWinSize();
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
@@ -593,8 +601,8 @@ var gameLayer = cc.Layer.extend({
     },  
 	generateLvl:function(){
         //load seed
-        var ls = cc.sys.localStorage;
-        this.seed = ls.getItem(3);  
+        //var ls = cc.sys.localStorage;
+        //this.seed = ls.getItem(3);  
 
         cc.log("seed = "+this.seed);
 		var x = this.columns;

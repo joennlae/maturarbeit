@@ -20,7 +20,7 @@ var menuLayer = cc.Layer.extend({
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		
 		this.startLabelP = new cc.LabelTTF("Start", "Quicksand-Light", this.winsize.height/4);
-        this.startLabelP.setColor(cc.color(0,0,150));//black color
+        this.startLabelP.setColor(cc.color(0,0,150));//blue color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		
         var menuItemLabel = new cc.MenuItemSprite(

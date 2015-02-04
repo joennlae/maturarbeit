@@ -1,3 +1,4 @@
+
 var levelSelector = cc.Layer.extend({
 	winsize: 0,
 	winsize: 0,
@@ -15,6 +16,7 @@ var levelSelector = cc.Layer.extend({
 		this.row = {y: 0};
         this.column = {x: 0};
 		this.levelNum = {value: 1};
+
     },
     init:function(){
 		this._super();
@@ -23,9 +25,23 @@ var levelSelector = cc.Layer.extend({
         this.addChild(background);
 		//after background ;-) homofish
 		cc.log(this.ls.getItem(100));
-		if (this.ls.getItem(100) == null){
+        cc.log("test");
+        //first time loading iOS
+		if (this.ls.getItem(100) < 1){
 			this.ls.setItem(100, 1);
+            //if (this.ls.getItem(101) != 5){
+            var saveArray = new Array();
+            for(i=0; i<levelsArray.length; i++){
+            saveArray.push( [] );
+            for(j=0; j<5; j++){
+                saveArray[i].push(0);
+            }
+            }
+                this.ls.setItem(101, JSON.stringify(saveArray));//points, redquads, bluequads, stars
+            //}
 		}
+		cc.log(this.ls.getItem(101));
+
 		this.levelNum.value = this.ls.getItem(100);
 		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/2);
         this.levelLabel.setColor(cc.color(0,0,0));//black color
@@ -33,23 +49,10 @@ var levelSelector = cc.Layer.extend({
         this.addChild(this.levelLabel);
 		
 		this.recognizer = new SimpleRecognizer();
-
-        cc.eventManager.addListener({
-            event: cc.EventListener.TOUCH_ONE_BY_ONE,
-            swallowTouches: true,
-			levelNum: this.levelNum,
-			ls: this.ls,
-			levelLabel: this.levelLabel,
-			spriteSheet: this.spriteSheet,
-            onTouchBegan: this.onTouchBegan,
-            onTouchMoved: this.onTouchMoved,
-            onTouchEnded: this.onTouchEnded
-        }, this);
 		
-		this.startLabel = new cc.LabelTTF("Start", "Quicksand-Light", this.winsize.height/10);
+		this.startLabel = new cc.LabelTTF("Start", "Quicksand-Light" , this.winsize.height/10);
         this.startLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
-		
 		this.startLabelP = new cc.LabelTTF("Start", "Quicksand-Light", this.winsize.height/10);
         this.startLabelP.setColor(cc.color(0,0,150));//black color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
@@ -59,29 +62,36 @@ var levelSelector = cc.Layer.extend({
 		//this.controlRight.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/2));
 		this.controlRightP = new cc.LabelTTF(">", "Quicksand-Light", this.winsize.height/4);
         this.controlRightP.setColor(cc.color(0,0,0));
+		this.controlRight.retain();
+        this.controlRightP.retain();
 		
-		this.controlLeft = new cc.LabelTTF("<", "Quicksand-Light", this.winsize.height/4);
+        this.controlLeft = new cc.LabelTTF("<", "Quicksand-Light", this.winsize.height/4);
         this.controlLeft.setColor(cc.color(120,120,120));
 		//this.controlLeft.setPosition(cc.p(this.winsize.width/4, this.winsize.height/2));
 		this.controlLeftP = new cc.LabelTTF("<", "Quicksand-Light", this.winsize.height/4);
         this.controlLeftP.setColor(cc.color(0,0,0));
-		
+		this.controlLeft.retain();
+        this.controlLeftP.retain();
+                                    
 		var controlRightLabel = new cc.MenuItemSprite(
             this.controlRight,
             this.controlRightP, 
             this.controllingRight, this);
         var cR = new cc.Menu(controlRightLabel);  
-        cR.setPosition(cc.p(this.winsize.width/4*3,this.winsize.height/2));
-        this.addChild(cR);
-		
+        cR.setPosition(cc.p(this.winsize.width/8*7,this.winsize.height/2));
+        this.addChild(cR,0,1);
+        cR.retain();
 		var controlLeftLabel = new cc.MenuItemSprite(
             this.controlLeft,
             this.controlLeftP, 
             this.controllingLeft, this);
         this.cL = new cc.Menu(controlLeftLabel);  
-        this.cL.setPosition(cc.p(this.winsize.width/4,this.winsize.height/2));
+        this.cL.setPosition(cc.p(this.winsize.width/8,this.winsize.height/2));
         //this.addChild(cL);
-		
+		if (this.ls.getItem(100) > 1){
+			this.addChild(this.cL,0,2);
+        }
+        this.cL.retain();
         var menuItemLabel = new cc.MenuItemSprite(
             this.startLabel,
             this.startLabelP, 
@@ -89,13 +99,27 @@ var levelSelector = cc.Layer.extend({
         var menu = new cc.Menu(menuItemLabel);  
         menu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/4));
         this.addChild(menu);
+
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            swallowTouches: true,
+			levelNum: this.levelNum,
+			ls: this.ls,
+			levelSel: this,
+			cL: this.cL,
+			levelLabel: this.levelLabel,
+			spriteSheet: this.spriteSheet,
+            onTouchBegan: this.onTouchBegan,
+            onTouchMoved: this.onTouchMoved,
+            onTouchEnded: this.onTouchEnded
+        }, this);
     },
 	
 	controllingRight : function(){
 		cc.log(this.getChildrenCount());
 		//this.addChild(this.cL);
 		if (this.levelNum.value == 1) {
-			this.addChild(this.cL);
+			this.addChild(this.cL,0,2);
 			this.levelNum.value ++;
 			this.levelLabel.setString(this.levelNum.value);
 			if (this.ls.getItem(100) == 2){
@@ -128,16 +152,23 @@ var levelSelector = cc.Layer.extend({
 	controllingLeft : function(){
 		if (this.levelNum.value == 2){
 			this.levelNum.value --;
-			this.removeChild(this.cL);
+			this.removeChildByTag(2);
 			this.levelLabel.setString(this.levelNum.value);
 			if (this.ls.getItem(100) == 1){
 				this.levelLabel.setColor(cc.color(0,0,0));
 			}
-			else this.levelLabel.setColor(cc.color(160,160,160));
+			else if (this.levelNum.value < this.ls.getItem(100)){
+				this.levelLabel.setColor(cc.color(255,0,0));
+				// and load results ls.getItem
+			}
+			else if (this.levelNum.value == this.ls.getItem(100)){
+				this.levelLabel.setColor(cc.color(0,0,0));
+					// load results
+			}
 			
 		}
 
-		else if (this.levelNum.value >2){
+		else if (this.levelNum.value > 2){
 			this.levelNum.value --;
 			this.levelLabel.setString(this.levelNum.value);
 			if (this.levelNum.value > this.ls.getItem(100)){
@@ -155,7 +186,7 @@ var levelSelector = cc.Layer.extend({
 	},
 
     onPlay : function(){
-        this.ls.setItem(3, Math.random()*34);    //current level number
+		this.ls.setItem(99, this.levelNum.value); //current Level
         cc.log("==onplay clicked");
         cc.director.runScene(new PlayScene());
     },
@@ -175,12 +206,24 @@ var levelSelector = cc.Layer.extend({
         var rtn = event.getCurrentTarget().recognizer.endPoint();
 		cc.log(rtn);
         switch (rtn) {
-            case "up":
-                break;
-			case "down":
-				break;
 			case "left":
-			if (this.levelNum.value <= 1000){
+			if (this.levelNum.value == 1){
+				this.levelNum.value ++;
+				this.levelSel.addChild(this.cL,0,2);
+				this.levelLabel.setString(this.levelNum.value);
+				if (this.levelNum.value > this.ls.getItem(100)){
+					this.levelLabel.setColor(cc.color(160,160,160));
+				}
+				else if (this.levelNum.value < this.ls.getItem(100)){
+					this.levelLabel.setColor(cc.color(255,0,0));
+					// and load results ls.getItem
+				}
+				else if (this.levelNum.value == this.ls.getItem(100)){
+					this.levelLabel.setColor(cc.color(0,0,0));
+					// load results
+				}
+			}
+			else if (this.levelNum.value <= 1000){
 				this.levelNum.value ++;
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
@@ -197,7 +240,23 @@ var levelSelector = cc.Layer.extend({
 			}
 				break;
 			case "right":
-			if (this.levelNum.value >1){
+			if (this.levelNum.value == 2){
+				this.levelNum.value --;
+				this.levelSel.removeChildByTag(2);
+				this.levelLabel.setString(this.levelNum.value);
+				if (this.levelNum.value > this.ls.getItem(100)){
+					this.levelLabel.setColor(cc.color(160,160,160));
+				}
+				else if (this.levelNum.value < this.ls.getItem(100)){
+					this.levelLabel.setColor(cc.color(255,0,0));
+					// and load results ls.getItem
+				}
+				else if (this.levelNum.value == this.ls.getItem(100)){
+					this.levelLabel.setColor(cc.color(0,0,0));
+					// load results
+				}
+			}
+			else if (this.levelNum.value > 2){
 				this.levelNum.value --;
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){

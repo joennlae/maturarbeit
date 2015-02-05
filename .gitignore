@@ -2,3 +2,4 @@ runtime
 .DS_Store
 frameworks/js-bindings
 frameworks/runtime-src
+*.db

@@ -25,7 +25,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.againLabel.setPosition(cc.p(winsize.width/2, winsize.height/4*3));
         this.againLabel.setColor(cc.color(0,150,0));
 
-        this.closeLabel = new cc.LabelTTF("So close...", "Quicksand-Light", winSize.height/8);
+        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winSize.height/8);
         this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/4*3));
         this.closeLabel.setColor(cc.color(0,0,0));
 

@@ -8,6 +8,8 @@ var res = {
 	font		: "res/Quicksand-Light.ttf"
 };
 
+var messages = ["So close...","Next Time","Keep on","Never surrender", "Endurance makes you stronger","Hungry?","Pizzasalami?"];
+
 var levelsArray =  [[25,26,1,3,0,10000,50],   //rows | columns | seed | red quads | blue quads | min points | max Moves
 					[25,26,2,3,0,15000,50],
 					[30,30,3,4,0,25000,54]];

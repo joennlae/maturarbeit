@@ -24,8 +24,8 @@ var levelSelector = cc.Layer.extend({
         var background = new cc.LayerColor(cc.color(255,255,255,255), this.winsize.width, this.winsize.height);
         this.addChild(background);
 		//after background ;-) homofish
-		cc.log(this.ls.getItem(100));
-        cc.log("test");
+		//cc.log(this.ls.getItem(100));
+        //cc.log("test");
         //first time loading iOS
 		if (this.ls.getItem(100) < 1){
 			this.ls.setItem(100, 1);
@@ -33,14 +33,17 @@ var levelSelector = cc.Layer.extend({
             var saveArray = new Array();
             for(i=0; i<levelsArray.length; i++){
             saveArray.push( [] );
-            for(j=0; j<5; j++){
-                saveArray[i].push(0);
+            for(j=0; j<6; j++){
+                saveArray[i].push(0); 
             }
             }
-                this.ls.setItem(101, JSON.stringify(saveArray));//points, redquads, bluequads, stars
+                this.ls.setItem(101, JSON.stringify(saveArray));//points| redquads | bluequads | rank | moves | done-check
             //}
 		}
-		cc.log(this.ls.getItem(101));
+		
+
+		saveArray = JSON.parse(this.ls.getItem(101));
+		cc.log(saveArray);
 
 		this.levelNum.value = this.ls.getItem(100);
 		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/2);
@@ -77,10 +80,10 @@ var levelSelector = cc.Layer.extend({
             this.controlRight,
             this.controlRightP, 
             this.controllingRight, this);
-        var cR = new cc.Menu(controlRightLabel);  
-        cR.setPosition(cc.p(this.winsize.width/8*7,this.winsize.height/2));
-        this.addChild(cR,0,1);
-        cR.retain();
+        this.cR = new cc.Menu(controlRightLabel);  
+        this.cR.setPosition(cc.p(this.winsize.width/8*7,this.winsize.height/2));
+        this.addChild(this.cR,0,1);
+        this.cR.retain();
 		var controlLeftLabel = new cc.MenuItemSprite(
             this.controlLeft,
             this.controlLeftP, 
@@ -99,6 +102,29 @@ var levelSelector = cc.Layer.extend({
         var menu = new cc.Menu(menuItemLabel);  
         menu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/4));
         this.addChild(menu);
+        cc.log(this.levelNum.value);
+
+        //stats preloading objects
+        this.pointsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5], "Quicksand-Light", this.winsize.height/16);
+        this.pointsLabel.setColor(cc.color(0,0,0));//black color
+        this.pointsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*9));
+        this.addChild(this.pointsLabel);
+
+        this.quadsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3], "Quicksand-Light", this.winsize.height/16);
+        this.quadsLabel.setColor(cc.color(0,0,0));//black color
+        this.quadsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*8));
+        this.addChild(this.quadsLabel);
+
+        this.movesLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6], "Quicksand-Light", this.winsize.height/16);
+        this.movesLabel.setColor(cc.color(0,0,0));//black color
+        this.movesLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*9));
+        this.addChild(this.movesLabel);
+
+       	this.rankLabel = new cc.LabelTTF("Rank"/*saveArray[this.levelNum.value-1][0]*/, "Quicksand-Light", this.winsize.height/16);
+        this.rankLabel.setColor(cc.color(0,0,0));//black color
+        this.rankLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*8));
+        this.addChild(this.rankLabel);
+        this.updateStats();
 
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -111,8 +137,44 @@ var levelSelector = cc.Layer.extend({
 			spriteSheet: this.spriteSheet,
             onTouchBegan: this.onTouchBegan,
             onTouchMoved: this.onTouchMoved,
-            onTouchEnded: this.onTouchEnded
+            onTouchEnded: this.onTouchEnded,
+            updateStats: this.updateStats,
+            pointsLabel: this.pointsLabel,
+            quadsLabel: this.quadsLabel,
+            movesLabel: this.movesLabel
         }, this);
+    },
+
+    updateStats : function(){
+    	saveArray = JSON.parse(this.ls.getItem(101));
+
+    	if (saveArray[this.levelNum.value-1][0] >= levelsArray[this.levelNum.value-1][5]){
+    		this.pointsLabel.setColor(cc.color(0,150,0));
+    		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5]);
+    	}
+    	else {
+    		this.pointsLabel.setColor(cc.color(0,0,0));
+    		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5]);
+    	}
+
+    	if (saveArray[this.levelNum.value-1][1] >= levelsArray[this.levelNum.value-1][3]){
+    		this.quadsLabel.setColor(cc.color(150,0,0));
+    		this.quadsLabel.setString(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3]);
+    	}
+    	else {
+    		this.quadsLabel.setColor(cc.color(0,0,0));
+    		this.quadsLabel.setString(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3]);
+    	}
+
+    	if (saveArray[this.levelNum.value-1][4] <= levelsArray[this.levelNum.value-1][6] && saveArray[this.levelNum.value-1][4]!=0){
+    		this.movesLabel.setColor(cc.color(255,150,0));
+    		this.movesLabel.setString(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6]);
+    	}
+    	else {
+    		this.movesLabel.setColor(cc.color(0,0,0));
+    		this.movesLabel.setString(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6]);
+    	}
+
     },
 	
 	controllingRight : function(){
@@ -121,23 +183,25 @@ var levelSelector = cc.Layer.extend({
 		if (this.levelNum.value == 1) {
 			this.addChild(this.cL,0,2);
 			this.levelNum.value ++;
+			this.updateStats();
 			this.levelLabel.setString(this.levelNum.value);
 			if (this.ls.getItem(100) == 2){
 				this.levelLabel.setColor(cc.color(0,0,0));
 			}
 			else if (this.ls.getItem(100) > 2){
-				this.levelLabel.setColor(cc.color(255,0,0));
+				this.levelLabel.setColor(cc.color(0,150,0));
 			}
 			else this.levelLabel.setColor(cc.color(160,160,160));
 		}
 		else if (this.levelNum.value <= 1000){
 			this.levelNum.value ++;
 			this.levelLabel.setString(this.levelNum.value);
+			this.updateStats();
 			if (this.levelNum.value > this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(160,160,160));
 			}
 			else if (this.levelNum.value < this.ls.getItem(100)){
-				this.levelLabel.setColor(cc.color(255,0,0));
+				this.levelLabel.setColor(cc.color(0,150,0));
 				// and load results ls.getItem
 			}
 			else if (this.levelNum.value == this.ls.getItem(100)){
@@ -152,13 +216,14 @@ var levelSelector = cc.Layer.extend({
 	controllingLeft : function(){
 		if (this.levelNum.value == 2){
 			this.levelNum.value --;
+			this.updateStats();
 			this.removeChildByTag(2);
 			this.levelLabel.setString(this.levelNum.value);
 			if (this.ls.getItem(100) == 1){
 				this.levelLabel.setColor(cc.color(0,0,0));
 			}
 			else if (this.levelNum.value < this.ls.getItem(100)){
-				this.levelLabel.setColor(cc.color(255,0,0));
+				this.levelLabel.setColor(cc.color(0,150,0));
 				// and load results ls.getItem
 			}
 			else if (this.levelNum.value == this.ls.getItem(100)){
@@ -170,12 +235,13 @@ var levelSelector = cc.Layer.extend({
 
 		else if (this.levelNum.value > 2){
 			this.levelNum.value --;
+			this.updateStats();
 			this.levelLabel.setString(this.levelNum.value);
 			if (this.levelNum.value > this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(160,160,160));
 			}
 			else if (this.levelNum.value < this.ls.getItem(100)){
-				this.levelLabel.setColor(cc.color(255,0,0));
+				this.levelLabel.setColor(cc.color(0,150,0));
 				// and load results ls.getItem
 			}
 			else if (this.levelNum.value == this.ls.getItem(100)){
@@ -186,9 +252,11 @@ var levelSelector = cc.Layer.extend({
 	},
 
     onPlay : function(){
+    	if (this.levelNum.value <= this.ls.getItem(100)){
 		this.ls.setItem(99, this.levelNum.value); //current Level
         cc.log("==onplay clicked");
         cc.director.runScene(new PlayScene());
+    	}
     },
 	
 	onTouchBegan:function(touch, event) {
@@ -209,13 +277,14 @@ var levelSelector = cc.Layer.extend({
 			case "left":
 			if (this.levelNum.value == 1){
 				this.levelNum.value ++;
+				this.updateStats();
 				this.levelSel.addChild(this.cL,0,2);
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
 				}
 				else if (this.levelNum.value < this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(255,0,0));
+					this.levelLabel.setColor(cc.color(0,150,0));
 					// and load results ls.getItem
 				}
 				else if (this.levelNum.value == this.ls.getItem(100)){
@@ -225,12 +294,13 @@ var levelSelector = cc.Layer.extend({
 			}
 			else if (this.levelNum.value <= 1000){
 				this.levelNum.value ++;
+				this.updateStats();
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
 				}
 				else if (this.levelNum.value < this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(255,0,0));
+					this.levelLabel.setColor(cc.color(0,150,0));
 					// and load results ls.getItem
 				}
 				else if (this.levelNum.value == this.ls.getItem(100)){
@@ -242,13 +312,14 @@ var levelSelector = cc.Layer.extend({
 			case "right":
 			if (this.levelNum.value == 2){
 				this.levelNum.value --;
+				this.updateStats();
 				this.levelSel.removeChildByTag(2);
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
 				}
 				else if (this.levelNum.value < this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(255,0,0));
+					this.levelLabel.setColor(cc.color(0,150,0));
 					// and load results ls.getItem
 				}
 				else if (this.levelNum.value == this.ls.getItem(100)){
@@ -258,12 +329,13 @@ var levelSelector = cc.Layer.extend({
 			}
 			else if (this.levelNum.value > 2){
 				this.levelNum.value --;
+				this.updateStats();
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
 				}
 				else if (this.levelNum.value < this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(255,0,0));
+					this.levelLabel.setColor(cc.color(0,150,0));
 					// and load results ls.getItem
 				}
 				else if (this.levelNum.value == this.ls.getItem(100)){
@@ -276,6 +348,16 @@ var levelSelector = cc.Layer.extend({
                 break;
         }
     },	
+
+ onExit:function() {
+		this.controlRight.release();
+        this.controlRightP.release();
+		this.controlLeft.release();
+        this.controlLeftP.release();
+        this.cR.release();
+        this.cL.release();
+        this._super();
+},
 });
 
 var levelSelectorScene = cc.Scene.extend({

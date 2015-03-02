@@ -1004,10 +1004,13 @@ var gameLayer = cc.Layer.extend({
         // update meter
         if (-this.spriteSheet.y>this.highest) this.highest = -this.spriteSheet.y;
         var statusLayer = this.getParent().getChildByTag(3);
+        statusLayer.updateMoves(this.moves.value);
         statusLayer.updatePoints(this.highest + this.moves.value*this.sizeOfSprite);
         statusLayer.updateQuads(this.quads.value);
-        if (this.switcher.value === true && this.spriteSheet.getNumberOfRunningActions()==0) return this.gameOver();
-        
+        if (this.switcher.value === true && this.spriteSheet.getNumberOfRunningActions()==0){
+            statusLayer.removeEverything();
+            return this.gameOver();
+        } 
 
     },
     onExit:function() {
@@ -1020,10 +1023,11 @@ var gameLayer = cc.Layer.extend({
         this._super();
     },
     gameOver:function (){
-        cc.log("==game over");
+        cc.log("LevelEnd");
         var ls = cc.sys.localStorage;
         ls.setItem(1, Math.floor(this.highest + this.moves.value*this.sizeOfSprite));
         ls.setItem(2, this.quads.value);
+        ls.setItem(3, this.moves.value);
         this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
         cc.director.pause();
         this.addChild(new gameOverLayer());

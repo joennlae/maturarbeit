@@ -53,10 +53,10 @@ var levelSelector = cc.Layer.extend({
 		
 		this.recognizer = new SimpleRecognizer();
 		
-		this.startLabel = new cc.LabelTTF("Start", "Quicksand-Light" , this.winsize.height/10);
+		this.startLabel = new cc.LabelTTF("Play", "Quicksand-Light" , this.winsize.height/10);
         this.startLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
-		this.startLabelP = new cc.LabelTTF("Start", "Quicksand-Light", this.winsize.height/10);
+		this.startLabelP = new cc.LabelTTF("Play", "Quicksand-Light", this.winsize.height/10);
         this.startLabelP.setColor(cc.color(0,0,150));//black color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		
@@ -120,7 +120,7 @@ var levelSelector = cc.Layer.extend({
         this.movesLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*9));
         this.addChild(this.movesLabel);
 
-       	this.rankLabel = new cc.LabelTTF("Rank"/*saveArray[this.levelNum.value-1][0]*/, "Quicksand-Light", this.winsize.height/16);
+       	this.rankLabel = new cc.LabelTTF(""/*saveArray[this.levelNum.value-1][0]*/, "Quicksand-Light", this.winsize.height/16);
         this.rankLabel.setColor(cc.color(0,0,0));//black color
         this.rankLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*8));
         this.addChild(this.rankLabel);
@@ -174,6 +174,7 @@ var levelSelector = cc.Layer.extend({
     		this.movesLabel.setColor(cc.color(0,0,0));
     		this.movesLabel.setString(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6]);
     	}
+    	this.rankLabel.setString(ranks[saveArray[this.levelNum.value-1][3]]);
 
     },
 	

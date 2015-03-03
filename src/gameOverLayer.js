@@ -121,7 +121,7 @@ var gameOverLayer = cc.LayerColor.extend({
 			saveArray[levelNum-1][0] = JSON.parse(this.ls.getItem(1));//points
 			saveArray[levelNum-1][1] = JSON.parse(this.ls.getItem(2));//redquads
 			//saveArray[levelNum][2] = this.ls.getItem(3);//bluequads
-			saveArray[levelNum-1][3] = 3; //starfunction TODO
+			saveArray[levelNum-1][3] = this.checkRank(); //rank function
             saveArray[levelNum-1][4] = JSON.parse(this.ls.getItem(3));
             saveArray[levelNum-1][5] = 1; //LevelCheck Number | done
 
@@ -135,12 +135,21 @@ var gameOverLayer = cc.LayerColor.extend({
 			if (saveArray[levelNum][0] < this.ls.getItem(1)) saveArray[levelNum][0] = JSON.parse(this.ls.getItem(1));
 			if (saveArray[levelNum][1] < this.ls.getItem(2)) saveArray[levelNum][1] = JSON.parse(this.ls.getItem(2));
 			//if (saveArray[levelNum][2] < this.ls.getItem(3)) saveArray[levelNum][2] = this.ls.getItem(3);
-			if (saveArray[levelNum][3] < 3 ) saveArray[levelNum][3] = 3;//starfunction
+			if (saveArray[levelNum][3] < 3 ) saveArray[levelNum][3] = this.checkRank();//starfunction
             if (saveArray[levelNum][4] > this.ls.getItem(3)) saveArray[levelNum][4] = JSON.parse(this.ls.getItem(3));
 			this.ls.setItem(101, JSON.stringify(saveArray));
 			//cc.log(this.ls.getItem(101));
 		}
 	},
+    checkRank : function(){
+        if (this.points >= levelsArray[this.ls.getItem(99)-1][8]){
+            return 3;
+        }
+        else if (this.points >= levelsArray[this.ls.getItem(99)-1][7] && this.points < levelsArray[this.ls.getItem(99)-1][8]){
+            return 2;
+        }
+        else return 1;
+    },
 	onTouchBegan:function(touch, event) {
         var pos = touch.getLocation();
         event.getCurrentTarget().recognizer.beginPoint(pos.x, pos.y);

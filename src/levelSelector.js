@@ -278,7 +278,6 @@ var levelSelector = cc.Layer.extend({
 			case "left":
 			if (this.levelNum.value == 1){
 				this.levelNum.value ++;
-				this.updateStats();
 				this.levelSel.addChild(this.cL,0,2);
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
@@ -292,10 +291,10 @@ var levelSelector = cc.Layer.extend({
 					this.levelLabel.setColor(cc.color(0,0,0));
 					// load results
 				}
+				this.updateStats();
 			}
 			else if (this.levelNum.value <= 1000){
 				this.levelNum.value ++;
-				this.updateStats();
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
@@ -308,12 +307,12 @@ var levelSelector = cc.Layer.extend({
 					this.levelLabel.setColor(cc.color(0,0,0));
 					// load results
 				}
+				this.updateStats();
 			}
 				break;
 			case "right":
 			if (this.levelNum.value == 2){
 				this.levelNum.value --;
-				this.updateStats();
 				this.levelSel.removeChildByTag(2);
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
@@ -327,10 +326,10 @@ var levelSelector = cc.Layer.extend({
 					this.levelLabel.setColor(cc.color(0,0,0));
 					// load results
 				}
+				this.updateStats();
 			}
 			else if (this.levelNum.value > 2){
 				this.levelNum.value --;
-				this.updateStats();
 				this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
@@ -343,6 +342,7 @@ var levelSelector = cc.Layer.extend({
 					this.levelLabel.setColor(cc.color(0,0,0));
 					// load results
 				}
+				this.updateStats();
 			}
 				break;			
             default:

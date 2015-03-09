@@ -613,14 +613,16 @@ var gameLayer = cc.Layer.extend({
         Math.seed = function(s) {
             return function() {
                 s = Math.sin(s) * 10;
-                return s - Math.floor(s); //auf 8 Nachkommastellen genau, weil unterschiedlich genau Sinuswerte  (Math.floor((s - Math.floor(s))*100000000))/100000000
+                s = s - Math.floor(s);
+                s = Math.floor(s*100000000); 
+                return s/100000000;                     //auf 8 Nachkommastellen genau, weil unterschiedlich genau Sinuswerte  (Math.floor((s - Math.floor(s))*100000000))/100000000
             };
         };
 
         // Seed:
         var random1 = Math.seed(this.seed);
         var random2 = Math.seed(random1());
-        randomWithSeed = Math.seed(random2());
+        randomWithSeed = Math.seed(random2()); //Math.seed(Math.seed(Math.seed(this.seed)));
         //cc.log("Numbers"+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed()+","+randomWithSeed());
         //====================================================================
         //====================================================================

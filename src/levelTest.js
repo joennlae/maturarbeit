@@ -57,6 +57,14 @@ var levelTestLayer = cc.Layer.extend({
 		this.columnField.addEventListener(this.textFieldListener);
 		this.addChild(this.columnField);
 
+		this.gameModeField = new ccui.TextField("mode 1/2","Arial",50);
+   		this.gameModeField.setTextColor(cc.color(0,0,0));
+		this.gameModeField.setTouchEnabled(true);
+		this.gameModeField.x = winsize.width/2;
+		this.gameModeField.y = winsize.height/6*2;
+		this.gameModeField.addEventListener(this.textFieldListener);
+		this.addChild(this.gameModeField);
+
 
 		this.startLabel = new cc.LabelTTF("Play", "Quicksand-Light" , winsize.height/10);
         this.startLabel.setColor(cc.color(0,0,0));//black color
@@ -84,7 +92,7 @@ var levelTestLayer = cc.Layer.extend({
             this.startLabelP, 
             this.onPlay, this);
         var menu = new cc.Menu(menuItemLabel);  
-        menu.setPosition(cc.p(winsize.width/2,winsize.height/4));
+        menu.setPosition(cc.p(winsize.width/2,winsize.height/6));
         this.addChild(menu);
 
 	},
@@ -94,7 +102,9 @@ var levelTestLayer = cc.Layer.extend({
         ls.setItem(1000, parseFloat(this.rowField.getString()));
         ls.setItem(1001, parseFloat(this.columnField.getString()));
         ls.setItem(1002, parseFloat(this.seedField.getString()));
+        ls.setItem(666, parseFloat(this.gameModeField.getString()));
         cc.director.runScene(new PlayScene());
+    	
     },
     	onBack : function(){
     	cc.director.runScene(new menuScene());

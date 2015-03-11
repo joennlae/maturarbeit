@@ -1048,5 +1048,4 @@ var gameLayer = cc.Layer.extend({
         
         //spriteSheet.getParent().addChild(new gameOverLayer());
     }
-	
 });

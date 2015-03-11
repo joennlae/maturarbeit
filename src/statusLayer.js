@@ -4,6 +4,7 @@ var statusLayer = cc.Layer.extend({
     labelMoves:null,
 	winsize: null,
     pauseMenu: null,
+    labelQuadsBlue: null,
 	ls : null,
     ctor:function () {
         this._super();
@@ -19,6 +20,12 @@ var statusLayer = cc.Layer.extend({
 		this.labelQuads.setAnchorPoint(1,0);
         this.labelQuads.setPosition(cc.p(this.winsize.width, this.winsize.height - (2*this.winsize.height/10+20)));
         this.addChild(this.labelQuads);
+
+        this.labelQuadsBlue = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/10);
+        this.labelQuadsBlue.setColor(cc.color(150,0,0));
+        this.labelQuadsBlue.setAnchorPoint(1,0);
+        this.labelQuadsBlue.setPosition(cc.p(this.winsize.width, this.winsize.height - (2*this.winsize.height/10+20)));
+        if (this.ls.getItem(666)==2) this.addChild(this.labelQuadsBlue);
 
         this.labelPoints = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/10);
 		this.labelPoints.setAnchorPoint(1,0);
@@ -55,6 +62,9 @@ var statusLayer = cc.Layer.extend({
         updateMoves:function (moves) {
         this.labelMoves.setString(/*levelsArray[this.ls.getItem(99)-1][6]-*/moves);
     },
+        updateBlueQuads:function(quadsBlue){
+        this.labelQuadsBlue.setString(quadsBlue);
+    },
         removeEverything : function(){
         this.removeAllChildren();
     },
@@ -63,6 +73,7 @@ var statusLayer = cc.Layer.extend({
         ls.setItem(1, parseFloat(this.labelPoints.getString()));
         ls.setItem(2, parseFloat(this.labelQuads.getString()));
         ls.setItem(3, parseFloat(this.labelMoves.getString()));
+        if (ls.getItem(666)==2) ls.setItem(4, parseFloat(this.labelQuadsBlue.getString()));
         this.removeChildByTag(12);
         cc.director.pause();
         this.addChild(new pauseLayer());

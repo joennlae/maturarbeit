@@ -23,7 +23,8 @@
 		"src/levelSelector.js",
         "src/levelTest.js",
         "src/gameBetaOverLayer.js",
-        "src/pauseLayer.js"
+        "src/pauseLayer.js",
+        "src/gameLayerModeTwo.js"
     ]
 
 }

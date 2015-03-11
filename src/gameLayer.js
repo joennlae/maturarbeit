@@ -31,9 +31,17 @@ var gameLayer = cc.Layer.extend({
         this.levelsArray = levelsArray;
         this.ls = cc.sys.localStorage;
         //load level variables
+        //Beta Test switch ls(999)
+        if(this.ls.getItem(999)==1){
         this.rows = this.levelsArray[this.ls.getItem(99)-1][0];
         this.columns = this.levelsArray[this.ls.getItem(99)-1][1];
         this.seed = this.levelsArray[this.ls.getItem(99)-1][2];
+        }
+        else {
+        this.rows = this.ls.getItem(1000);
+        this.columns = this.ls.getItem(1001);
+        this.seed = this.ls.getItem(1002);
+        }
 		this.winsize = cc.director.getWinSize();
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
@@ -1032,7 +1040,10 @@ var gameLayer = cc.Layer.extend({
         ls.setItem(3, this.moves.value);
         this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
         cc.director.pause();
+        if(ls.getItem(999)==1){ //Beta switch
         this.addChild(new gameOverLayer());
+        }
+        else this.addChild(new gameBetaOverLayer());
 
         
         //spriteSheet.getParent().addChild(new gameOverLayer());

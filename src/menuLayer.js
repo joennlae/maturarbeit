@@ -22,6 +22,14 @@ var menuLayer = cc.Layer.extend({
 		this.startLabelP = new cc.LabelTTF("Play", "Quicksand-Light", this.winsize.height/4);
         this.startLabelP.setColor(cc.color(0,0,150));//blue color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+
+        this.betaLabel = new cc.LabelTTF("Beta", "Quicksand-Light", this.winsize.height/12);
+        this.betaLabel.setColor(cc.color(0,0,0));//black color
+        //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+        
+        this.betaLabelP = new cc.LabelTTF("Beta", "Quicksand-Light", this.winsize.height/12);
+        this.betaLabelP.setColor(cc.color(0,0,150));//blue color
+        //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		
         this.messageLabel = new cc.LabelTTF(startUpMessages[Math.floor(Math.random()*10)], "Quicksand-Light", this.winsize.height/16);
         this.messageLabel.setColor(cc.color(150,0,0));
@@ -36,11 +44,23 @@ var menuLayer = cc.Layer.extend({
         var menu = new cc.Menu(menuItemLabel);  
         menu.setPosition(centerpos);
         this.addChild(menu);
+
+        var betaItemLabel = new cc.MenuItemSprite(
+            this.betaLabel,
+            this.betaLabelP, 
+            this.onBeta, this);
+        var betaMenu = new cc.Menu(betaItemLabel); 
+        betaMenu.setPosition(cc.p(this.winsize.width/4,this.winsize.height/6));
+        this.addChild(betaMenu);
     },
 
     onPlay : function(){
         cc.log("==onplay clicked");
         cc.director.runScene(new levelSelectorScene());
+    },
+
+    onBeta : function(){
+        cc.director.runScene(new levelTestScene());
     }
 });
 

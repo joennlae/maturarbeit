@@ -156,7 +156,8 @@ var levelSelector = cc.Layer.extend({
             updateStats: this.updateStats,
             pointsLabel: this.pointsLabel,
             quadsLabel: this.quadsLabel,
-            movesLabel: this.movesLabel
+            movesLabel: this.movesLabel,
+            rankLabel: this.rankLabel
         }, this);
     },
 

@@ -44,6 +44,7 @@ var statusLayer = cc.Layer.extend({
         this.pauseMenu = new cc.Menu(pauseItemLabel);  
         this.pauseMenu.setPosition(cc.p(100,this.winsize.height-(this.winsize.height/16+10)));
         this.addChild(this.pauseMenu,0,12);
+        this.pauseMenu.retain();
     },
         updateQuads:function (quads) {
         this.labelQuads.setString(quads/*-levelsArray[this.ls.getItem(99)-1][3]*/);
@@ -68,6 +69,10 @@ var statusLayer = cc.Layer.extend({
     },
     addPauseLabel : function(){
         this.addChild(this.pauseMenu,0,12);
+    },
+    onExit : function(){
+        this.pauseMenu.release();
+        this._super();
     }
     
 

@@ -92,7 +92,6 @@ var pauseLayer = cc.LayerColor.extend({
     },
     onRestart:function (sender) {
         cc.director.resume();
-        //this.removeChildByTag(13);
         this.getParent().addPauseLabel();
         this.removeFromParent();
     },

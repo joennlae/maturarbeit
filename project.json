@@ -22,7 +22,8 @@
 		"src/simpleMoveRecognizer.js",
 		"src/levelSelector.js",
         "src/levelTest.js",
-        "src/gameBetaOverLayer.js"
+        "src/gameBetaOverLayer.js",
+        "src/pauseLayer.js"
     ]
 
 }

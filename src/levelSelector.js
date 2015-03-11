@@ -148,6 +148,8 @@ var levelSelector = cc.Layer.extend({
 			ls: this.ls,
 			levelSel: this,
 			cL: this.cL,
+			winsize: this.winsize,
+			onPlay: this.onPlay,
 			levelLabel: this.levelLabel,
 			spriteSheet: this.spriteSheet,
             onTouchBegan: this.onTouchBegan,
@@ -304,7 +306,7 @@ var levelSelector = cc.Layer.extend({
 
     onTouchEnded:function(touch, event) {
         var rtn = event.getCurrentTarget().recognizer.endPoint();
-		cc.log(rtn);
+		//cc.log(rtn);
         switch (rtn) {
 			case "left":
 			if (this.levelNum.value == 1){
@@ -377,6 +379,9 @@ var levelSelector = cc.Layer.extend({
 			}
 				break;			
             default:
+            	var corX = touch.getLocationX();
+                var corY = touch.getLocationY();
+                if (corX > this.winsize.width/4 && corX < this.winsize.width/4*3 && corY > this.winsize.height/4 && corY < this.winsize.height/4*3) this.onPlay();
                 break;
         }
     },	

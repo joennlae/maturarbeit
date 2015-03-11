@@ -162,6 +162,17 @@ var levelSelector = cc.Layer.extend({
 
     updateStats : function(){
     	saveArray = JSON.parse(this.ls.getItem(101));
+    	if(this.levelNum.value>(saveArray.length)){
+    		this.pointsLabel.setString("level");
+    		this.quadsLabel.setString("does");
+    		this.movesLabel.setString("not");
+    		this.rankLabel.setString("exist");
+    		this.pointsLabel.setColor(cc.color(0,0,0));
+			this.quadsLabel.setColor(cc.color(0,0,0));
+			this.movesLabel.setColor(cc.color(0,0,0));
+			this.rankLabel.setColor(cc.color(0,0,0));    	
+		}
+    	else{
 
     	if (saveArray[this.levelNum.value-1][0] >= levelsArray[this.levelNum.value-1][5]){
     		this.pointsLabel.setColor(cc.color(0,150,0));
@@ -190,6 +201,7 @@ var levelSelector = cc.Layer.extend({
     		this.movesLabel.setString(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6]);
     	}
     	this.rankLabel.setString(ranks[saveArray[this.levelNum.value-1][3]]);
+    	}
 
     },
 	

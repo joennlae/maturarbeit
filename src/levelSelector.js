@@ -126,6 +126,21 @@ var levelSelector = cc.Layer.extend({
         this.addChild(this.rankLabel);
         this.updateStats();
 
+        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , this.winsize.height/16);
+        this.backLabel.setColor(cc.color(0,0,0));//black color
+        //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+		this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", this.winsize.height/16);
+        this.backLabelP.setColor(cc.color(0,0,150));
+
+        var backItemLabel = new cc.MenuItemSprite(
+            this.backLabel,
+            this.backLabelP, 
+            this.onBack, this);
+        var backMenu = new cc.Menu(backItemLabel);  
+        //backMenu.setAnchorPoint(1,0); 
+        backMenu.setPosition(cc.p(100,this.winsize.height-(this.winsize.height/16+10)));
+        this.addChild(backMenu);
+
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
             swallowTouches: true,
@@ -147,6 +162,17 @@ var levelSelector = cc.Layer.extend({
 
     updateStats : function(){
     	saveArray = JSON.parse(this.ls.getItem(101));
+    	if(this.levelNum.value>(saveArray.length)){
+    		this.pointsLabel.setString("level");
+    		this.quadsLabel.setString("does");
+    		this.movesLabel.setString("not");
+    		this.rankLabel.setString("exist");
+    		this.pointsLabel.setColor(cc.color(0,0,0));
+			this.quadsLabel.setColor(cc.color(0,0,0));
+			this.movesLabel.setColor(cc.color(0,0,0));
+			this.rankLabel.setColor(cc.color(0,0,0));    	
+		}
+    	else{
 
     	if (saveArray[this.levelNum.value-1][0] >= levelsArray[this.levelNum.value-1][5]){
     		this.pointsLabel.setColor(cc.color(0,150,0));
@@ -175,6 +201,7 @@ var levelSelector = cc.Layer.extend({
     		this.movesLabel.setString(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6]);
     	}
     	this.rankLabel.setString(ranks[saveArray[this.levelNum.value-1][3]]);
+    	}
 
     },
 	
@@ -255,9 +282,12 @@ var levelSelector = cc.Layer.extend({
     onPlay : function(){
     	if (this.levelNum.value <= this.ls.getItem(100)){
 		this.ls.setItem(99, this.levelNum.value); //current Level
-        cc.log("==onplay clicked");
+        this.ls.setItem(999,1); // Beta switch
         cc.director.runScene(new PlayScene());
     	}
+    },
+        onBack : function(){
+    	cc.director.runScene(new menuScene());
     },
 	
 	onTouchBegan:function(touch, event) {

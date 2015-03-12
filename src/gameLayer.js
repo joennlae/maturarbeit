@@ -25,12 +25,12 @@ var gameLayer = cc.Layer.extend({
     moves: null,
     ls: null,
     levelsArray: null,
+    showNodeAction: null,
+    showNode: null,
     ctor:function () {
         this._super();
-		//Variables
         this.levelsArray = levelsArray;
         this.ls = cc.sys.localStorage;
-        //load level variables
         //Beta Test switch ls(999)
         if(this.ls.getItem(999)==1){
         this.rows = this.levelsArray[this.ls.getItem(99)-1][0];
@@ -48,60 +48,39 @@ var gameLayer = cc.Layer.extend({
         this.switcher = {value: false};
         this.moves = {value: 0};
 		this.generateLvl(); //returns this.init();
-        
-		//Variables
-		
-        /*cc.loader.loadJson(res.levels_json,function(err,data){
-            if (err) {
-                return false;
-            } else {
-                    // data is the json object
-                var level_json=data["level_one"];
-                //cc.log(level_json);
-                cc.log(level_json);
-                level = level_json;
-                return (gameLayer.init());
-            }
-        });*/
 
-        /*function setLevel(level_info){
-            cc.log(level_info);
-            level = level_info;
-           
-        };*/
-        
-        //this.init();
     },
     init:function() {
         this._super();
 		cc.log(this.level);
 		//Nodes
 		cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
-        /*var texture =*/ cc.textureCache.addImage("res/rails.png");
-        this.spriteSheet = /*new cc.SpriteBatchNode(texture, 50);*/new cc.Node; //runs faster on iOS heard of depriceated since JSB V3.0 not sure about this
-        //var spriteSheet = this.spriteSheet; 
+        cc.textureCache.addImage("res/rails.png");
+        this.spriteSheet = new cc.Node; 
         this.spriteSheet.y = 0;
-        //this.spriteSheet.retain();
         this.addChild(this.spriteSheet);
         //====================================================================
         //TouchNode and Stuff further implementation in setUp()
         this.touchNode = new cc.DrawNode();
-        //this.touchNode.retain();
-        //cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
         this.addChild(this.touchNode);
-		//Variables for controlling
-        //var level = this.level;
+
+        this.showNode = new cc.LayerColor(cc.color(0,0,0,80),this.winsize.width/2,this.winsize.height/2);
+        this.showNode.setAnchorPoint(0,0);
+        this.showNode.setPosition(cc.p(0,0));
+        this.showNode.visible = false;
+        this.addChild(this.showNode,1,15);
+        this.showNode.retain();
         
 		cc.log(this.spriteSheet.x);
         this.row = {y: 0};
         this.column = {x: 0};
-        //this.initAnimations();
+
 		this.setUp()
         this.scheduleUpdate();
 		this.quads = {value: 0}; // make it an object not a variable so we can point on it and not copy the value 
-
         //Load controlling
-		//Variables
+
+		//Variables for eevent Manager
 		winsize = this.winsize;
 		spriteSheet = this.spriteSheet;
 		level = this.level;
@@ -120,12 +99,17 @@ var gameLayer = cc.Layer.extend({
         initAnimations = this.initAnimations;
         getStartColumn = this.getStartColumn;
         quads = this.quads;
-        //gameOver = this.gameOver;  
         finalSequence = this.finalSequence;
         switcher = this.switcher;
         scaling = this.scaling;
         gameLayer_copy = this;
         moves = this.moves;
+        showNodeUpRight = this.showNodeUpRight;
+        showNodeUpLeft = this.showNodeUpLeft;
+        showNodeDownRight = this.showNodeDownRight;
+        showNodeDownLeft = this.showNodeDownLeft;
+        showNode = this.showNode;
+        showNodeAction = this.showNodeAction;
 
 		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -134,21 +118,16 @@ var gameLayer = cc.Layer.extend({
                 var corX = touch.getLocationX();
                 var corY = touch.getLocationY();
                 cc.log(spriteSheet.getNumberOfRunningActions());
-                //cc.log("COrx:" +corX+ " CorY:" +corY);
-                //cc.log("X:"+level.length+"Y:"+level[0].length);
-                 //immer gerade 
-                //cc.log("Aktuelles Feld:" + level[row][column]);
                 if (spriteSheet.getNumberOfRunningActions()===0){
                 if(corX >= winsize.width/2 && corY >= winsize.height/2){ //up-right
                     if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34){
-                        //spriteBatchNode.x -= sizeOfSprite;
-                        //spriteBatchNode.y -= sizeOfSprite;
                         spriteSheet.runAction(rightUp);
                         moves.value += 1;
                         changeRails(row.y,column.x+1);
                         checkForQuad(row.y,column.x+1,1);
                         row.y -= 1;
                         column.x +=1;
+                        showNodeUpRight();
                         infos();
                         return true;
                     }
@@ -168,6 +147,7 @@ var gameLayer = cc.Layer.extend({
                         checkForQuad(row.y,column.x,4);
                         row.y -=1;
                         column.x -=1;
+                        showNodeUpLeft();
                         infos();
                         return true;
                     }
@@ -187,6 +167,7 @@ var gameLayer = cc.Layer.extend({
                         checkForQuad(row.y+1,column.x,3);
                         row.y +=1;
                         column.x -=1;
+                        showNodeDownLeft();
                         infos();
                         return true;
                     }
@@ -200,6 +181,7 @@ var gameLayer = cc.Layer.extend({
                         checkForQuad(row.y+1,column.x+1,2);
                         row.y +=1;
                         column.x +=1;
+                        showNodeDownRight();
                         infos();
                         return true;
                     }
@@ -213,12 +195,7 @@ var gameLayer = cc.Layer.extend({
         });
  
         function infos(){
-            cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y+1][column.x] + "|" + level[row.y+1][column.x+1]);
-            //cc.log("y="+row.y+" x="+column.x);
-            /*if (row.y==level[level.length-1][3]){
-                return gameOver();*/
-            //} 
-                
+            cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y+1][column.x] + "|" + level[row.y+1][column.x+1]);       
         };
 
        
@@ -497,74 +474,17 @@ var gameLayer = cc.Layer.extend({
                             break;
          
             }
-		};
-        //Local Storage not a good idea because 2dArray's also must be JSON.parse which is better with local files because i'd need a plugin in javascript or i would have to write one which i think is not compatible with JSB
-        //var localStorage = cc.sys.localStorage;
-        /*localStorage.prototype.setObject = function(key, value) {
-            this.setItem(key, JSON.stringify(value));
-            };
-
-        localStorage.prototype.getObject = function(key) {
-            return JSON.parse(this.getItem(key));
-            };
-        localStorage.setObject('test',level_big);*/
-		
-        //====================================================================
-        //====================================================================
-        
-        /*setUp(this.railsPerRow);
-        function setUp(n){
-        scaleFactor = winsize.width/n/500;      //500 size of sprite ursprünglich :-P
-        sizeOfSprite = winsize.width/n;
-        touchNode.drawRect(cc.p(winsize.width/2-5,2*sizeOfSprite-5),cc.p(winsize.width/2+5,2*sizeOfSprite+5),cc.color(255,0,0,255),null,null);
-        for (i = level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
-            for (j = 0; j < level[0].length; j++) { //level[0].length = level[][x] j=column
-                if (level[i][j]!==0) {
-                //var sprite = new cc.Sprite('#rail_'+((level[i][j]%2+1)%2+1)+'.png');/*first try :eval("res.rail_"+level[i][j]) rails-png nur zwei aber bis 6 nummeriert also modulo --> verkehrt den hatl modulo modulo --> epic ((level[i][j]%2+1)%2+1)= alli richtig*/
-                /*var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+level[i][j]+".png");
-                var sprite = new cc.Sprite(spriteFrame);
-                    sprite.attr({x: (j*sizeOfSprite), y:((level.length-i-1)*sizeOfSprite), scale: scaleFactor});
-                spriteSheet.addChild(sprite,0,1000*i+j); // only Javascript with name with string, now we have tags with Integer also supports iOS !!Attention to only 1000 height!!
-                
-                }
-            }
-        }
-        this.spriteSheet.x = -((level[level.length-1][0])-(n/2-0.5))*sizeOfSprite;//-2 wägä arrayOutOfBound am rand ä rahmä vo 1 und denn -0.5 wäg mitti, old version wenn genau mitti level[0].length-2)/2
-        //return controlling(sizeOfSprite);
-		spriteSheet.y += sizeOfSprite/2; //AnchorPoint (0,5,0,5) 
-        }*/
-        //====================================================================
-        //====================================================================
-        //Controlling
-        //function controlling(sizeOfSprite){
-        
-        
-            
-        
-
-       
-        
-        
-        //cc.eventManager.addListener(listener_keyboard, this);
- 		//cc.eventManager.addListener(listener1, touchNode); //Inside Function because of Action Length
-        
-           
-		
-
-
-                      
-    
+		};  
     },
 	getStartColumn: function (){
 			var level = this.level;
             if (level[level[level.length-1][1]][level[level.length-1][0]]==1 || level[level[level.length-1][1]][level[level.length-1][0]]==33) return level[level.length-1][0]
             else {
-            //this.spriteSheet.x += this.sizeOfSprite;
             return level[level.length-1][0]-1
             }
     },
 	initAnimations: function(){
-		this.rightUp =  cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
+		this.rightUp = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
         this.rightUp.retain();
         this.leftUp = cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
         this.leftUp.retain();
@@ -576,11 +496,10 @@ var gameLayer = cc.Layer.extend({
         this.scaling.retain();
         this.scalingreverse = cc.scaleTo(3, 1);
         this.scalingreverse.retain();
-        cc.log(this.sizeOfSprite+"=sizeOfSprite");
-        cc.log("initAnimations");
+        this.showNodeAction = new cc.Blink(0.1, 1);
+        this.showNodeAction.retain();
 	},
 	setUp: function (){
-        cc.log(this.railsPerRow);
         this.row.y = this.level[this.level.length-1][1]; //muss Global sein , old level.length-2
         this.column.x = this.getStartColumn();//old level[0].length/2-1
         this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
@@ -590,7 +509,6 @@ var gameLayer = cc.Layer.extend({
         for (i = this.level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
             for (j = 0; j < this.level[0].length; j++) { //level[0].length = level[][x] j=column
                 if (this.level[i][j]!==0) {
-                //var sprite = new cc.Sprite('#rail_'+((level[i][j]%2+1)%2+1)+'.png');/*first try :eval("res.rail_"+level[i][j]) rails-png nur zwei aber bis 6 nummeriert also modulo --> verkehrt den hatl modulo modulo --> epic ((level[i][j]%2+1)%2+1)= alli richtig*/
                 var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+this.level[i][j]+".png");
                 var sprite = new cc.Sprite(spriteFrame);
                     sprite.attr({x: (j*this.sizeOfSprite), y:((this.level.length-i-1)*this.sizeOfSprite), scale: this.scaleFactor});
@@ -1030,6 +948,8 @@ var gameLayer = cc.Layer.extend({
         this.leftDown.release();
         this.scaling.release();
         this.scalingreverse.release();
+        this.showNodeAction.release();
+        this.showNode.release();
         this._super();
     },
     gameOver:function (){
@@ -1047,5 +967,22 @@ var gameLayer = cc.Layer.extend({
 
         
         //spriteSheet.getParent().addChild(new gameOverLayer());
+    },
+        showNodeUpRight:function(){
+        this.showNode.setPosition(this.winsize.width/2,this.winsize.height/2);
+        this.showNode.runAction(this.showNodeAction);
+    },
+        showNodeUpLeft:function(){
+        this.showNode.setPosition(0,this.winsize.height/2);
+        this.showNode.runAction(this.showNodeAction);
+    },
+        showNodeDownRight:function(){
+        this.showNode.setPosition(this.winsize.width/2,0);
+        this.showNode.runAction(this.showNodeAction);
+    },
+        showNodeDownLeft:function(){
+        this.showNode.setPosition(0,0);
+        this.showNode.runAction(this.showNodeAction);
     }
+
 });

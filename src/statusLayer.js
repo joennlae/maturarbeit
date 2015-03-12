@@ -39,9 +39,9 @@ var statusLayer = cc.Layer.extend({
         this.labelMoves.setColor(cc.color(255,150,0));
         this.addChild(this.labelMoves);
 
-        this.pauseLabel = new cc.LabelTTF("Pause", "Quicksand-Light" , this.winsize.height/16);
+        this.pauseLabel = new cc.LabelTTF("Pause", "Quicksand-Light" , this.winsize.height/12);
         this.pauseLabel.setColor(cc.color(0,0,0));
-        this.pauseLabelP = new cc.LabelTTF("Pause", "Quicksand-Light", this.winsize.height/16);
+        this.pauseLabelP = new cc.LabelTTF("Pause", "Quicksand-Light", this.winsize.height/12);
         this.pauseLabelP.setColor(cc.color(0,0,150));
 
         var pauseItemLabel = new cc.MenuItemSprite(
@@ -49,9 +49,42 @@ var statusLayer = cc.Layer.extend({
             this.pauseLabelP, 
             this.onPause, this);
         this.pauseMenu = new cc.Menu(pauseItemLabel);  
-        this.pauseMenu.setPosition(cc.p(100,this.winsize.height-(this.winsize.height/16+10)));
+        this.pauseMenu.setPosition(cc.p(150,this.winsize.height-(this.winsize.height/16+10)));
         this.addChild(this.pauseMenu,0,12);
         this.pauseMenu.retain();
+
+
+        this.helpNodeTop = new cc.LayerColor(cc.color(0,0,0,40),10,this.winsize.height/4);
+        this.helpNodeTop.setPosition(cc.p(this.winsize.width/2-5,this.winsize.height-this.winsize.height/4));
+        this.helpNodeTop.visible = false;
+        this.addChild(this.helpNodeTop);
+        this.helpNodeTop.retain();
+
+        this.helpNodeBottum = new cc.LayerColor(cc.color(0,0,0,40),10,this.winsize.height/4);
+        this.helpNodeBottum.setPosition(cc.p(this.winsize.width/2-5,0));
+        this.helpNodeBottum.visible = false;
+        this.addChild(this.helpNodeBottum);
+        this.helpNodeBottum.retain();
+
+        this.helpNodeLeft = new cc.LayerColor(cc.color(0,0,0,40),this.winsize.width/4,10);
+        this.helpNodeLeft.setPosition(cc.p(0,this.winsize.height/2-5));
+        this.helpNodeLeft.visible = false;
+        this.addChild(this.helpNodeLeft);
+        this.helpNodeLeft.retain();
+
+        this.helpNodeRight = new cc.LayerColor(cc.color(0,0,0,40),this.winsize.width/4,10);
+        this.helpNodeRight.setPosition(cc.p(this.winsize.width-this.winsize.width/4,this.winsize.height/2-5));
+        this.helpNodeRight.visible = false;
+        this.addChild(this.helpNodeRight);
+        this.helpNodeRight.retain();
+
+        //set visiblity
+        if(this.ls.getItem(200)==1){
+            this.helpNodeTop.visible = true;
+            this.helpNodeRight.visible = true;
+            this.helpNodeLeft.visible = true;
+            this.helpNodeBottum.visible = true;
+        }
     },
         updateQuads:function (quads) {
         this.labelQuads.setString(quads/*-levelsArray[this.ls.getItem(99)-1][3]*/);

@@ -46,7 +46,7 @@ var levelSelector = cc.Layer.extend({
 		cc.log(saveArray);
 
 		this.levelNum.value = this.ls.getItem(100);
-		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/2);
+		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/8*5);
         this.levelLabel.setColor(cc.color(0,0,0));//black color
         this.levelLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
         this.addChild(this.levelLabel);
@@ -100,36 +100,36 @@ var levelSelector = cc.Layer.extend({
             this.startLabelP, 
             this.onPlay, this);
         var menu = new cc.Menu(menuItemLabel);  
-        menu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/4));
+        menu.setPosition(cc.p(this.winsize.width/8*5,this.winsize.height/6));
         this.addChild(menu);
-        cc.log(this.levelNum.value);
+        //cc.log(this.levelNum.value);
 
         //stats preloading objects
-        this.pointsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5], "Quicksand-Light", this.winsize.height/16);
+        this.pointsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5], "Quicksand-Light", this.winsize.height/12);
         this.pointsLabel.setColor(cc.color(0,0,0));//black color
         this.pointsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*9));
         this.addChild(this.pointsLabel);
 
-        this.quadsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3], "Quicksand-Light", this.winsize.height/16);
+        this.quadsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3], "Quicksand-Light", this.winsize.height/12);
         this.quadsLabel.setColor(cc.color(0,0,0));//black color
         this.quadsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*8));
         this.addChild(this.quadsLabel);
 
-        this.movesLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6], "Quicksand-Light", this.winsize.height/16);
+        this.movesLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6], "Quicksand-Light", this.winsize.height/12);
         this.movesLabel.setColor(cc.color(0,0,0));//black color
         this.movesLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*9));
         this.addChild(this.movesLabel);
 
-       	this.rankLabel = new cc.LabelTTF(""/*saveArray[this.levelNum.value-1][0]*/, "Quicksand-Light", this.winsize.height/16);
+       	this.rankLabel = new cc.LabelTTF(""/*saveArray[this.levelNum.value-1][0]*/, "Quicksand-Light", this.winsize.height/12);
         this.rankLabel.setColor(cc.color(0,0,0));//black color
         this.rankLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*8));
         this.addChild(this.rankLabel);
         this.updateStats();
 
-        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , this.winsize.height/16);
+        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , this.winsize.height/10);
         this.backLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
-		this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", this.winsize.height/16);
+		this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", this.winsize.height/10);
         this.backLabelP.setColor(cc.color(0,0,150));
 
         var backItemLabel = new cc.MenuItemSprite(
@@ -138,7 +138,7 @@ var levelSelector = cc.Layer.extend({
             this.onBack, this);
         var backMenu = new cc.Menu(backItemLabel);  
         //backMenu.setAnchorPoint(1,0); 
-        backMenu.setPosition(cc.p(100,this.winsize.height-(this.winsize.height/16+10)));
+        backMenu.setPosition(cc.p(this.winsize.width/8*3,this.winsize.height/6));
         this.addChild(backMenu);
 
         cc.eventManager.addListener({

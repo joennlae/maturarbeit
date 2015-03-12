@@ -12,21 +12,21 @@ var gameOverLayer = cc.LayerColor.extend({
     },
     init:function () {
         this._super(cc.color(0, 0, 0, 20));
-        var winSize = cc.director.getWinSize();
+        var winsize = cc.director.getWinSize();
         this.getPoints();
 		this.ls = cc.sys.localStorage;
         saveArray = JSON.parse(this.ls.getItem(101));
 
-        this.levelCompleteLabel = new cc.LabelTTF("Level completed", "Quicksand-Light", winSize.height/6);
-        this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/4*3));
+        this.levelCompleteLabel = new cc.LabelTTF("Level completed", "Quicksand-Light", winsize.height/12);
+        this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.levelCompleteLabel.setColor(cc.color(0,150,0));
 
-        this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winSize.height/6);
-        this.againLabel.setPosition(cc.p(winsize.width/2, winsize.height/4*3));
+        this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winsize.height/12);
+        this.againLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.againLabel.setColor(cc.color(0,150,0));
 
-        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winSize.height/8);
-        this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/4*3));
+        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/12);
+        this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.closeLabel.setColor(cc.color(0,0,0));
 
 
@@ -42,18 +42,18 @@ var gameOverLayer = cc.LayerColor.extend({
             this.addChild(this.closeLabel);
         }
 
-        this.labelQuads = new cc.LabelTTF(this.quads+ " Quads" + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")", "Quicksand-Light", 80);
+        this.labelQuads = new cc.LabelTTF(this.quads+ " Quads" + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")", "Quicksand-Light", winsize.height/10);
         this.labelQuads.setColor(cc.color(0,0,0));//black color
-        this.labelQuads.setPosition(cc.p(winsize.width/2, winsize.height/2));
+        this.labelQuads.setPosition(cc.p(winsize.width/2, winsize.height/6*4));
         this.addChild(this.labelQuads);
 
-        this.labelPoints = new cc.LabelTTF(this.points+" Points" + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")", "Quicksand-Light", 80);
-        this.labelPoints.setPosition(cc.p(winsize.width/2, winsize.height/2-100));
+        this.labelPoints = new cc.LabelTTF(this.points+" Points" + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")", "Quicksand-Light", winsize.height/10);
+        this.labelPoints.setPosition(cc.p(winsize.width/2, winsize.height/6*3));
         this.labelPoints.setColor(cc.color(0,0,0));
         this.addChild(this.labelPoints);
 
-        this.movesLabel = new cc.LabelTTF(this.moves+" Moves" + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")", "Quicksand-Light", 80);
-        this.movesLabel.setPosition(cc.p(winsize.width/2, winsize.height/2+100));
+        this.movesLabel = new cc.LabelTTF(this.moves+" Moves" + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")", "Quicksand-Light", winsize.height/10);
+        this.movesLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*2));
         this.movesLabel.setColor(cc.color(0,0,0));
         this.addChild(this.movesLabel);
 
@@ -86,9 +86,9 @@ var gameOverLayer = cc.LayerColor.extend({
 		
 		this.recognizer = new SimpleRecognizer();
 		
-		this.swipeLabel = new cc.LabelTTF("Swipe to continue", "Quicksand-Light", winsize.height/20);
+		this.swipeLabel = new cc.LabelTTF("Swipe to continue", "Quicksand-Light", winsize.height/8);
         this.swipeLabel.setColor(cc.color(0,0,0,100));//black color
-		this.swipeLabel.setPosition(cc.p(winsize.width/2, winsize.height/4));
+		this.swipeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6));
         this.addChild(this.swipeLabel);
 		
 		cc.eventManager.addListener({

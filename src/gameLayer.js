@@ -969,20 +969,32 @@ var gameLayer = cc.Layer.extend({
         //spriteSheet.getParent().addChild(new gameOverLayer());
     },
         showNodeUpRight:function(){
+        var ls = cc.sys.localStorage;
+        if(ls.getItem(201)==1){
         this.showNode.setPosition(this.winsize.width/2,this.winsize.height/2);
         this.showNode.runAction(this.showNodeAction);
+        }
     },
         showNodeUpLeft:function(){
+        var ls = cc.sys.localStorage;
+        if(ls.getItem(201)==1){
         this.showNode.setPosition(0,this.winsize.height/2);
         this.showNode.runAction(this.showNodeAction);
+        }
     },
         showNodeDownRight:function(){
+        var ls = cc.sys.localStorage;
+        if(ls.getItem(201)==1){
         this.showNode.setPosition(this.winsize.width/2,0);
         this.showNode.runAction(this.showNodeAction);
+        }
     },
         showNodeDownLeft:function(){
+        var ls = cc.sys.localStorage;
+        if(ls.getItem(201)==1){
         this.showNode.setPosition(0,0);
         this.showNode.runAction(this.showNodeAction);
+        }
     }
 
 });

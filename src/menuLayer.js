@@ -7,7 +7,14 @@ var menuLayer = cc.Layer.extend({
     init:function(){
  
         this._super();
-
+        //global variables
+        var ls = cc.sys.localStorage;
+        if(ls.getItem(200)!=0) ls.setItem(200,1);//Helplines
+        if(ls.getItem(201)!=0) ls.setItem(201,1);//Blinkhelp
+        if(ls.getItem(202)<1) ls.setItem(202,0);//Gesamt Moves
+        if(ls.getItem(203)<1) ls.setItem(203,0);//Gesamt Points
+        if(ls.getItem(204)<1) ls.setItem(204,0);//Gesamt Level
+        if(ls.getItem(205)<1) ls.setItem(205,0);//Gesamt Quads
         this.winsize = cc.director.getWinSize();
 
         var centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
@@ -23,15 +30,23 @@ var menuLayer = cc.Layer.extend({
         this.startLabelP.setColor(cc.color(0,0,150));//blue color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 
-        this.betaLabel = new cc.LabelTTF("Beta", "Quicksand-Light", this.winsize.height/12);
+        this.betaLabel = new cc.LabelTTF("Beta", "Quicksand-Light", this.winsize.height/10);
         this.betaLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
         
-        this.betaLabelP = new cc.LabelTTF("Beta", "Quicksand-Light", this.winsize.height/12);
+        this.betaLabelP = new cc.LabelTTF("Beta", "Quicksand-Light", this.winsize.height/10);
         this.betaLabelP.setColor(cc.color(0,0,150));//blue color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		
-        this.messageLabel = new cc.LabelTTF(startUpMessages[Math.floor(Math.random()*10)], "Quicksand-Light", this.winsize.height/16);
+        this.settingsLabel = new cc.LabelTTF("Settings", "Quicksand-Light", this.winsize.height/10);
+        this.settingsLabel.setColor(cc.color(0,0,0));//black color
+        //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+        
+        this.settingsLabelP = new cc.LabelTTF("Settings", "Quicksand-Light", this.winsize.height/10);
+        this.settingsLabelP.setColor(cc.color(0,0,150));//blue color
+        //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+        
+        this.messageLabel = new cc.LabelTTF(startUpMessages[Math.floor(Math.random()*10)], "Quicksand-Light", this.winsize.height/12);
         this.messageLabel.setColor(cc.color(150,0,0));
         this.messageLabel.setPosition(cc.p(this.winsize.width/4*(posNumbers[Math.floor(Math.random()*2)]),this.winsize.height/4*(Math.random()*2+1)));
         this.messageLabel.setAnchorPoint(0,0);
@@ -52,15 +67,25 @@ var menuLayer = cc.Layer.extend({
         var betaMenu = new cc.Menu(betaItemLabel); 
         betaMenu.setPosition(cc.p(this.winsize.width/4,this.winsize.height/6));
         this.addChild(betaMenu);
+
+        var settingsItemLabel = new cc.MenuItemSprite(
+            this.settingsLabel,
+            this.settingsLabelP, 
+            this.onSettings, this);
+        var settingsMenu = new cc.Menu(settingsItemLabel); 
+        settingsMenu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/6));
+        this.addChild(settingsMenu);
     },
 
     onPlay : function(){
-        cc.log("==onplay clicked");
         cc.director.runScene(new levelSelectorScene());
     },
 
     onBeta : function(){
         cc.director.runScene(new levelTestScene());
+    },
+    onSettings : function(){
+        cc.director.runScene(new settingsScene());
     }
 });
 

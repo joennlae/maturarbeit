@@ -24,7 +24,8 @@
         "src/levelTest.js",
         "src/gameBetaOverLayer.js",
         "src/pauseLayer.js",
-        "src/gameLayerModeTwo.js"
+        "src/gameLayerModeTwo.js",
+        "src/settingsLayer.js"
     ]
 
 }

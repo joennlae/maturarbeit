@@ -16,18 +16,18 @@ var pauseLayer = cc.LayerColor.extend({
         this.getPoints();
 		this.ls = cc.sys.localStorage;
 
-        this.labelQuads = new cc.LabelTTF(this.quads+ " Quads" + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")", "Quicksand-Light", 80);
+        this.labelQuads = new cc.LabelTTF(this.quads+ " Quads" + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")", "Quicksand-Light", winsize.height/8);
         this.labelQuads.setColor(cc.color(0,0,0));//black color
-        this.labelQuads.setPosition(cc.p(winsize.width/2, winsize.height/2));
+        this.labelQuads.setPosition(cc.p(winsize.width/2, winsize.height/6*4));
         this.addChild(this.labelQuads);
 
-        this.labelPoints = new cc.LabelTTF(this.points+" Points" + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")", "Quicksand-Light", 80);
-        this.labelPoints.setPosition(cc.p(winsize.width/2, winsize.height/2-100));
+        this.labelPoints = new cc.LabelTTF(this.points+" Points" + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")", "Quicksand-Light", winsize.height/8);
+        this.labelPoints.setPosition(cc.p(winsize.width/2, winsize.height/6*3));
         this.labelPoints.setColor(cc.color(0,0,0));
         this.addChild(this.labelPoints);
 
-        this.movesLabel = new cc.LabelTTF(this.moves+" Moves" + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")", "Quicksand-Light", 80);
-        this.movesLabel.setPosition(cc.p(winsize.width/2, winsize.height/2+100));
+        this.movesLabel = new cc.LabelTTF(this.moves+" Moves" + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")", "Quicksand-Light", winsize.height/8);
+        this.movesLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*2));
         this.movesLabel.setColor(cc.color(0,0,0));
         this.addChild(this.movesLabel);
 
@@ -60,15 +60,15 @@ var pauseLayer = cc.LayerColor.extend({
 		
 		this.recognizer = new SimpleRecognizer();
 		
-		this.swipeLabel = new cc.LabelTTF("Swipe to continue", "Quicksand-Light", winsize.height/20);
+		this.swipeLabel = new cc.LabelTTF("Swipe to continue", "Quicksand-Light", winsize.height/10);
         this.swipeLabel.setColor(cc.color(0,0,0,100));//black color
-		this.swipeLabel.setPosition(cc.p(winsize.width/2, winsize.height/4));
+		this.swipeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6));
         this.addChild(this.swipeLabel);
 
-        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , winsize.height/16);
+        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , winsize.height/12);
         this.backLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
-        this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", winsize.height/16);
+        this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", winsize.height/12);
         this.backLabelP.setColor(cc.color(0,0,150));
 
         var backItemLabel = new cc.MenuItemSprite(
@@ -77,7 +77,7 @@ var pauseLayer = cc.LayerColor.extend({
             this.onBack, this);
         var backMenu = new cc.Menu(backItemLabel);  
         //backMenu.setAnchorPoint(1,0); 
-        backMenu.setPosition(cc.p(100,winsize.height-(winsize.height/16+10)));
+        backMenu.setPosition(cc.p(120,winsize.height-(winsize.height/16+10)));
         this.addChild(backMenu,0,13);
 		
 		cc.eventManager.addListener({

@@ -19,16 +19,16 @@ var settingsLayer = cc.Layer.extend({
         this.backLabelP.setColor(cc.color(0,0,150));
 
         this.helpLineLabel = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10); //ls.getnumber(200) for helplines
-        if(ls.getItem(200)==1) this.helpLineLabel.setString("Helplines : ON")
-        else if(ls.getItem(200)==0) this.helpLineLabel.setString("Helplines : OFF"); 
+        if(ls.getItem(200)==1) this.helpLineLabel.setString("Lines : ON")
+        else if(ls.getItem(200)==0) this.helpLineLabel.setString("Lines : OFF"); 
         this.helpLineLabel.setColor(cc.color(0,0,0));
 
         this.helpLineLabelP = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10);
         //this.helpLineLabelP.visible = false;
 
         this.blinkHelpLabel = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10); //ls.getnumber(200) for blinkHelps
-        if(ls.getItem(201)==1) this.blinkHelpLabel.setString("Blinkhelp : ON")
-        else if(ls.getItem(201)==0) this.blinkHelpLabel.setString("Blinkhelp : OFF"); 
+        if(ls.getItem(201)==1) this.blinkHelpLabel.setString("Blink : ON")
+        else if(ls.getItem(201)==0) this.blinkHelpLabel.setString("Blink : OFF"); 
         this.blinkHelpLabel.setColor(cc.color(0,0,0));
 
         this.blinkHelpLabelP = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10);
@@ -69,22 +69,22 @@ var settingsLayer = cc.Layer.extend({
         onhelpLineLabel : function(){
         var ls = cc.sys.localStorage;
         if (ls.getItem(200)==1){
-            this.helpLineLabel.setString("Helplines : OFF");
+            this.helpLineLabel.setString("Lines : OFF");
             ls.setItem(200,0);
         }
         else if (ls.getItem(200)==0){
-            this.helpLineLabel.setString("Helplines : ON");
+            this.helpLineLabel.setString("Lines : ON");
             ls.setItem(200,1);
         }
     },
         onblinkHelpLabel : function(){
         var ls = cc.sys.localStorage;
         if (ls.getItem(201)==1){
-            this.blinkHelpLabel.setString("Blinkhelp : OFF");
+            this.blinkHelpLabel.setString("Blink : OFF");
             ls.setItem(201,0);
         }
         else if (ls.getItem(201)==0){
-            this.blinkHelpLabel.setString("Blinkhelp : ON");
+            this.blinkHelpLabel.setString("Blink : ON");
             ls.setItem(201,1);
         }
     }

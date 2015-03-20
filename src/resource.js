@@ -1,7 +1,9 @@
 var res = {
     rails_plist : "res/rails.plist",
     rails_png   : "res/rails.png",
-	font		: "res/Quicksand-Light.ttf"
+	font		: "res/Quicksand-Light.ttf",
+	vote_true	: "res/vote_true.png",
+	vote_false	: "res/vote_false.png"
 };
 var posNumbers = [0.5,3];
 var startUpMessages = ["yolo","My Name..","Pizza?","Hungry?","Good guy","Brou?","GG WP","Gl hf","RKO","invade?"];

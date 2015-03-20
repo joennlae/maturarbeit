@@ -115,6 +115,10 @@ var statusLayer = cc.Layer.extend({
     },
     onExit : function(){
         this.pauseMenu.release();
+        this.helpNodeLeft.retain();
+        this.helpNodeTop.retain();
+        this.helpNodeRight.retain();
+        this.helpNodeBottum.retain();
         this._super();
     },
     tutorial:function(){

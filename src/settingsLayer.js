@@ -12,33 +12,68 @@ var settingsLayer = cc.Layer.extend({
 		var background = new cc.LayerColor(cc.color(255,255,255,255), winsize.width, winsize.height);
         this.addChild(background);
 
+        this.voteTrueButton = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.helpLine,this);
+        this.voteFalseButton = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.helpLine,this);
+        this.voteTrueMenu = new cc.Menu(this.voteTrueButton);
+        this.voteFalseMenu = new cc.Menu(this.voteFalseButton);
+        this.voteTrueMenu.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+        this.voteFalseMenu.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+        this.voteTrueMenu.visible = false;
+        this.voteFalseMenu.visible = false;
+        this.addChild(this.voteTrueMenu);
+        this.addChild(this.voteFalseMenu);
+
+        if(ls.getItem(200)==1) this.voteTrueMenu.visible = true;
+        else this.voteFalseMenu.visible = true;
+
         this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , winsize.height/8);
         this.backLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", winsize.height/8);
         this.backLabelP.setColor(cc.color(0,0,150));
 
-        this.helpLineLabel = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10); //ls.getnumber(200) for helplines
-        if(ls.getItem(200)==1) this.helpLineLabel.setString("Lines : ON")
-        else if(ls.getItem(200)==0) this.helpLineLabel.setString("Lines : OFF"); 
-        this.helpLineLabel.setColor(cc.color(0,0,0));
+        this.helpLineLabel = new cc.LabelTTF("Lines", "Quicksand-Light" , winsize.height/10); 
+        this.helpLineLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*4))
+        this.helpLineLabel.setColor(0,0,0);
+        this.addChild(this.helpLineLabel);
 
-        this.helpLineLabelP = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10);
-        //this.helpLineLabelP.visible = false;
+        this.voteTrueButtonBlink = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.blink,this);
+        this.voteFalseButtonBlink = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.blink,this);
+        this.voteTrueMenuBlink = new cc.Menu(this.voteTrueButtonBlink);
+        this.voteFalseMenuBlink = new cc.Menu(this.voteFalseButtonBlink);
+        this.voteTrueMenuBlink.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
+        this.voteFalseMenuBlink.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
+        this.voteTrueMenuBlink.visible = false;
+        this.voteFalseMenuBlink.visible = false;
+        this.addChild(this.voteTrueMenuBlink);
+        this.addChild(this.voteFalseMenuBlink);
+        if(ls.getItem(201)==1) this.voteTrueMenuBlink.visible = true;
+        else this.voteFalseMenuBlink.visible = true;
 
-        this.blinkHelpLabel = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10); //ls.getnumber(201) for blinkHelps
-        if(ls.getItem(201)==1) this.blinkHelpLabel.setString("Blink : ON")
-        else if(ls.getItem(201)==0) this.blinkHelpLabel.setString("Blink : OFF"); 
+        this.blinkHelpLabel = new cc.LabelTTF("Blink", "Quicksand-Light" , winsize.height/10); //ls.getnumber(201)
+        this.blinkHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*3));
         this.blinkHelpLabel.setColor(cc.color(0,0,0));
+        this.addChild(this.blinkHelpLabel);
 
-        this.blinkHelpLabelP = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10);
 
-        this.tutorialHelpLabel = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10); //ls.getnumber(206) 
-        if(ls.getItem(206)==1) this.tutorialHelpLabel.setString("Tutorial : ON")
-        else if(ls.getItem(206)==0) this.tutorialHelpLabel.setString("Tutorial : OFF"); 
+        this.voteTrueButtonTutorial = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.tutorial,this);
+        this.voteFalseButtonTutorial = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.tutorial,this);
+        this.voteTrueMenuTutorial = new cc.Menu(this.voteTrueButtonTutorial);
+        this.voteFalseMenuTutorial = new cc.Menu(this.voteFalseButtonTutorial);
+        this.voteTrueMenuTutorial.setPosition(cc.p(winsize.width/4*3,winsize.height/6*2));
+        this.voteFalseMenuTutorial.setPosition(cc.p(winsize.width/4*3,winsize.height/6*2));
+        this.voteTrueMenuTutorial.visible = false;
+        this.voteFalseMenuTutorial.visible = false;
+        this.addChild(this.voteTrueMenuTutorial);
+        this.addChild(this.voteFalseMenuTutorial);
+
+        if(ls.getItem(206)==1) this.voteTrueMenuTutorial.visible = true;
+        else this.voteFalseMenuTutorial.visible = true;
+
+        this.tutorialHelpLabel = new cc.LabelTTF("Tutorial", "Quicksand-Light" , winsize.height/10); //ls.getnumber(206) 
         this.tutorialHelpLabel.setColor(cc.color(0,0,0));
-
-        this.tutorialHelpLabelP = new cc.LabelTTF("", "Quicksand-Light" , winsize.height/10);
+        this.tutorialHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*2));
+        this.addChild(this.tutorialHelpLabel);
 
         var backItemLabel = new cc.MenuItemSprite(
             this.backLabel,
@@ -49,69 +84,47 @@ var settingsLayer = cc.Layer.extend({
         backMenu.setPosition(cc.p(winsize.width/2,winsize.height/6));
         this.addChild(backMenu);
 
-        var helpLineLabelItemLabel = new cc.MenuItemSprite(
-            this.helpLineLabel,
-            this.helpLineLabelP,
-            this.onhelpLineLabel, this);
-        var helpLineLabelMenu = new cc.Menu(helpLineLabelItemLabel);  
-        //backMenu.setAnchorPoint(1,0); 
-        helpLineLabelMenu.setPosition(cc.p(winsize.width/2,winsize.height/6*4));
-        this.addChild(helpLineLabelMenu);
-
-        var blinkHelpLabelItemLabel = new cc.MenuItemSprite(
-            this.blinkHelpLabel,
-            this.blinkHelpLabelP,
-            this.onblinkHelpLabel, this);
-        var blinkHelpLabelMenu = new cc.Menu(blinkHelpLabelItemLabel);  
-        //backMenu.setAnchorPoint(1,0); 
-        blinkHelpLabelMenu.setPosition(cc.p(winsize.width/2,winsize.height/6*3));
-        this.addChild(blinkHelpLabelMenu);
-
-        var tutorialHelpLabelItemLabel = new cc.MenuItemSprite(
-            this.tutorialHelpLabel,
-            this.tutorialHelpLabelP,
-            this.ontutorialHelpLabel, this);
-        var tutorialHelpLabelMenu = new cc.Menu(tutorialHelpLabelItemLabel);  
-        //backMenu.setAnchorPoint(1,0); 
-        tutorialHelpLabelMenu.setPosition(cc.p(winsize.width/2,winsize.height/6*2));
-        this.addChild(tutorialHelpLabelMenu);
-
-
 	},
     	onBack : function(){
     	cc.director.runScene(new menuScene());
     },
-        onhelpLineLabel : function(){
+        helpLine:function(){
         var ls = cc.sys.localStorage;
         if (ls.getItem(200)==1){
-            this.helpLineLabel.setString("Lines : OFF");
             ls.setItem(200,0);
+            this.voteTrueMenu.visible = false;
+            this.voteFalseMenu.visible = true;
         }
         else if (ls.getItem(200)==0){
-            this.helpLineLabel.setString("Lines : ON");
             ls.setItem(200,1);
+            this.voteTrueMenu.visible = true;
+            this.voteFalseMenu.visible = false;
         }
     },
-        onblinkHelpLabel : function(){
+        blink:function(){
         var ls = cc.sys.localStorage;
         if (ls.getItem(201)==1){
-            this.blinkHelpLabel.setString("Blink : OFF");
             ls.setItem(201,0);
+            this.voteTrueMenuBlink.visible = false;
+            this.voteFalseMenuBlink.visible = true;
         }
         else if (ls.getItem(201)==0){
-            this.blinkHelpLabel.setString("Blink : ON");
             ls.setItem(201,1);
+            this.voteTrueMenuBlink.visible = true;
+            this.voteFalseMenuBlink.visible = false;
         }
     },
-        ontutorialHelpLabel : function(){
+        tutorial:function(){
         var ls = cc.sys.localStorage;
         if (ls.getItem(206)==1){
-            this.tutorialHelpLabel.setString("Tutorial : OFF");
             ls.setItem(206,0);
+            this.voteTrueMenuTutorial.visible = false;
+            this.voteFalseMenuTutorial.visible = true;
         }
         else if (ls.getItem(206)==0){
-            this.tutorialHelpLabel.setString("Tutorial : ON");
             ls.setItem(206,1);
+            this.voteTrueMenuTutorial.visible = true;
+            this.voteFalseMenuTutorial.visible = false;
         }
     }
 });

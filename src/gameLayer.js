@@ -945,8 +945,9 @@ var gameLayer = cc.Layer.extend({
         if (this.switcher.tutorial == true && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.tutorial();
             this.switcher.tutorial = false;
+            this.switcher.loading = false;
         }
-        if (this.switcher.loading == true && this.spriteSheet.getNumberOfRunningActions()==0){
+        if (this.switcher.loading == true && this.spriteSheet.getNumberOfRunningActions()==0 && this.switcher.tutorial==false){
             statusLayer.helpNodes();
             this.switcher.loading = false;
         }

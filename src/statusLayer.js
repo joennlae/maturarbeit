@@ -6,6 +6,7 @@ var statusLayer = cc.Layer.extend({
     pauseMenu: null,
     labelQuadsBlue: null,
 	ls : null,
+    tutorialSwitcher: null,
     ctor:function () {
         this._super();
         this.init();
@@ -13,6 +14,7 @@ var statusLayer = cc.Layer.extend({
 
     init:function () {
         this._super();
+
         this.winsize = cc.director.getWinSize();
 		this.ls = cc.sys.localStorage;
         this.labelQuads = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/10);
@@ -39,9 +41,9 @@ var statusLayer = cc.Layer.extend({
         this.labelMoves.setColor(cc.color(255,150,0));
         this.addChild(this.labelMoves);
 
-        this.pauseLabel = new cc.LabelTTF("Pause", "Quicksand-Light" , this.winsize.height/12);
+        this.pauseLabel = new cc.LabelTTF("Pause", "Quicksand-Light" , this.winsize.height/10);
         this.pauseLabel.setColor(cc.color(0,0,0));
-        this.pauseLabelP = new cc.LabelTTF("Pause", "Quicksand-Light", this.winsize.height/12);
+        this.pauseLabelP = new cc.LabelTTF("Pause", "Quicksand-Light", this.winsize.height/10);
         this.pauseLabelP.setColor(cc.color(0,0,150));
 
         var pauseItemLabel = new cc.MenuItemSprite(
@@ -49,7 +51,7 @@ var statusLayer = cc.Layer.extend({
             this.pauseLabelP, 
             this.onPause, this);
         this.pauseMenu = new cc.Menu(pauseItemLabel);  
-        this.pauseMenu.setPosition(cc.p(150,this.winsize.height-(this.winsize.height/16+10)));
+        this.pauseMenu.setPosition(cc.p(160,this.winsize.height-(this.winsize.height/16+10)));
         this.addChild(this.pauseMenu,0,12);
         this.pauseMenu.retain();
 
@@ -78,22 +80,17 @@ var statusLayer = cc.Layer.extend({
         this.addChild(this.helpNodeRight);
         this.helpNodeRight.retain();
 
-        //set visiblity
-        if(this.ls.getItem(200)==1){
-            this.helpNodeTop.visible = true;
-            this.helpNodeRight.visible = true;
-            this.helpNodeLeft.visible = true;
-            this.helpNodeBottum.visible = true;
-        }
+        //if(this.ls.getItem(206)==1) this.tutorial();
+
     },
         updateQuads:function (quads) {
-        this.labelQuads.setString(quads/*-levelsArray[this.ls.getItem(99)-1][3]*/);
+        this.labelQuads.setString(quads+"/"+levelsArray[this.ls.getItem(99)-1][3]);
     },
         updatePoints:function (points) {
         this.labelPoints.setString(Math.floor(points)/*-levelsArray[this.ls.getItem(99)-1][5]*/);
     },
         updateMoves:function (moves) {
-        this.labelMoves.setString(/*levelsArray[this.ls.getItem(99)-1][6]-*/moves);
+        this.labelMoves.setString(levelsArray[this.ls.getItem(99)-1][6]-moves);
     },
         updateBlueQuads:function(quadsBlue){
         this.labelQuadsBlue.setString(quadsBlue);
@@ -102,6 +99,10 @@ var statusLayer = cc.Layer.extend({
         this.removeAllChildren();
     },
     onPause:function (){
+        this.helpNodeTop.visible = false;
+        this.helpNodeRight.visible = false;
+        this.helpNodeLeft.visible = false;
+        this.helpNodeBottum.visible = false;
         var ls = cc.sys.localStorage;
         ls.setItem(1, parseFloat(this.labelPoints.getString()));
         ls.setItem(2, parseFloat(this.labelQuads.getString()));
@@ -113,10 +114,39 @@ var statusLayer = cc.Layer.extend({
     },
     addPauseLabel : function(){
         this.addChild(this.pauseMenu,0,12);
+        this.helpNodes();
     },
     onExit : function(){
         this.pauseMenu.release();
+        this.helpNodeLeft.release();
+        this.helpNodeTop.release();
+        this.helpNodeRight.release();
+        this.helpNodeBottum.release();
         this._super();
+    },
+    tutorial:function(){
+        this.removeChildByTag(12);
+        this.helpNodeTop.visible = false;
+        this.helpNodeRight.visible = false;
+        this.helpNodeLeft.visible = false;
+        this.helpNodeBottum.visible = false;
+        cc.director.pause();
+        this.addChild(new tutorialLayer());
+        cc.director.resume();
+    },
+    helpNodes:function(){
+        if(this.ls.getItem(200)==1){
+            this.helpNodeTop.visible = true;
+            this.helpNodeRight.visible = true;
+            this.helpNodeLeft.visible = true;
+            this.helpNodeBottum.visible = true;
+        }
+        else{
+            this.helpNodeTop.visible = false;
+            this.helpNodeRight.visible = false;
+            this.helpNodeLeft.visible = false;
+            this.helpNodeBottum.visible = false;
+        }
     }
     
 

@@ -34,7 +34,7 @@ var settingsLayer = cc.Layer.extend({
 
         this.helpLineLabel = new cc.LabelTTF("Lines", "Quicksand-Light" , winsize.height/10); 
         this.helpLineLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*4))
-        this.helpLineLabel.setColor(0,0,0);
+        this.helpLineLabel.setColor(cc.color(0,0,0));
         this.addChild(this.helpLineLabel);
 
         this.voteTrueButtonBlink = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.blink,this);

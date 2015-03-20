@@ -65,10 +65,10 @@ var pauseLayer = cc.LayerColor.extend({
 		this.swipeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6));
         this.addChild(this.swipeLabel);
 
-        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , winsize.height/12);
+        this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , winsize.height/8);
         this.backLabel.setColor(cc.color(0,0,0));//black color
         //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
-        this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", winsize.height/12);
+        this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", winsize.height/8);
         this.backLabelP.setColor(cc.color(0,0,150));
 
         var backItemLabel = new cc.MenuItemSprite(
@@ -77,7 +77,7 @@ var pauseLayer = cc.LayerColor.extend({
             this.onBack, this);
         var backMenu = new cc.Menu(backItemLabel);  
         //backMenu.setAnchorPoint(1,0); 
-        backMenu.setPosition(cc.p(120,winsize.height-(winsize.height/16+10)));
+        backMenu.setPosition(cc.p(170,winsize.height-(winsize.height/16+10)));
         this.addChild(backMenu,0,13);
 		
 		cc.eventManager.addListener({

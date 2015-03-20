@@ -45,7 +45,10 @@ var gameLayer = cc.Layer.extend({
 		this.winsize = cc.director.getWinSize();
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
-        this.switcher = {value: false};
+        this.switcher = {value: false, tutorial: false, loading: true};
+        if (this.ls.getItem(206)==1){
+            this.switcher.tutorial = true;
+        }
         this.moves = {value: 0};
 		this.generateLvl(); //returns this.init();
 
@@ -939,6 +942,14 @@ var gameLayer = cc.Layer.extend({
             statusLayer.removeEverything();
             return this.gameOver();
         } 
+        if (this.switcher.tutorial == true && this.spriteSheet.getNumberOfRunningActions()==0){
+            statusLayer.tutorial();
+            this.switcher.tutorial = false;
+        }
+        if (this.switcher.loading == true && this.spriteSheet.getNumberOfRunningActions()==0){
+            statusLayer.helpNodes();
+            this.switcher.loading = false;
+        }
 
     },
     onExit:function() {

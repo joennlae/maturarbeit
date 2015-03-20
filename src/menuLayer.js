@@ -11,12 +11,13 @@ var menuLayer = cc.Layer.extend({
         var ls = cc.sys.localStorage;
         if(ls.getItem(200)!=0) ls.setItem(200,1);//Helplines
         if(ls.getItem(201)!=0) ls.setItem(201,1);//Blinkhelp
-        if(ls.getItem(202)<1) ls.setItem(202,0);//Gesamt Moves
-        if(ls.getItem(203)<1) ls.setItem(203,0);//Gesamt Points
-        if(ls.getItem(204)<1) ls.setItem(204,0);//Gesamt Level
-        if(ls.getItem(205)<1) ls.setItem(205,0);//Gesamt Quads
+        if(ls.getItem(202)!=0 && ls.getItem(202)<1) ls.setItem(202,0);//Gesamt Moves
+        if(ls.getItem(203)!=0 && ls.getItem(203)<1) ls.setItem(203,0);//Gesamt Points
+        if(ls.getItem(204)!=0 && ls.getItem(204)<1) ls.setItem(204,0);//Gesamt Level
+        if(ls.getItem(205)!=0 && ls.getItem(205)<1) ls.setItem(205,0);//Gesamt Quads
+        if(ls.getItem(206)!=0) ls.setItem(206,1);//Tutorial activated default
         this.winsize = cc.director.getWinSize();
-
+        cc.log(ls.getItem(206));
         var centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
 
         var background = new cc.LayerColor(cc.color(255,255,255,255), this.winsize.width, this.winsize.height);

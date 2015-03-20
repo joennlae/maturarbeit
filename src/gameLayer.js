@@ -45,7 +45,7 @@ var gameLayer = cc.Layer.extend({
 		this.winsize = cc.director.getWinSize();
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
-        this.switcher = {value: false, tutorial: false, loading: true};
+        this.switcher = {value: false, tutorial: false, loading: true, tutorialRunning: false};
         if (this.ls.getItem(206)==1){
             this.switcher.tutorial = true;
         }
@@ -82,7 +82,6 @@ var gameLayer = cc.Layer.extend({
         this.scheduleUpdate();
 		this.quads = {value: 0}; // make it an object not a variable so we can point on it and not copy the value 
         //Load controlling
-
 		//Variables for eevent Manager
 		winsize = this.winsize;
 		spriteSheet = this.spriteSheet;
@@ -198,7 +197,11 @@ var gameLayer = cc.Layer.extend({
         });
  
         function infos(){
-            cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y+1][column.x] + "|" + level[row.y+1][column.x+1]);       
+            this.ls = cc.sys.localStorage;
+            var possibleMovesArray = [level[row.y][column.x],level[row.y][column.x+1],level[row.y][column.x+1],level[row.y+1][column.x+1]]
+            this.ls.setItem(150, JSON.stringify(possibleMovesArray));
+            cc.log(this.ls.getItem(150));
+            //cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y][column.x+1] + "|" + level[row.y+1][column.x+1]);       
         };
 
        
@@ -480,9 +483,18 @@ var gameLayer = cc.Layer.extend({
 		};  
     },
 	getStartColumn: function (){
+            this.ls = cc.sys.localStorage;
+            
+
 			var level = this.level;
-            if (level[level[level.length-1][1]][level[level.length-1][0]]==1 || level[level[level.length-1][1]][level[level.length-1][0]]==33) return level[level.length-1][0]
+            if (level[level[level.length-1][1]][level[level.length-1][0]]==1 || level[level[level.length-1][1]][level[level.length-1][0]]==33){
+                var possibleMovesArray = [1,0,0,0]
+                this.ls.setItem(150, JSON.stringify(possibleMovesArray));
+                return level[level.length-1][0]  
+            } 
             else {
+                var possibleMovesArray = [0,2,0,0]
+                this.ls.setItem(150, JSON.stringify(possibleMovesArray));
             return level[level.length-1][0]-1
             }
     },
@@ -942,6 +954,10 @@ var gameLayer = cc.Layer.extend({
             statusLayer.removeEverything();
             return this.gameOver();
         } 
+        if (levelsArray[this.ls.getItem(99)-1][6]-this.moves.value < 0 && this.spriteSheet.getNumberOfRunningActions()==0){
+            statusLayer.removeEverything();
+            return this.gameOver();
+        }
         if (this.switcher.tutorial == true && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.tutorial();
             this.switcher.tutorial = false;

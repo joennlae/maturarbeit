@@ -6,6 +6,7 @@ var statusLayer = cc.Layer.extend({
     pauseMenu: null,
     labelQuadsBlue: null,
 	ls : null,
+    tutorialSwitcher: null,
     ctor:function () {
         this._super();
         this.init();
@@ -79,15 +80,17 @@ var statusLayer = cc.Layer.extend({
         this.addChild(this.helpNodeRight);
         this.helpNodeRight.retain();
 
+        //if(this.ls.getItem(206)==1) this.tutorial();
+
     },
         updateQuads:function (quads) {
-        this.labelQuads.setString(quads/*-levelsArray[this.ls.getItem(99)-1][3]*/);
+        this.labelQuads.setString(quads+"/"+levelsArray[this.ls.getItem(99)-1][3]);
     },
         updatePoints:function (points) {
         this.labelPoints.setString(Math.floor(points)/*-levelsArray[this.ls.getItem(99)-1][5]*/);
     },
         updateMoves:function (moves) {
-        this.labelMoves.setString(/*levelsArray[this.ls.getItem(99)-1][6]-*/moves);
+        this.labelMoves.setString(levelsArray[this.ls.getItem(99)-1][6]-moves);
     },
         updateBlueQuads:function(quadsBlue){
         this.labelQuadsBlue.setString(quadsBlue);
@@ -115,10 +118,10 @@ var statusLayer = cc.Layer.extend({
     },
     onExit : function(){
         this.pauseMenu.release();
-        this.helpNodeLeft.retain();
-        this.helpNodeTop.retain();
-        this.helpNodeRight.retain();
-        this.helpNodeBottum.retain();
+        this.helpNodeLeft.release();
+        this.helpNodeTop.release();
+        this.helpNodeRight.release();
+        this.helpNodeBottum.release();
         this._super();
     },
     tutorial:function(){
@@ -129,6 +132,7 @@ var statusLayer = cc.Layer.extend({
         this.helpNodeBottum.visible = false;
         cc.director.pause();
         this.addChild(new tutorialLayer());
+        cc.director.resume();
     },
     helpNodes:function(){
         if(this.ls.getItem(200)==1){

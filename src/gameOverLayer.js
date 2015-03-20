@@ -11,24 +11,43 @@ var gameOverLayer = cc.LayerColor.extend({
         this.init();
     },
     init:function () {
-        this._super(cc.color(0, 0, 0, 20));
+        this._super(cc.color(250, 250, 250, 150));
         var winsize = cc.director.getWinSize();
         this.getPoints();
 		this.ls = cc.sys.localStorage;
         saveArray = JSON.parse(this.ls.getItem(101));
 
-        this.levelCompleteLabel = new cc.LabelTTF("Level completed", "Quicksand-Light", winsize.height/12);
+        this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/10);
         this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
-        this.levelCompleteLabel.setColor(cc.color(0,150,0));
+        this.levelCompleteLabel.setColor(cc.color(0,0,0));
 
-        this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winsize.height/12);
+        this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winsize.height/10);
         this.againLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.againLabel.setColor(cc.color(0,150,0));
 
-        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/12);
+        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/10);
         this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.closeLabel.setColor(cc.color(0,0,0));
 
+        this.successfulQuads = new cc.Sprite(res.vote_true);
+        this.successfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+        this.successfulQuads.visible = false;
+        this.addChild(this.successfulQuads);
+
+        this.unsuccessfulQuads = new cc.Sprite(res.vote_false);
+        this.unsuccessfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+        this.unsuccessfulQuads.visible = false;
+        this.addChild(this.unsuccessfulQuads);
+
+        this.successfulMoves = new cc.Sprite(res.vote_true);
+        this.successfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
+        this.successfulMoves.visible = false;
+        this.addChild(this.successfulMoves);
+
+        this.unsuccessfulMoves = new cc.Sprite(res.vote_false);
+        this.unsuccessfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
+        this.unsuccessfulMoves.visible = false;
+        this.addChild(this.unsuccessfulMoves);
 
         if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
             this.addChild(this.levelCompleteLabel);
@@ -42,54 +61,69 @@ var gameOverLayer = cc.LayerColor.extend({
             this.addChild(this.closeLabel);
         }
 
-        this.labelQuads = new cc.LabelTTF(this.quads+ " Quads" + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")", "Quicksand-Light", winsize.height/10);
+        this.labelQuads = new cc.LabelTTF(this.quads+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/, "Quicksand-Light", winsize.height/10);
         this.labelQuads.setColor(cc.color(0,0,0));//black color
-        this.labelQuads.setPosition(cc.p(winsize.width/2, winsize.height/6*4));
+        this.labelQuads.setPosition(cc.p(winsize.width/8*5, winsize.height/6*4));
+        this.labelQuads.setAnchorPoint(1,0.5);
         this.addChild(this.labelQuads);
 
-        this.labelPoints = new cc.LabelTTF(this.points+" Points" + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")", "Quicksand-Light", winsize.height/10);
-        this.labelPoints.setPosition(cc.p(winsize.width/2, winsize.height/6*3));
+        this.labelPoints = new cc.LabelTTF(this.points+" Points"/* + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/, "Quicksand-Light", winsize.height/10);
+        this.labelPoints.setPosition(cc.p(winsize.width/8*5, winsize.height/6*2));
+        this.labelPoints.setAnchorPoint(1,0.5);
         this.labelPoints.setColor(cc.color(0,0,0));
         this.addChild(this.labelPoints);
 
-        this.movesLabel = new cc.LabelTTF(this.moves+" Moves" + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")", "Quicksand-Light", winsize.height/10);
-        this.movesLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*2));
+        this.movesLabel = new cc.LabelTTF(this.moves+" Moves" /*+ " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/, "Quicksand-Light", winsize.height/10);
+        this.movesLabel.setPosition(cc.p(winsize.width/8*5, winsize.height/6*3));
+        this.movesLabel.setAnchorPoint(1,0.5);
         this.movesLabel.setColor(cc.color(0,0,0));
         this.addChild(this.movesLabel);
 
         if (this.quads >= levelsArray[this.ls.getItem(99)-1][3]){
-            this.labelQuads.setString(this.quads+ " Quads" + " (" + "+" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")");
-            this.labelQuads.setColor(cc.color(0,150,0));
+            this.labelQuads.setString(this.quads+ " Quads"/* + " (" + "+" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
+            this.successfulQuads.visible = true;
+            this.labelQuads.setColor(cc.color(0,0,0));
         }
         else {
-            this.labelQuads.setString(this.quads+ " Quads" + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")");
-            this.labelQuads.setColor(cc.color(150,0,0));
+            this.labelQuads.setString(this.quads+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
+            this.unsuccessfulQuads.visible = true;
+            this.labelQuads.setColor(cc.color(0,0,0));
         }
 
         if (this.points >= levelsArray[this.ls.getItem(99)-1][5]){
-            this.labelPoints.setString(this.points+" Points" + " (" + "+" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")");
-            this.labelPoints.setColor(cc.color(0,150,0));
+            this.labelPoints.setString(this.points+" Points" /*+ " (" + "+" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
+            this.labelPoints.setColor(cc.color(0,0,0));
         }
         else {
-            this.labelPoints.setString(this.points+" Points" + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")");
-            this.labelPoints.setColor(cc.color(150,0,0));
+            this.labelPoints.setString(this.points+" Points"/* + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
+            this.labelPoints.setColor(cc.color(0,0,0));
         }
 
         if (this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
-            this.movesLabel.setString(this.moves+" Moves" + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")");
-            this.movesLabel.setColor(cc.color(0,150,0));
+            this.movesLabel.setString(this.moves+" Moves"/* + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
+            this.successfulMoves.visible = true;
+            this.movesLabel.setColor(cc.color(0,0,0));
         }
         else{
-            this.movesLabel.setString(this.moves+" Moves" + " (" + "+" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")");
-            this.movesLabel.setColor(cc.color(150,0,0));
+            this.movesLabel.setString(this.moves+" Moves"/* + " (" + "+" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
+            this.unsuccessfulMoves.visible = true;
+            this.movesLabel.setColor(cc.color(0,0,0));
         }
 		
 		this.recognizer = new SimpleRecognizer();
 		
-		this.swipeLabel = new cc.LabelTTF("Swipe to continue", "Quicksand-Light", winsize.height/8);
+		/*this.swipeLabel = new cc.LabelTTF("", "Quicksand-Light", winsize.height/12);
         this.swipeLabel.setColor(cc.color(0,0,0,100));//black color
-		this.swipeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6));
-        this.addChild(this.swipeLabel);
+		this.swipeLabel.setPosition(cc.p(winsize.width/4, winsize.height/6));
+        this.addChild(this.swipeLabel);*/
+
+        var backItemLabel = new cc.MenuItemSprite(
+            new cc.Sprite(res.forward),
+            new cc.Sprite(res.forward), 
+            this.onRestart, this);
+        var backMenu = new cc.Menu(backItemLabel);  
+        backMenu.setPosition(cc.p(winsize.width/2,winsize.height/6));
+        this.addChild(backMenu,0,13);
 		
 		cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,

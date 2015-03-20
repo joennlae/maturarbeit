@@ -8,6 +8,7 @@ var levelSelector = cc.Layer.extend({
 	recognizer: null,
 	levelNum: null,
 	levelLabel: null,
+
     ctor : function(){
 		this._super();
 		this.winsize = cc.director.getWinSize();
@@ -179,11 +180,11 @@ var levelSelector = cc.Layer.extend({
 
     	if (saveArray[this.levelNum.value-1][0] >= levelsArray[this.levelNum.value-1][5]){
     		this.pointsLabel.setColor(cc.color(0,150,0));
-    		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5]);
+    		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]/*+"/"+levelsArray[this.levelNum.value-1][5]*/);
     	}
     	else {
     		this.pointsLabel.setColor(cc.color(0,0,0));
-    		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5]);
+    		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]/*+"/"+levelsArray[this.levelNum.value-1][5]*/);
     	}
 
     	if (saveArray[this.levelNum.value-1][1] >= levelsArray[this.levelNum.value-1][3]){

@@ -27,6 +27,8 @@ var gameLayer = cc.Layer.extend({
     levelsArray: null,
     showNodeAction: null,
     showNode: null,
+    points:null,
+    levelOver: null,
     ctor:function () {
         this._super();
         this.levelsArray = levelsArray;
@@ -50,6 +52,7 @@ var gameLayer = cc.Layer.extend({
             this.switcher.tutorial = true;
         }
         this.moves = {value: 0};
+        this.levelOver = {value: 0};
 		this.generateLvl(); //returns this.init();
 
     },
@@ -80,7 +83,8 @@ var gameLayer = cc.Layer.extend({
 
 		this.setUp()
         this.scheduleUpdate();
-		this.quads = {value: 0}; // make it an object not a variable so we can point on it and not copy the value 
+		this.quads = {value: 0, combo: 0, points: 0}; // make it an object not a variable so we can point on it and not copy the value 
+        this.points = {value: 0, frames: 0, updatedFrames: 0};
         //Load controlling
 		//Variables for eevent Manager
 		winsize = this.winsize;
@@ -112,6 +116,7 @@ var gameLayer = cc.Layer.extend({
         showNodeDownLeft = this.showNodeDownLeft;
         showNode = this.showNode;
         showNodeAction = this.showNodeAction;
+        quadsCombo = this.quadsCombo;
 
 		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -387,6 +392,7 @@ var gameLayer = cc.Layer.extend({
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(2);
                             break;
                         }
                         else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
@@ -396,6 +402,7 @@ var gameLayer = cc.Layer.extend({
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
@@ -405,25 +412,30 @@ var gameLayer = cc.Layer.extend({
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 ){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
                             quads.value -= 2;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
-                        else break;
+                        else this.quadsCombo(0); 
+                            break;
                         
                      case 2 : case 4:
                         if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
@@ -439,6 +451,7 @@ var gameLayer = cc.Layer.extend({
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(2);
                             break;
                         }
                         else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14){
@@ -448,6 +461,7 @@ var gameLayer = cc.Layer.extend({
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
@@ -457,25 +471,30 @@ var gameLayer = cc.Layer.extend({
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
                             quads.value -= 2;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
-                        else break;
+                        else this.quadsCombo(0);
+                            break;
                         default:
                             break;
          
@@ -943,19 +962,25 @@ var gameLayer = cc.Layer.extend({
         //return gameOver();
     },
     update:function (dt) {
-        //cc.log(this.row.y+"  "+this.column.x);
-        // update meter
+        //Points
+        if(this.levelOver.value == 0){
         if (-this.spriteSheet.y>this.highest) this.highest = -this.spriteSheet.y;
+        this.points.frames = this.points.frames + 1;
+        if ( this.points.frames % 4 == 0) this.points.updatedFrames = this.points.frames; //every 20Fps sec at 60FPS
+        this.points.value = this.highest + this.quads.points + this.points.updatedFrames;
+
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updateMoves(this.moves.value);
-        statusLayer.updatePoints(this.highest + this.moves.value*this.sizeOfSprite);
+        statusLayer.updatePoints(this.points.value);
         statusLayer.updateQuads(this.quads.value);
         if (this.switcher.value === true && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.removeEverything();
+            this.levelOver.value = 1;
             return this.gameOver();
         } 
-        if (levelsArray[this.ls.getItem(99)-1][6]-this.moves.value < 0 && this.spriteSheet.getNumberOfRunningActions()==0){
+        if (levelsArray[this.ls.getItem(99)-1][6]-this.moves.value <= 0 && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.removeEverything();
+            this.levelOver.value = 1;
             return this.gameOver();
         }
         if (this.switcher.tutorial == true && this.spriteSheet.getNumberOfRunningActions()==0){
@@ -967,6 +992,7 @@ var gameLayer = cc.Layer.extend({
             statusLayer.helpNodes();
             this.switcher.loading = false;
         }
+     }
 
     },
     onExit:function() {
@@ -983,15 +1009,17 @@ var gameLayer = cc.Layer.extend({
     gameOver:function (){
         cc.log("LevelEnd");
         var ls = cc.sys.localStorage;
-        ls.setItem(1, Math.floor(this.highest + this.moves.value*this.sizeOfSprite));
+        ls.setItem(1, Math.floor(this.points.value));
         ls.setItem(2, this.quads.value);
         ls.setItem(3, this.moves.value);
-        this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
+        ls.setItem(5, levelsArray[ls.getItem(99)-1][6]-this.moves.value);
+        //this.spriteSheet.runAction(this.rightUp); //hack but fixes problem not anymore needed
         cc.director.pause();
         if(ls.getItem(999)==1){ //Beta switch
         this.addChild(new gameOverLayer());
         }
         else this.addChild(new gameBetaOverLayer());
+        cc.director.resume();
 
         
         //spriteSheet.getParent().addChild(new gameOverLayer());
@@ -1023,6 +1051,26 @@ var gameLayer = cc.Layer.extend({
         this.showNode.setPosition(0,0);
         this.showNode.runAction(this.showNodeAction);
         }
+    },
+        quadsCombo:function(input){
+        if (input==1 || input==2){ 
+            this.quads.combo = this.quads.combo + input;
+            this.quads.points = this.quads.points + 1000;
+        }
+        else if(input==10){ //combo finished with destroy
+            if (this.quads.combo>1){
+            this.quads.points = this.quads.points + (Math.pow(2,this.quads.combo)*1000);
+            }
+            this.quads.combo = 0;
+        }
+        else {
+            cc.log(this.quads.combo);
+            if (this.quads.combo>1){
+            this.quads.points = this.quads.points + (Math.pow(2,this.quads.combo)*1000);
+            }
+            this.quads.combo = 0;
+        } 
+
     }
 
 });

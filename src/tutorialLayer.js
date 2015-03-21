@@ -133,7 +133,7 @@ var tutorialLayer = cc.LayerColor.extend({
             this.pointsLabel.visible = true;
             this.quadsLabel.visible = true;
         }
-        if (this.counter==2 && this.animations==1){
+        if (this.counter==2 && this.animations==1 && this.getParent().labelMoves.getNumberOfRunningActions()==0){
             this.movesLabel.visible = false;
             this.pointsLabel.visible = false;
             this.quadsLabel.visible = false;
@@ -147,6 +147,9 @@ var tutorialLayer = cc.LayerColor.extend({
             this.getParent().labelMoves.runAction(new cc.MoveTo(2, cc.p(this.winSize.width, this.winSize.height - (this.winSize.height/10*3+20))));
             this.getParent().labelMoves.setFontSize(this.winSize.height/10);
             this.animations=2;
+        }
+        if(this.counter==2 && this.animations==1 && this.getParent().labelMoves.getNumberOfRunningActions()>0){
+            this.counter = 1;
         }
         if(this.animations==2 && this.getParent().labelMoves.getNumberOfRunningActions()==0){
             this.animations=3;

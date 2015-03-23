@@ -16,6 +16,8 @@ var menuLayer = cc.Layer.extend({
         if(ls.getItem(204)!=0 && ls.getItem(204)<1) ls.setItem(204,0);//Gesamt Level
         if(ls.getItem(205)!=0 && ls.getItem(205)<1) ls.setItem(205,0);//Gesamt Quads
         if(ls.getItem(206)!=0) ls.setItem(206,1);//Tutorial activated default
+        if(ls.getItem(207)!=0 && ls.getItem(207)<1) ls.setItem(207,1); //positionMarker
+        if(ls.getItem(208)!=0 && ls.getItem(208)<1) ls.setItem(208,1); //Halfsize or Fullsize
         this.winsize = cc.director.getWinSize();
         cc.log(ls.getItem(206));
         var centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);

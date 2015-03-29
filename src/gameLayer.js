@@ -85,6 +85,14 @@ var gameLayer = cc.Layer.extend({
         this.scheduleUpdate();
 		this.quads = {value: 0, combo: 0, points: 0, blue:0}; // make it an object not a variable so we can point on it and not copy the value 
         this.points = {value: 0, frames: 0, updatedFrames: 0};
+        
+        this.comboLabel = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/12);
+        this.comboLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/5*2));
+        this.comboLabel.setColor(cc.color(0,150,0));
+        this.comboLabel.opacity = 0;
+        this.addChild(this.comboLabel,10);
+        this.comboLabel.retain();
+
         //Load controlling
 		//Variables for eevent Manager
 		winsize = this.winsize;
@@ -117,6 +125,9 @@ var gameLayer = cc.Layer.extend({
         showNode = this.showNode;
         showNodeAction = this.showNodeAction;
         quadsCombo = this.quadsCombo;
+        comboLabel = this.comboLabel;
+        comboOut = this.comboOut;
+        comboJump = this.comboJump;
 
 		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -978,6 +989,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==36 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
@@ -986,6 +998,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46){
@@ -994,6 +1007,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 ){
@@ -1003,6 +1017,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 2;
                             this.quadsCombo(10);
                         }
+                        else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
@@ -1011,6 +1026,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12){
@@ -1019,6 +1035,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
 
@@ -1069,6 +1086,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
@@ -1077,6 +1095,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108){
@@ -1085,6 +1104,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==3 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 ){
@@ -1094,6 +1114,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==3 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
@@ -1102,6 +1123,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==3 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110){
@@ -1110,6 +1132,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else this.quadsCombo(0);
@@ -1162,6 +1185,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46){
@@ -1170,6 +1194,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==36 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
@@ -1178,6 +1203,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
@@ -1187,6 +1213,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12){
@@ -1195,6 +1222,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
@@ -1203,6 +1231,7 @@ var gameLayer = cc.Layer.extend({
                             quads.value -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
 
@@ -1253,6 +1282,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108){
@@ -1261,6 +1291,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
@@ -1269,6 +1300,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==4 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
@@ -1278,6 +1310,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 2;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==4 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110){
@@ -1286,6 +1319,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else if (level[pY][pX]==4 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
@@ -1294,6 +1328,7 @@ var gameLayer = cc.Layer.extend({
                             quads.blue -= 1;
                             this.quadsCombo(10);
                             }
+                            else this.quadsCombo(0);
                             break;
                         }
                         else this.quadsCombo(0);
@@ -1322,13 +1357,13 @@ var gameLayer = cc.Layer.extend({
             }
     },
 	initAnimations: function(){
-		this.rightUp = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
+		this.rightUp = new cc.moveBy(0.1, cc.p(-this.sizeOfSprite, -this.sizeOfSprite)); //fucking shiiit of retain :-P costed me about 8hours
         this.rightUp.retain();
-        this.leftUp = cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
+        this.leftUp = new cc.moveBy(0.1, cc.p(+this.sizeOfSprite, -this.sizeOfSprite));
         this.leftUp.retain();
-        this.rightDown = cc.moveBy(0.1, cc.p(-this.sizeOfSprite, +this.sizeOfSprite));
+        this.rightDown = new cc.moveBy(0.1, cc.p(-this.sizeOfSprite, +this.sizeOfSprite));
         this.rightDown.retain();
-        this.leftDown =  cc.moveBy(0.1, cc.p(+this.sizeOfSprite, +this.sizeOfSprite));
+        this.leftDown =  new cc.moveBy(0.1, cc.p(+this.sizeOfSprite, +this.sizeOfSprite));
         this.leftDown.retain();	
         this.scaling = cc.scaleTo(3, 0.01);
         this.scaling.retain();
@@ -1336,6 +1371,10 @@ var gameLayer = cc.Layer.extend({
         this.scalingreverse.retain();
         this.showNodeAction = new cc.Blink(0.1, 1);
         this.showNodeAction.retain();
+        this.comboJump = new cc.jumpTo(1.5, cc.p(this.winsize.width, this.winsize.height/6*5.5), 200, 1);
+        this.comboJump.retain();
+        this.comboOut = new cc.FadeOut(1.5);
+        this.comboOut.retain();
 	},
 	setUp: function (){
         this.row.y = this.level[this.level.length-1][1]; //muss Global sein , old level.length-2
@@ -1824,6 +1863,9 @@ var gameLayer = cc.Layer.extend({
         this.scalingreverse.release();
         this.showNodeAction.release();
         this.showNode.release();
+        this.comboOut.release();
+        this.comboJump.release();
+        this.comboLabel.release();
         this._super();
     },
     gameOver:function (){
@@ -1875,6 +1917,7 @@ var gameLayer = cc.Layer.extend({
         }
     },
         quadsCombo:function(input){
+        cc.log(input);
         if (input==1 || input==2){ 
             this.quads.combo = this.quads.combo + input;
             this.quads.points = this.quads.points + 1000;
@@ -1882,13 +1925,26 @@ var gameLayer = cc.Layer.extend({
         else if(input==10){ //combo finished with destroy
             if (this.quads.combo>1){
             this.quads.points = this.quads.points + (Math.pow(2,this.quads.combo)*1000);
+            if(this.comboLabel.getNumberOfRunningActions()==0){
+            this.comboLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/5*2));
+            this.comboLabel.opacity = 255;
+            this.comboLabel.setString(this.quads.combo+" x Combo");
+            this.comboLabel.runAction(this.comboJump);
+            this.comboLabel.runAction(this.comboOut);
+                }
             }
             this.quads.combo = 0;
         }
         else {
-            cc.log(this.quads.combo);
             if (this.quads.combo>1){
             this.quads.points = this.quads.points + (Math.pow(2,this.quads.combo)*1000);
+            if(this.comboLabel.getNumberOfRunningActions()==0){
+            this.comboLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/5*2));
+            this.comboLabel.opacity = 255;
+            this.comboLabel.setString(this.quads.combo+" x Combo");
+            this.comboLabel.runAction(this.comboJump);
+            this.comboLabel.runAction(this.comboOut);
+                }
             }
             this.quads.combo = 0;
         } 

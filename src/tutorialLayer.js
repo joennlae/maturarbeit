@@ -661,15 +661,15 @@ var tutorialLayer = cc.LayerColor.extend({
                 }
         },
     onExit : function(){
+        this._super();
         if (this.ls.getItem(666)==1){
         this.helpNodeHor.release();
         this.helpNodeVert.release();
         }
-            this.rightUpTut.release();
-            this.leftUpTut.release();
-            this.rightDownTut.release();
-            this.leftDownTut.release();
-            this._super();
+        this.rightUpTut.release();
+        this.leftUpTut.release();
+        this.rightDownTut.release();
+        this.leftDownTut.release();
     }
 
 });

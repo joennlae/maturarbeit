@@ -34,8 +34,10 @@ var gameOverLayer = cc.LayerColor.extend({
 
         this.actionTo = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*4), 150, 4);
         this.actionTo.retain();
-        this.actionToRank = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*3), 150, 2);
+        this.actionToRank = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*3), 150, 4);
         this.actionTo.retain();
+        this.actionIn = new cc.FadeIn(1.5);
+        this.actionIn.retain();
 
         this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/12);
         this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
@@ -59,7 +61,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.highscoreLabel);
 
         this.newrankLabel = new cc.LabelTTF("New Rank!", "Quicksand-Light", winsize.height/12);
-        this.newrankLabel.setPosition(cc.p(winsize.width/4*3, winsize.height/6*3));
+        this.newrankLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.newrankLabel.setRotation(-30);
         this.newrankLabel.setColor(cc.color(0,150,0));
         this.newrankLabel.visible = false;
@@ -116,6 +118,7 @@ var gameOverLayer = cc.LayerColor.extend({
             if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
                 this.newrankLabel.visible = true;
                 this.newrankLabel.runAction(this.actionToRank);
+                this.newrankLabel.runAction(this.actionIn);
             }
         }
         else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){ //only points countä für highscore
@@ -125,6 +128,7 @@ var gameOverLayer = cc.LayerColor.extend({
             if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
                 this.newrankLabel.visible = true;
                 this.newrankLabel.runAction(this.actionToRank);
+                this.newrankLabel.runAction(this.actionIn);
             }    
         }
         else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
@@ -343,6 +347,7 @@ var gameOverLayer = cc.LayerColor.extend({
     onExit:function() {
         this.actionTo.release();
         this.actionToRank.release();
+        this.actionIn.release();
         this._super();
     }
 });

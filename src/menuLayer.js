@@ -12,8 +12,8 @@ var menuLayer = cc.Layer.extend({
         if(ls.getItem(200)!=0) ls.setItem(200,1);//Helplines
         if(ls.getItem(201)!=0) ls.setItem(201,1);//Blinkhelp
         if(ls.getItem(206)!=0) ls.setItem(206,1);//Tutorial activated default
-        if(ls.getItem(207)<1) ls.setItem(207,1); //positionMarker
-        if(ls.getItem(208)<1) ls.setItem(208,1); //Halfsize or Fullsize
+        if(ls.getItem(207)<1) ls.setItem(207,6); //positionMarker 6=default
+        if(ls.getItem(208)<1) ls.setItem(208,2); //Halfsize or Fullsize=default
         if(ls.getItem(209)<1) ls.setItem(209,1); //Gamemode 2 tutorial
         this.winsize = cc.director.getWinSize();
 

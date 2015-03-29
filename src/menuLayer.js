@@ -11,12 +11,12 @@ var menuLayer = cc.Layer.extend({
         var ls = cc.sys.localStorage;
         if(ls.getItem(200)!=0) ls.setItem(200,1);//Helplines
         if(ls.getItem(201)!=0) ls.setItem(201,1);//Blinkhelp
-        if(ls.getItem(202)!=0 && ls.getItem(202)<1) ls.setItem(202,0);//Gesamt Moves
-        if(ls.getItem(203)!=0 && ls.getItem(203)<1) ls.setItem(203,0);//Gesamt Points
-        if(ls.getItem(204)!=0 && ls.getItem(204)<1) ls.setItem(204,0);//Gesamt Level
-        if(ls.getItem(205)!=0 && ls.getItem(205)<1) ls.setItem(205,0);//Gesamt Quads
         if(ls.getItem(206)!=0) ls.setItem(206,1);//Tutorial activated default
+        if(ls.getItem(207)<1) ls.setItem(207,1); //positionMarker
+        if(ls.getItem(208)<1) ls.setItem(208,1); //Halfsize or Fullsize
+        if(ls.getItem(209)<1) ls.setItem(209,1); //Gamemode 2 tutorial
         this.winsize = cc.director.getWinSize();
+
         cc.log(ls.getItem(206));
         var centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
 

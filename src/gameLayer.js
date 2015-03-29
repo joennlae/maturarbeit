@@ -27,6 +27,8 @@ var gameLayer = cc.Layer.extend({
     levelsArray: null,
     showNodeAction: null,
     showNode: null,
+    points:null,
+    levelOver: null,
     ctor:function () {
         this._super();
         this.levelsArray = levelsArray;
@@ -45,11 +47,12 @@ var gameLayer = cc.Layer.extend({
 		this.winsize = cc.director.getWinSize();
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
-        this.switcher = {value: false, tutorial: false, loading: true, tutorialRunning: false};
+        this.switcher = {value: false, tutorial: false, loading: true, tutorialRunning: false, gameModeThree: 0};
         if (this.ls.getItem(206)==1){
             this.switcher.tutorial = true;
         }
         this.moves = {value: 0};
+        this.levelOver = {value: 0};
 		this.generateLvl(); //returns this.init();
 
     },
@@ -80,7 +83,8 @@ var gameLayer = cc.Layer.extend({
 
 		this.setUp()
         this.scheduleUpdate();
-		this.quads = {value: 0}; // make it an object not a variable so we can point on it and not copy the value 
+		this.quads = {value: 0, combo: 0, points: 0, blue:0}; // make it an object not a variable so we can point on it and not copy the value 
+        this.points = {value: 0, frames: 0, updatedFrames: 0};
         //Load controlling
 		//Variables for eevent Manager
 		winsize = this.winsize;
@@ -112,6 +116,7 @@ var gameLayer = cc.Layer.extend({
         showNodeDownLeft = this.showNodeDownLeft;
         showNode = this.showNode;
         showNodeAction = this.showNodeAction;
+        quadsCombo = this.quadsCombo;
 
 		var listener1 = cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -122,7 +127,7 @@ var gameLayer = cc.Layer.extend({
                 cc.log(spriteSheet.getNumberOfRunningActions());
                 if (spriteSheet.getNumberOfRunningActions()===0){
                 if(corX >= winsize.width/2 && corY >= winsize.height/2){ //up-right
-                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34){
+                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34 || level[row.y][column.x+1]==36 || level[row.y][column.x+1]==1.1){
                         spriteSheet.runAction(rightUp);
                         moves.value += 1;
                         changeRails(row.y,column.x+1);
@@ -142,7 +147,7 @@ var gameLayer = cc.Layer.extend({
                     return false;
                 }
                 else if(corX < winsize.width/2 && corY >= winsize.height/2){ //up-left
-                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3 || level[row.y][column.x]==33){
+                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3 || level[row.y][column.x]==33 || level[row.y][column.x]==35 || level[row.y][column.x]==0.1){
                         spriteSheet.runAction(leftUp);
                         moves.value += 1;
                         changeRails(row.y,column.x);
@@ -162,7 +167,7 @@ var gameLayer = cc.Layer.extend({
                     return false;
                 }
                 else if(corX < winsize.width/2 && corY < winsize.height/2){ //down-left
-                    if(level[row.y+1][column.x]==2 || level[row.y+1][column.x]==4 ){
+                    if(level[row.y+1][column.x]==2 || level[row.y+1][column.x]==4 || level[row.y+1][column.x]==36 || level[row.y+1][column.x]==1.1){
                         spriteSheet.runAction(leftDown);
                         moves.value += 1;
                         changeRails(row.y+1,column.x);
@@ -176,7 +181,7 @@ var gameLayer = cc.Layer.extend({
                     return false;
                 }
                 else if(corX >= winsize.width/2 && corY < winsize.height/2){ //down-right
-                    if(level[row.y+1][column.x+1]==1 || level[row.y+1][column.x+1]==3){
+                    if(level[row.y+1][column.x+1]==1 || level[row.y+1][column.x+1]==3 || level[row.y+1][column.x+1]==35 || level[row.y+1][column.x+1]==0.1){
                         spriteSheet.runAction(rightDown);
                         moves.value += 1;
                         changeRails(row.y+1,column.x+1);
@@ -247,7 +252,7 @@ var gameLayer = cc.Layer.extend({
             }
             else if (spriteSheet.getNumberOfRunningActions()===0){
                 if(key==105 || key==74){ //up-right
-                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34) {
+                    if(level[row.y][column.x+1]==2 || level[row.y][column.x+1]==4 || level[row.y][column.x+1]==34 || level[row.y][column.x+1]==36 || level[row.y][column.x+1]==1.1) {
                         spriteSheet.runAction(rightUp);
                         moves.value += 1;
                         changeRails(row.y,column.x+1);
@@ -266,7 +271,7 @@ var gameLayer = cc.Layer.extend({
                     return false;
                 }
                 else if(key==103 || key==70){ //up-left
-                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3  || level[row.y][column.x]==33){
+                    if(level[row.y][column.x]==1 || level[row.y][column.x]==3  || level[row.y][column.x]==33|| level[row.y][column.x]==35 || level[row.y][column.x]==0.1){
                         spriteSheet.runAction(leftUp);
                         moves.value += 1;
                         changeRails(row.y,column.x);
@@ -285,7 +290,7 @@ var gameLayer = cc.Layer.extend({
                     return false;
                 }
                 else if(key==97 || key==86){ //down-left
-                    if(level[row.y+1][column.x]==2 || level[row.y+1][column.x]==4){
+                    if(level[row.y+1][column.x]==2 || level[row.y+1][column.x]==4 || level[row.y+1][column.x]==36 || level[row.y+1][column.x]==1.1){
                         spriteSheet.runAction(leftDown);
                         moves.value += 1;
                         changeRails(row.y+1,column.x);
@@ -298,7 +303,7 @@ var gameLayer = cc.Layer.extend({
                     return false;
                 }
                 else if(key==99 || key==78){ //down-right
-                    if(level[row.y+1][column.x+1]==1 || level[row.y+1][column.x+1]==3){
+                    if(level[row.y+1][column.x+1]==1 || level[row.y+1][column.x+1]==3 || level[row.y+1][column.x+1]==35 || level[row.y+1][column.x+1]==0.1){
                         spriteSheet.runAction(rightDown);
                         moves.value += 1;
                         changeRails(row.y+1,column.x+1);
@@ -321,7 +326,8 @@ var gameLayer = cc.Layer.extend({
         
            
         function changeRails(railPosY,railPosX){
-
+            var ls = cc.sys.localStorage;
+            if(ls.getItem(666)==1){
             switch (level[railPosY][railPosX]) {
                     case 1:
                         var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
@@ -369,116 +375,933 @@ var gameLayer = cc.Layer.extend({
                         break;
                         
             }
+            }
+            else if(ls.getItem(666)==2){
+                switch (level[railPosY][railPosX]) {
+                    case 1:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel); 
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+3+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=3;
+                        break;
+                    case 2:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel); 
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+4+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=4;
+                        break;
+                    case 3:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+1+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=0.1;//asynchron grad ungrad no calc errors
+                        break;
+                    case 4:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+2+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=1.1;
+                        break;
+                    case 0.1:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+5+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=35;
+                        break;
+                    case 1.1:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+6+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=36;
+                        break;
+
+                    case 35:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+1+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=1;
+                        break;
+                    case 36:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+2+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=2;
+                        break;
+                    case 31: 
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX-1.5)*sizeOfSprite,(level.length-railPosY-1.5)*sizeOfSprite));
+                        finalSequence(1);
+                    case 32: 
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX+0.5)*sizeOfSprite,(level.length-railPosY-0.5)*sizeOfSprite));
+                        finalSequence(2);
+                    default: 
+                        break;
+                        
+            }
+            }
+            else if(ls.getItem(666)==3){
+                if (this.switcher.gameModeThree==0){//color Red
+                switch (level[railPosY][railPosX]) {
+                    case 1: case 35: 
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel); 
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+3+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=3;
+                        break;
+                    case 2: case 36:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel); 
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+4+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=4;
+                        break;
+                    case 3:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+1+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=1;
+                        break;
+                    case 4:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+2+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=2;
+                        break;
+                    case 31: 
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX-1.5)*sizeOfSprite,(level.length-railPosY-1.5)*sizeOfSprite));
+                        finalSequence(1);
+                    case 32: 
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX+0.5)*sizeOfSprite,(level.length-railPosY-0.5)*sizeOfSprite));
+                        finalSequence(2);
+                    default: 
+                        break;
+                    }
+                }
+            else if (this.switcher.gameModeThree==1){//color Blue
+                switch (level[railPosY][railPosX]) {
+                    case 1: case 3: 
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel); 
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+5+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=35;
+                        break;
+                    case 2: case 4:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel); 
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+6+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=36;
+                        break;
+                    case 35:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+1+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=1;
+                        break;
+                    case 36:
+                        var spriteDel = spriteSheet.getChildByTag(1000*railPosY+railPosX); 
+                        spriteSheet.removeChild(spriteDel);
+                        var spriteFrame = cc.spriteFrameCache.getSpriteFrame("rail_"+2+".png");
+                        var sprite = new cc.Sprite(spriteFrame);
+                            sprite.attr({x: (railPosX*sizeOfSprite), y:((level.length-railPosY-1)*sizeOfSprite), scale: scaleFactor});
+                        spriteSheet.addChild(sprite,0,1000*railPosY+railPosX);
+                        level[railPosY][railPosX]=2;
+                        break;
+                    case 31: 
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX-1.5)*sizeOfSprite,(level.length-railPosY-1.5)*sizeOfSprite));
+                        finalSequence(1);
+                    case 32: 
+                        spriteSheet.runAction(cc.moveBy(5,(railPosX+0.5)*sizeOfSprite,(level.length-railPosY-0.5)*sizeOfSprite));
+                        finalSequence(2);
+                    default: 
+                        break;
+                    }
+                }
+                        
+            }
+            
             
         };
 		function checkForQuad(pY,pX,lm){ // get Position and lastmove. 1:Up-Right, 2: Down-Right, 3:Down-Left, 4:Up-Left$
+            var ls = cc.sys.localStorage;
+            if(ls.getItem(666)==1){
             switch (lm) { //14 when circle, 12 when destroyed with last move
                     case 1 : case 3:
                         if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite_n = new cc.Sprite(spriteFrame);
                                 sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(2);
                             break;
                         }
                         else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 ){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
                             quads.value -= 2;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
-                        else break;
+                        else this.quadsCombo(0); 
+                            break;
                         
                      case 2 : case 4:
                         if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite_n = new cc.Sprite(spriteFrame);
                                 sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
                                 sprite_n.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(2);
                             break;
                         }
                         else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14){
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
-                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+".png");
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);;
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
                                 sprite.setRotation(45);
                                 quads.value += 1;
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
                             quads.value -= 2;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
                         else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
                             quads.value -= 1;
+                            this.quadsCombo(10);
                             break;
                         }
-                        else break;
+                        else this.quadsCombo(0);
+                            break;
                         default:
                             break;
          
+            }
+            }
+            else if(ls.getItem(666)==2){
+                switch (lm) { //14 when circle, 11.1 with lm(1,3) when 1 when(2,4), 142 bih blue quads und zerstört isches immer minus 34 also 108
+                    case 1 : case 3:
+                        if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(2);
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY][pX]==1.1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==11.1 || level[pY][pX]==0.1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==11.1 ){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.value -= 2;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==1.1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1 || level[pY][pX]==0.1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==1.1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==11.1 || level[pY][pX]==0.1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==11.1){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+
+                        // check for blue
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(2);
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 ){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.blue -= 2;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else this.quadsCombo(0);
+                            break;
+                        
+                     case 2 : case 4:
+                        if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(2);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);;
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY][pX]==0.1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==11.1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1 || level[pY][pX]==1.1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==11.1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.value -= 2;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==0.1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==11.1 || level[pY][pX]==1.1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==11.1){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==0.1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1 || level[pY][pX]==1.1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==11.1){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+
+                        //check blue
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==142 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(2);
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);;
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.blue -= 2;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            break;
+                        }
+                        else this.quadsCombo(0);
+                            break;
+                        default:
+                            break;
+         
+            }
+            }
+            else if(ls.getItem(666)==3){
+                cc.log(spriteSheet.getChildByTag(19508.5));
+                switch (lm) { //14 when circle, 11.1 with lm(1,3) when 1 when(2,4), 142 bih blue quads und zerstört isches immer minus 34 also 108
+                    case 1 : case 3:
+                        if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(2);
+                            this.switcher.gameModeThree = 1; //color blue
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 1; //color blue
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 1; //color blue
+                            break;
+                        }
+                        else if (level[pY][pX]==36 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 ){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.value -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==36 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 ){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.value -= 2;
+                            this.quadsCombo(10);
+                        }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+
+                        // check for blue
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});//+0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(2);
+                            this.switcher.gameModeThree = 0;
+                            break;
+                        }
+                        else if (level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 0;
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-1.5)*sizeOfSprite), scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 0;
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 ){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.blue -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==3 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 ){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.blue -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==3 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX-0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==3 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX+0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else this.quadsCombo(0);
+                            break;
+                        
+                     case 2 : case 4:
+                        if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(2);
+                            this.switcher.gameModeThree = 1;
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 1;
+                            break;
+                        }
+                        else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);;
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.value += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 1;
+                            break;
+                        }
+                        else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.value -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==36 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.value -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.value -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+
+                        //check blue
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==142 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);//- und + vertauscht
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite_n = new cc.Sprite(spriteFrame);
+                                sprite_n.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});//-0.5,+0.5
+                                sprite_n.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite_n,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(2);
+                            this.switcher.gameModeThree = 0;
+                            break;
+                        }
+                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);
+                                sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:(level.length-pY-(1-0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 0;
+                            break;
+                        }
+                        else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                            var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
+                            var sprite = new cc.Sprite(spriteFrame);;
+                                sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:(level.length-pY-(1+0.5))*sizeOfSprite, scale: scaleFactor});
+                                sprite.setRotation(45);
+                                quads.blue += 1;
+                            spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
+                            this.quadsCombo(1);
+                            this.switcher.gameModeThree = 0;
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.blue -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==1 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==4 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.blue -= 2;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==4 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110){
+                            if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX+0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY-0.5)*1000+pX+0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else if (level[pY][pX]==4 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
+                            if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
+                            spriteSheet.removeChildByTag(1*10000+(pY+0.5)*1000+pX-0.5);
+                            quads.blue -= 1;
+                            this.quadsCombo(10);
+                            }
+                            break;
+                        }
+                        else this.quadsCombo(0);
+                            break;
+                        default:
+                            break;
+         
+            }
             }
 		};  
     },
@@ -520,7 +1343,6 @@ var gameLayer = cc.Layer.extend({
         this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
         this.initAnimations();
-        this.touchNode.drawRect(cc.p(this.winsize.width/2-5,2*this.sizeOfSprite-5),cc.p(this.winsize.width/2+5,2*this.sizeOfSprite+5),cc.color(255,0,0,255),null,null);
         for (i = this.level.length-2; i > 0; i--) {        //level.length = level[y][] i=row , -2 weill neu auch startpositionen an letzer y stelle gespeichert
             for (j = 0; j < this.level[0].length; j++) { //level[0].length = level[][x] j=column
                 if (this.level[i][j]!==0) {
@@ -539,6 +1361,15 @@ var gameLayer = cc.Layer.extend({
         this.spriteSheet.runAction(cc.moveBy(3,-(((this.column.x)+0.5)*this.sizeOfSprite),-2*this.sizeOfSprite));
         //this.spriteSheet.x = -(((this.column.x)-(this.railsPerRow/2-0.5))*this.sizeOfSprite);//-2 wägä arrayOutOfBound am rand ä rahmä vo 1 und denn -0.5 wäg mitti, old version wenn genau mitti level[0].length-2)/2
 		this.spriteSheet.y = 2.5*this.sizeOfSprite; //AnchorPoint (0,5,0,5) 
+
+        //Position Marker
+        //this.touchNode.drawRect(cc.p(this.winsize.width/2-5,2*this.sizeOfSprite-5),cc.p(this.winsize.width/2+5,2*this.sizeOfSprite+5),cc.color(255,0,0,255),null,null); //Position Marker
+        var spriteFrame = cc.spriteFrameCache.getSpriteFrame(this.ls.getItem(207)+".png");
+        this.positionMarker = new cc.Sprite(spriteFrame);
+        this.positionMarker.opacity = 200;
+        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208);
+        this.positionMarker.setPosition(cc.p(this.winsize.width/2+positionMarkerArray[this.ls.getItem(207)-1][0],2*this.sizeOfSprite+positionMarkerArray[this.ls.getItem(207)-1][1]));
+        this.touchNode.addChild(this.positionMarker,1);
     },  
 	generateLvl:function(){
         //load seed
@@ -943,19 +1774,28 @@ var gameLayer = cc.Layer.extend({
         //return gameOver();
     },
     update:function (dt) {
-        //cc.log(this.row.y+"  "+this.column.x);
-        // update meter
+        //Points
+        if(this.levelOver.value == 0){
         if (-this.spriteSheet.y>this.highest) this.highest = -this.spriteSheet.y;
+        this.points.frames = this.points.frames + 1;
+        if ( this.points.frames % 4 == 0) this.points.updatedFrames = this.points.frames; //every 20Fps sec at 60FPS
+        this.points.value = Math.ceil(this.highest) + this.quads.points /*+ this.points.updatedFrames*/;
+
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updateMoves(this.moves.value);
-        statusLayer.updatePoints(this.highest + this.moves.value*this.sizeOfSprite);
+        statusLayer.updatePoints(this.points.value);
         statusLayer.updateQuads(this.quads.value);
+        if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+        statusLayer.updateBlueQuads(this.quads.blue);
+        }
         if (this.switcher.value === true && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.removeEverything();
+            this.levelOver.value = 1;
             return this.gameOver();
         } 
-        if (levelsArray[this.ls.getItem(99)-1][6]-this.moves.value < 0 && this.spriteSheet.getNumberOfRunningActions()==0){
+        if (levelsArray[this.ls.getItem(99)-1][6]-this.moves.value <= 0 && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.removeEverything();
+            this.levelOver.value = 2;
             return this.gameOver();
         }
         if (this.switcher.tutorial == true && this.spriteSheet.getNumberOfRunningActions()==0){
@@ -963,10 +1803,16 @@ var gameLayer = cc.Layer.extend({
             this.switcher.tutorial = false;
             this.switcher.loading = false;
         }
+        /*if (this.ls.getItem(209)==1 && this.spriteSheet.getNumberOfRunningActions()==0){
+            statusLayer.tutorial();
+            this.switcher.loading = false;
+            this.ls.setItem(209,2);
+        }*/
         if (this.switcher.loading == true && this.spriteSheet.getNumberOfRunningActions()==0 && this.switcher.tutorial==false){
             statusLayer.helpNodes();
             this.switcher.loading = false;
         }
+     }
 
     },
     onExit:function() {
@@ -983,15 +1829,19 @@ var gameLayer = cc.Layer.extend({
     gameOver:function (){
         cc.log("LevelEnd");
         var ls = cc.sys.localStorage;
-        ls.setItem(1, Math.floor(this.highest + this.moves.value*this.sizeOfSprite));
+        ls.setItem(1, Math.floor(this.points.value));
         ls.setItem(2, this.quads.value);
         ls.setItem(3, this.moves.value);
-        this.spriteSheet.runAction(this.rightUp); //hack but fixes probelm
+        if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3) ls.setItem(4, this.quads.blue);
+        ls.setItem(5, levelsArray[ls.getItem(99)-1][6]-this.moves.value);
+        ls.setItem(13,this.levelOver.value);
+        //this.spriteSheet.runAction(this.rightUp); //hack but fixes problem not anymore needed
         cc.director.pause();
         if(ls.getItem(999)==1){ //Beta switch
         this.addChild(new gameOverLayer());
         }
         else this.addChild(new gameBetaOverLayer());
+        cc.director.resume();
 
         
         //spriteSheet.getParent().addChild(new gameOverLayer());
@@ -1023,6 +1873,26 @@ var gameLayer = cc.Layer.extend({
         this.showNode.setPosition(0,0);
         this.showNode.runAction(this.showNodeAction);
         }
+    },
+        quadsCombo:function(input){
+        if (input==1 || input==2){ 
+            this.quads.combo = this.quads.combo + input;
+            this.quads.points = this.quads.points + 1000;
+        }
+        else if(input==10){ //combo finished with destroy
+            if (this.quads.combo>1){
+            this.quads.points = this.quads.points + (Math.pow(2,this.quads.combo)*1000);
+            }
+            this.quads.combo = 0;
+        }
+        else {
+            cc.log(this.quads.combo);
+            if (this.quads.combo>1){
+            this.quads.points = this.quads.points + (Math.pow(2,this.quads.combo)*1000);
+            }
+            this.quads.combo = 0;
+        } 
+
     }
 
 });

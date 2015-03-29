@@ -24,10 +24,10 @@ var statusLayer = cc.Layer.extend({
         this.addChild(this.labelQuads);
 
         this.labelQuadsBlue = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/10);
-        this.labelQuadsBlue.setColor(cc.color(150,0,0));
+        this.labelQuadsBlue.setColor(cc.color(0,0,150));
         this.labelQuadsBlue.setAnchorPoint(1,0);
-        this.labelQuadsBlue.setPosition(cc.p(this.winsize.width, this.winsize.height - (2*this.winsize.height/10+20)));
-        if (this.ls.getItem(666)==2) this.addChild(this.labelQuadsBlue);
+        this.labelQuadsBlue.setPosition(cc.p(this.winsize.width, this.winsize.height - (this.winsize.height/10*3+20)));
+        if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3) this.addChild(this.labelQuadsBlue);
 
         this.labelPoints = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/10);
 		this.labelPoints.setAnchorPoint(1,0);
@@ -38,6 +38,7 @@ var statusLayer = cc.Layer.extend({
         this.labelMoves = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/10);
         this.labelMoves.setAnchorPoint(1,0);
         this.labelMoves.setPosition(cc.p(this.winsize.width, this.winsize.height - (this.winsize.height/10*3+20)));
+        if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3) this.labelMoves.setPosition(cc.p(this.winsize.width, this.winsize.height - (this.winsize.height/10*4+20)));
         this.labelMoves.setColor(cc.color(255,150,0));
         this.addChild(this.labelMoves);
 
@@ -93,7 +94,7 @@ var statusLayer = cc.Layer.extend({
         this.labelMoves.setString(levelsArray[this.ls.getItem(99)-1][6]-moves);
     },
         updateBlueQuads:function(quadsBlue){
-        this.labelQuadsBlue.setString(quadsBlue);
+        this.labelQuadsBlue.setString(quadsBlue+"/"+levelsArray[this.ls.getItem(99)-1][4]);
     },
         removeEverything : function(){
         this.removeAllChildren();
@@ -116,7 +117,7 @@ var statusLayer = cc.Layer.extend({
         this.addChild(this.pauseMenu,0,12);
         this.helpNodes();
     },
-    onExit : function(){
+    onExit:function(){
         this.pauseMenu.release();
         this.helpNodeLeft.release();
         this.helpNodeTop.release();

@@ -26,6 +26,16 @@ var pauseLayer = cc.LayerColor.extend({
         this.unsuccessfulQuads.visible = false;
         this.addChild(this.unsuccessfulQuads);
 
+        this.successfulQuadsBlue = new cc.Sprite(res.vote_true);
+        this.successfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
+        this.successfulQuadsBlue.visible = false;
+        this.addChild(this.successfulQuadsBlue);
+
+        this.unsuccessfulQuadsBlue = new cc.Sprite(res.vote_false);
+        this.unsuccessfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
+        this.unsuccessfulQuadsBlue.visible = false;
+        this.addChild(this.unsuccessfulQuadsBlue);
+
         this.successfulMoves = new cc.Sprite(res.vote_true);
         this.successfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
         this.successfulMoves.visible = false;
@@ -37,10 +47,19 @@ var pauseLayer = cc.LayerColor.extend({
         this.addChild(this.unsuccessfulMoves);
 
         this.labelQuads = new cc.LabelTTF(this.quads+ " Quads" /*+ " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/, "Quicksand-Light", winsize.height/8);
-        this.labelQuads.setColor(cc.color(0,0,0));//black color
+        if(this.ls.getItem(666)==2||this.ls.getItem(666)==3){
+            this.labelQuads.setColor(cc.color(150,0,0));
+        }
+        else this.labelQuads.setColor(cc.color(0,0,0));//black color
         this.labelQuads.setPosition(cc.p(winsize.width/8*5, winsize.height/6*4));
         this.labelQuads.setAnchorPoint(1,0.5);
         this.addChild(this.labelQuads);
+
+        this.labelQuadsBlue = new cc.LabelTTF(this.quads+ " Quads" , "Quicksand-Light", winsize.height/8);
+        this.labelQuadsBlue.setColor(cc.color(0,0,150));//black color
+        this.labelQuadsBlue.setPosition(cc.p(winsize.width/8*5, winsize.height/6*5));
+        this.labelQuadsBlue.setAnchorPoint(1,0.5);
+        if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3) this.addChild(this.labelQuadsBlue);
 
         this.labelPoints = new cc.LabelTTF(this.points+" Points"/* + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/, "Quicksand-Light", winsize.height/8);
         this.labelPoints.setPosition(cc.p(winsize.width/8*5, winsize.height/6*2));
@@ -57,24 +76,27 @@ var pauseLayer = cc.LayerColor.extend({
         if (this.quads >= levelsArray[this.ls.getItem(99)-1][3]){
             this.labelQuads.setString(this.quads+ " Quads"/* + " (" + "+" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
             this.successfulQuads.visible = true;
-            this.labelQuads.setColor(cc.color(0,0,0));
         }
         else {
             this.labelQuads.setString(this.quads+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
-            this.unsuccessfulQuads.visible = true;
-            this.labelQuads.setColor(cc.color(0,0,0));
+            this.unsuccessfulQuads.visible = true;;
+        }
+        if (this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4] && this.ls.getItem(666)==2 || this.ls.getItem(666)==3 && this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4]){
+                this.labelQuads.setColor(cc.color(150,0,0));
+                this.successfulQuadsBlue.visible = true;
+                this.labelQuadsBlue.setString(this.quadsBlue+ " Quads");
+        }
+        else if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+            this.labelQuadsBlue.setString(this.quads+ " Quads");
+            this.unsuccessfulQuadsBlue.visible = true;
         }
 
-        if (this.points >= levelsArray[this.ls.getItem(99)-1][5]){
             this.labelPoints.setString(this.points+" Points"/*  + " (" + "+" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
             this.labelPoints.setColor(cc.color(0,0,0));
-        }
-        else {
-            this.labelPoints.setString(this.points+" Points" /*+ " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
-            this.labelPoints.setColor(cc.color(0,0,0));
-        }
 
-        if (this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
+
+
+        if (this.moves < levelsArray[this.ls.getItem(99)-1][6]){
             this.movesLabel.setString(this.moves+" Moves" /* + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
             this.successfulMoves.visible = true;
             this.movesLabel.setColor(cc.color(0,0,0));
@@ -131,7 +153,7 @@ var pauseLayer = cc.LayerColor.extend({
         this.quads = ls.getItem(2);
         this.points = ls.getItem(1);
         this.moves = ls.getItem(3);
-        cc.log(this.moves);
+        if (ls.getItem(666)==2 || ls.getItem(666)==3) quadsBlue = ls.getItem(4);
     },
 	onTouchBegan:function(touch, event) {
         var pos = touch.getLocation();

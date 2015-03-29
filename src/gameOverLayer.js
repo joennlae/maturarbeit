@@ -27,7 +27,7 @@ var gameOverLayer = cc.LayerColor.extend({
 
         this.frameCounter = {value: 0, refreshTime: 60}; // 0.5 sec warten
 
-        this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/10);
+        /*this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/10);
         this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.levelCompleteLabel.setColor(cc.color(0,0,0));
 
@@ -37,7 +37,7 @@ var gameOverLayer = cc.LayerColor.extend({
 
         this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/10);
         this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
-        this.closeLabel.setColor(cc.color(0,0,0));
+        this.closeLabel.setColor(cc.color(0,0,0));*/
 
         this.successfulQuads = new cc.Sprite(res.vote_true);
         this.successfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
@@ -48,6 +48,16 @@ var gameOverLayer = cc.LayerColor.extend({
         this.unsuccessfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
         this.unsuccessfulQuads.visible = false;
         this.addChild(this.unsuccessfulQuads);
+
+        this.successfulQuadsBlue = new cc.Sprite(res.vote_true);
+        this.successfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
+        this.successfulQuadsBlue.visible = false;
+        this.addChild(this.successfulQuadsBlue);
+
+        this.unsuccessfulQuadsBlue = new cc.Sprite(res.vote_false);
+        this.unsuccessfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
+        this.unsuccessfulQuadsBlue.visible = false;
+        this.addChild(this.unsuccessfulQuadsBlue);
 
         this.successfulMoves = new cc.Sprite(res.vote_true);
         this.successfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
@@ -60,22 +70,31 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.unsuccessfulMoves);
 
         if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
-            this.addChild(this.levelCompleteLabel);
+            //this.addChild(this.levelCompleteLabel);
             //this.save();
         }
         else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
-            this.addChild(this.againLabel);
+            //this.addChild(this.againLabel);
             //this.save();
         }
         else{
-            this.addChild(this.closeLabel);
+            //this.addChild(this.closeLabel);
         }
 
         this.labelQuads = new cc.LabelTTF(this.quads+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/, "Quicksand-Light", winsize.height/10);
-        this.labelQuads.setColor(cc.color(0,0,0));//black color
+        if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+            this.labelQuads.setColor(cc.color(150,0,0));//black color
+        }
+        else this.labelQuads.setColor(cc.color(0,0,0));//black color
         this.labelQuads.setPosition(cc.p(winsize.width/8*5, winsize.height/6*4));
         this.labelQuads.setAnchorPoint(1,0.5);
         this.addChild(this.labelQuads);
+
+        this.labelQuadsBlue = new cc.LabelTTF(this.quadsBlue+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/, "Quicksand-Light", winsize.height/10);
+        this.labelQuadsBlue.setColor(cc.color(0,0,150));//black color
+        this.labelQuadsBlue.setPosition(cc.p(winsize.width/8*5, winsize.height/6*5));
+        this.labelQuadsBlue.setAnchorPoint(1,0.5);
+        if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3) this.addChild(this.labelQuadsBlue);
 
         this.labelPoints = new cc.LabelTTF(this.points+" Points"/* + " (" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/, "Quicksand-Light", winsize.height/10);
         this.labelPoints.setPosition(cc.p(winsize.width/8*5, winsize.height/6*2));
@@ -99,22 +118,23 @@ var gameOverLayer = cc.LayerColor.extend({
         if (this.quads >= levelsArray[this.ls.getItem(99)-1][3]){
             this.labelQuads.setString(this.quads+ " Quads"/* + " (" + "+" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
             this.successfulQuads.visible = true;
-            this.labelQuads.setColor(cc.color(0,0,0));
         }
         else {
             this.labelQuads.setString(this.quads+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
             this.unsuccessfulQuads.visible = true;
-            this.labelQuads.setColor(cc.color(0,0,0));
         }
 
-        if (this.points >= levelsArray[this.ls.getItem(99)-1][5]){
+        if (this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4] && this.ls.getItem(666)==2 || this.ls.getItem(666)==3 && this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4]){
+            this.labelQuadsBlue.setString(this.quadsBlue+ " Quads"/* + " (" + "+" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
+            this.successfulQuadsBlue.visible = true;
+        }
+        else if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+            this.labelQuadsBlue.setString(this.quadsBlue+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/);
+            this.unsuccessfulQuadsBlue.visible = true;
+        }
+
             this.labelPoints.setString(this.points+" Points" /*+ " (" + "+" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
             this.labelPoints.setColor(cc.color(0,0,0));
-        }
-        else {
-            this.labelPoints.setString(this.points+" Points"/* + " (" + (this.points.value-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
-            this.labelPoints.setColor(cc.color(0,0,0));
-        }
 
         if (this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
             this.movesLabel.setString(this.moves+" Moves"/* + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
@@ -180,6 +200,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.quads = JSON.parse(ls.getItem(2));
         this.points = JSON.parse(ls.getItem(1));
         this.moves = JSON.parse(ls.getItem(3));
+        if (ls.getItem(666)==2 || ls.getItem(666)==3) this.quadsBlue = JSON.parse(ls.getItem(4));
         this.movesLeft = JSON.parse(ls.getItem(5));
     },
 	save : function(){ //TODO Moves Adding

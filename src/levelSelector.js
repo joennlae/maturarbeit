@@ -291,7 +291,7 @@ var levelSelector = cc.Layer.extend({
         cc.director.runScene(new PlayScene());
     	}
     },
-        onBack : function(){
+       onBack : function(){
     	cc.director.runScene(new menuScene());
     },
 	

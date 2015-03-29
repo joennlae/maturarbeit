@@ -21,7 +21,7 @@ var positionMarkerArray =   [[10,10,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,5,0.5]
 
 var levelsArray =  [[10,10,1,0,0,100,10,11000,12000,1],   //rows | columns | seed | red quads | blue quads | min points | max Moves | points for rank 2 | points for rank 3
 					[25,26,2,3,0,100,200,16000,17000,1],
-					[30,30,3,0,0,100,200,26000,27000,1]];
+					[30,30,3,3,0,100,200,26000,27000,3]];
 
 var g_resources = [];
 for (var i in res) {

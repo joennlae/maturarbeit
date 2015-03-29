@@ -10,6 +10,9 @@ var gameOverLayer = cc.LayerColor.extend({
     pointsContainer: 0,
     animations: 0,
     updateCheck: 0,
+    finalPoints: 0,
+    pointsPerSec: 0,
+    movesPerSec: 0,
     // constructor
     ctor:function () {
         this._super();
@@ -26,6 +29,8 @@ var gameOverLayer = cc.LayerColor.extend({
         saveArray = JSON.parse(this.ls.getItem(101));
 
         this.frameCounter = {value: 0, refreshTime: 60}; // 0.5 sec warten
+        this.finalPoints = this.getFinalPoints();
+        cc.log(this.finalPoints);
 
         /*this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/10);
         this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
@@ -69,13 +74,13 @@ var gameOverLayer = cc.LayerColor.extend({
         this.unsuccessfulMoves.visible = false;
         this.addChild(this.unsuccessfulMoves);
 
-        if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
+        if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
             //this.addChild(this.levelCompleteLabel);
-            //this.save();
+            this.save();
         }
-        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
+        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.quads >=saveArray[this.ls.getItem(99)-1][1] && this.moves <= saveArray[this.ls.getItem(99)-1][4] && this.points >= saveArray[this.ls.getItem(99)-1][0]){
             //this.addChild(this.againLabel);
-            //this.save();
+            this.save();
         }
         else{
             //this.addChild(this.closeLabel);
@@ -172,28 +177,22 @@ var gameOverLayer = cc.LayerColor.extend({
         }, this);
 		
     },
+    getFinalPoints:function(){
+        var saveMovesLeft = this.movesLeft;
+        var pointsOuh = 0;
+        for ( i = this.movesLeft; i>0; i--){
+            pointsOuh = ((Math.floor(saveMovesLeft/10)+1) * 1000) + pointsOuh;
+            saveMovesLeft = saveMovesLeft - 1;
+            }
+        this.pointsContainer = pointsOuh;
+        this.pointsPerSec = this.pointsContainer/180; //anim = 3sec
+        this.movesPerSec = this.movesLeft/180; // anim = 3sec
+        return this.points + pointsOuh;
+    },
     onRestart:function (sender) {
-        if(this.animations==1){
+
         cc.director.resume();
         cc.director.runScene(new levelSelectorScene());
-        }
-        if(this.animations==0){
-            this.updateCheck = 1;
-            this.fastFinish();
-        }
-    },
-    fastFinish:function(){
-        for ( i = this.movesLeft; i>0; i--){
-            this.pointsContainer = ((Math.floor(this.movesLeft/10)+1) * 1000) + this.pointsContainer;
-            this.movesLeft = this.movesLeft - 1;
-            cc.log(this.pointsContainer);
-            }
-
-            this.points = this.points + this.pointsContainer;
-            this.labelPoints.setString(this.points + " Points");
-            this.animations = 1; 
-            this.movesLeftLabel.visible = false;
-        
     },
     getPoints:function(){
         var ls = cc.sys.localStorage;
@@ -203,33 +202,34 @@ var gameOverLayer = cc.LayerColor.extend({
         if (ls.getItem(666)==2 || ls.getItem(666)==3) this.quadsBlue = JSON.parse(ls.getItem(4));
         this.movesLeft = JSON.parse(ls.getItem(5));
     },
-	save : function(){ //TODO Moves Adding
+	save : function(){ 
 		if (this.ls.getItem(99) == this.ls.getItem(100)){
 			var levelNum = this.ls.getItem(99);
 			
 			saveArray = JSON.parse(this.ls.getItem(101));
-			//cc.log(saveArray);
-			saveArray[levelNum-1][0] = JSON.parse(this.points);//points
+			saveArray[levelNum-1][0] = JSON.parse(this.points+this.pointsContainer);//points
 			saveArray[levelNum-1][1] = JSON.parse(this.ls.getItem(2));//redquads
-			//saveArray[levelNum][2] = this.ls.getItem(3);//bluequads
-			saveArray[levelNum-1][3] = this.checkRank(); //rank function
+            if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+			saveArray[levelNum][2] = JSON.parse(this.ls.getItem(4));//bluequads
+            }
+			saveArray[levelNum-1][3] = JSON.parse(this.checkRank()); //rank function
             saveArray[levelNum-1][4] = JSON.parse(this.ls.getItem(3));
             saveArray[levelNum-1][5] = 1; //LevelCheck Number | done
 
 			this.ls.setItem(101, JSON.stringify(saveArray));
 			this.ls.setItem(100, JSON.parse(this.ls.getItem(99)) + 1);
-			//cc.log(this.ls.getItem(101));
 		}
 		else {
 			var levelNum = JSON.parse(this.ls.getItem(99))-1;
 			var saveArray = JSON.parse(this.ls.getItem(101));
-			if (saveArray[levelNum][0] < this.points) saveArray[levelNum][0] = JSON.parse(this.points);
+			if (saveArray[levelNum][0] < this.points + this.pointsContainer) saveArray[levelNum][0] = JSON.parse(this.points);
 			if (saveArray[levelNum][1] < this.ls.getItem(2)) saveArray[levelNum][1] = JSON.parse(this.ls.getItem(2));
-			//if (saveArray[levelNum][2] < this.ls.getItem(3)) saveArray[levelNum][2] = this.ls.getItem(3);
-			if (saveArray[levelNum][3] < 3 ) saveArray[levelNum][3] = this.checkRank();//starfunction
+            if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+			if (saveArray[levelNum][2] < this.ls.getItem(4)) saveArray[levelNum][2] = this.ls.getItem(4);
+            }
+			if (saveArray[levelNum][3] < 3 ) saveArray[levelNum][3] = this.checkRank();
             if (saveArray[levelNum][4] > this.ls.getItem(3)) saveArray[levelNum][4] = JSON.parse(this.ls.getItem(3));
 			this.ls.setItem(101, JSON.stringify(saveArray));
-			//cc.log(this.ls.getItem(101));
 		}
 	},
     checkRank : function(){
@@ -249,7 +249,7 @@ var gameOverLayer = cc.LayerColor.extend({
 
     onTouchMoved:function(touch, event) {
         var pos = touch.getLocation();
-	event.getCurrentTarget().recognizer.movePoint(pos.x, pos.y);
+	    event.getCurrentTarget().recognizer.movePoint(pos.x, pos.y);
     },
 
     onTouchEnded:function(touch, event) {
@@ -268,45 +268,20 @@ var gameOverLayer = cc.LayerColor.extend({
 	},
     update:function(dt) {
         this.frameCounter.value = this.frameCounter.value + 1;
-        if(this.updateCheck==0){
-        if(this.frameCounter.value % this.frameCounter.refreshTime == 0 && this.movesLeft>0){
-            this.pointsContainer = ((Math.floor(this.movesLeft/10)+1) * 1000) + this.pointsContainer;
-            this.movesLeft = this.movesLeft - 1;
-            this.labelPoints.setString(this.points + " Points");
-            this.movesLeftLabel.setString(this.movesLeft+ " Left");
-            if(this.movesLeft>50) this.frameCounter.refreshTime = 2;
-            else if(this.movesLeft<=50 && this.movesLeft>30) this.frameCounter.refreshTime = 4;
-            else if(this.movesLeft<=30 && this.movesLeft>20) this.frameCounter.refreshTime = 8;
-            else if(this.movesLeft<=20 && this.movesLeft>10) this.frameCounter.refreshTime = 12;
-            else if(this.movesLeft<=10 && this.movesLeft>0) this.frameCounter.refreshTime = 20;
-        }
         if(this.pointsContainer>0){
-            if(this.pointsContainer>1000){
-                this.points =  1000 + this.points; 
-                this.pointsContainer = this.pointsContainer - 1000;
-            }
-            else if (this.pointsContainer>100){
-                this.points = 100 + this.points;
-                this.pointsContainer = this.pointsContainer - 100;
-            }
-            else {
-                this.points = 10 + this.points;
-                this.pointsContainer = this.pointsContainer - 10;
-            }
-
+            this.points = this.points + this.pointsPerSec;
+            this.pointsContainer = this.pointsContainer - this.pointsPerSec;
+            this.movesLeft = this.movesLeft - this.movesPerSec;
+        }
+        else {
+            this.points = this.finalPoints;
+            this.movesLeft = 0;
+            this.movesLeftLabel.visible = false;
         }
         if(this.frameCounter.value % 4 == 0 && this.pointsContainer>0){
-            this.labelPoints.setString(this.points + " Points");
+            this.labelPoints.setString(Math.floor(this.points) + " Points");
+            this.movesLeftLabel.setString(Math.ceil(this.movesLeft)+ " Left");
         }
-        if(this.movesLeft == 0 && this.animations == 0) {
-                this.animations = 1;
-                this.movesLeftLabel.visible = false;
-                this.ls = cc.sys.localStorage;
-                saveArray = JSON.parse(this.ls.getItem(101));
-                this.movesLeftLabel.visible = false;
-                if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]) this.save();
-                else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.points >= levelsArray[this.ls.getItem(99)-1][5] && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]) this.save();
-            }
-        }
+        
     }
 });

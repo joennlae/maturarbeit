@@ -15,6 +15,7 @@ var menuLayer = cc.Layer.extend({
         if(ls.getItem(207)<1) ls.setItem(207,6); //positionMarker 6=default
         if(ls.getItem(208)<1) ls.setItem(208,2); //Halfsize or Fullsize=default
         if(ls.getItem(209)<1) ls.setItem(209,1); //Gamemode 2 tutorial
+        if(ls.getItem(211)<1) ls.setItem(211,1); //Background Sound true=default
         this.winsize = cc.director.getWinSize();
 
         cc.log(ls.getItem(206));
@@ -76,6 +77,12 @@ var menuLayer = cc.Layer.extend({
         var settingsMenu = new cc.Menu(settingsItemLabel); 
         settingsMenu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/6));
         this.addChild(settingsMenu);
+        //audio Eninge
+        if(cc.audioEngine.isMusicPlaying()){}
+        else{
+        cc.audioEngine.playMusic(res.sound, true);
+        if (ls.getItem(211)==2) cc.audioEngine.pauseMusic();
+        }
     },
 
     onPlay : function(){

@@ -32,22 +32,51 @@ var gameOverLayer = cc.LayerColor.extend({
         this.finalPoints = this.getFinalPoints();
         cc.log(this.finalPoints);
 
-        /*this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/10);
+        this.actionTo = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*4), 150, 4);
+        this.actionTo.retain();
+        this.actionToRank = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*3), 150, 2);
+        this.actionTo.retain();
+
+        this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/12);
         this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
-        this.levelCompleteLabel.setColor(cc.color(0,0,0));
+        this.levelCompleteLabel.setRotation(-30);
+        this.levelCompleteLabel.setColor(cc.color(0,150,0));
+        this.levelCompleteLabel.visible = false;
+        this.addChild(this.levelCompleteLabel);
 
-        this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winsize.height/10);
+        this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winsize.height/12);
         this.againLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
+        this.againLabel.setRotation(-30);
         this.againLabel.setColor(cc.color(0,150,0));
+        this.againLabel.visible = false;
+        this.addChild(this.againLabel);
 
-        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/10);
+        this.highscoreLabel = new cc.LabelTTF("New Highscore!", "Quicksand-Light", winsize.height/12);
+        this.highscoreLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
+        this.highscoreLabel.setRotation(-30);
+        this.highscoreLabel.setColor(cc.color(0,150,0));
+        this.highscoreLabel.visible = false;
+        this.addChild(this.highscoreLabel);
+
+        this.newrankLabel = new cc.LabelTTF("New Rank!", "Quicksand-Light", winsize.height/12);
+        this.newrankLabel.setPosition(cc.p(winsize.width/4*3, winsize.height/6*3));
+        this.newrankLabel.setRotation(-30);
+        this.newrankLabel.setColor(cc.color(0,150,0));
+        this.newrankLabel.visible = false;
+        this.addChild(this.newrankLabel);
+
+        this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/12);
         this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
-        this.closeLabel.setColor(cc.color(0,0,0));*/
+        this.closeLabel.setRotation(-30);
+        this.closeLabel.setColor(cc.color(150,0,0));
+        this.closeLabel.visible = false;
+        this.addChild(this.closeLabel);
 
-        this.movesoverLabel = new cc.LabelTTF("Out of Moves", "Quicksand-Light", winsize.height/16);
-        this.movesoverLabel.setPosition(cc.p(winsize.width/4, winsize.height/6*4));
+        this.movesoverLabel = new cc.LabelTTF("Out of Moves", "Quicksand-Light", winsize.height/12);
+        this.movesoverLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.movesoverLabel.setColor(cc.color(150,0,0));
         this.movesoverLabel.setRotation(-30);
+        this.movesoverLabel.visible = false;
         if(this.ls.getItem(13)==2) this.addChild(this.movesoverLabel);
 
         this.successfulQuads = new cc.Sprite(res.vote_true);
@@ -81,16 +110,37 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.unsuccessfulMoves);
 
         if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
-            //this.addChild(this.levelCompleteLabel);
+            this.levelCompleteLabel.visible = true;
+            this.levelCompleteLabel.runAction(this.actionTo);
             this.save();
+            if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
+                this.newrankLabel.visible = true;
+                this.newrankLabel.runAction(this.actionToRank);
+            }
         }
-        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.quads >=saveArray[this.ls.getItem(99)-1][1] && this.moves <= saveArray[this.ls.getItem(99)-1][4] && this.points >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){
-            //this.addChild(this.againLabel);
+        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){ //only points countä für highscore
+            this.highscoreLabel.visible = true;
+            this.highscoreLabel.runAction(this.actionTo);
             this.save();
+            if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
+                this.newrankLabel.visible = true;
+                this.newrankLabel.runAction(this.actionToRank);
+            }    
         }
-        else{
-            //this.addChild(this.closeLabel);
+        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
+            this.againLabel.visible = true;
+            this.againLabel.runAction(this.actionTo);
         }
+        else if (this.ls.getItem(13)==1){
+            this.closeLabel.visible = true;
+            this.closeLabel.runAction(this.actionTo);
+        }
+        else {
+            this.movesoverLabel.visible = true;
+            this.movesoverLabel.runAction(this.actionTo);
+            this.ls.setItem(13,1);  
+        }
+
 
         this.labelQuads = new cc.LabelTTF(this.quads+ " Quads"/* + " (" + (this.quads-levelsArray[this.ls.getItem(99)-1][3]) + ")"*/, "Quicksand-Light", winsize.height/10);
         if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
@@ -213,7 +263,7 @@ var gameOverLayer = cc.LayerColor.extend({
 			var levelNum = this.ls.getItem(99);
 			
 			saveArray = JSON.parse(this.ls.getItem(101));
-			saveArray[levelNum-1][0] = JSON.parse(this.points+this.pointsContainer);//points
+			saveArray[levelNum-1][0] = JSON.parse(this.finalPoints);//points
 			saveArray[levelNum-1][1] = JSON.parse(this.ls.getItem(2));//redquads
             if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
 			saveArray[levelNum][2] = JSON.parse(this.ls.getItem(4));//bluequads
@@ -228,21 +278,21 @@ var gameOverLayer = cc.LayerColor.extend({
 		else {
 			var levelNum = JSON.parse(this.ls.getItem(99))-1;
 			var saveArray = JSON.parse(this.ls.getItem(101));
-			if (saveArray[levelNum][0] < this.points + this.pointsContainer) saveArray[levelNum][0] = JSON.parse(this.points);
+			if (saveArray[levelNum][0] < this.finalPoints) saveArray[levelNum][0] = JSON.parse(this.points);
 			if (saveArray[levelNum][1] < this.ls.getItem(2)) saveArray[levelNum][1] = JSON.parse(this.ls.getItem(2));
             if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
 			if (saveArray[levelNum][2] < this.ls.getItem(4)) saveArray[levelNum][2] = this.ls.getItem(4);
             }
-			if (saveArray[levelNum][3] < 3 ) saveArray[levelNum][3] = this.checkRank();
+			if (saveArray[levelNum][3] < this.checkRank()) saveArray[levelNum][3] = this.checkRank();
             if (saveArray[levelNum][4] > this.ls.getItem(3)) saveArray[levelNum][4] = JSON.parse(this.ls.getItem(3));
 			this.ls.setItem(101, JSON.stringify(saveArray));
 		}
 	},
     checkRank : function(){
-        if (this.points >= levelsArray[this.ls.getItem(99)-1][8]){
+        if (this.finalPoints >= levelsArray[this.ls.getItem(99)-1][8]){
             return 3;
         }
-        else if (this.points >= levelsArray[this.ls.getItem(99)-1][7] && this.points < levelsArray[this.ls.getItem(99)-1][8]){
+        else if (this.finalPoints >= levelsArray[this.ls.getItem(99)-1][7] && this.finalPoints < levelsArray[this.ls.getItem(99)-1][8]){
             return 2;
         }
         else return 1;
@@ -289,5 +339,10 @@ var gameOverLayer = cc.LayerColor.extend({
             this.movesLeftLabel.setString(Math.ceil(this.movesLeft)+ " Left");
         }
         
+    },
+    onExit:function() {
+        this.actionTo.release();
+        this.actionToRank.release();
+        this._super();
     }
 });

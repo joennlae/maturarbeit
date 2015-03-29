@@ -96,7 +96,7 @@ var pauseLayer = cc.LayerColor.extend({
 
 
 
-        if (this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
+        if (this.moves < levelsArray[this.ls.getItem(99)-1][6]){
             this.movesLabel.setString(this.moves+" Moves" /* + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
             this.successfulMoves.visible = true;
             this.movesLabel.setColor(cc.color(0,0,0));

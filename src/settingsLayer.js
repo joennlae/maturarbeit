@@ -82,6 +82,7 @@ var settingsLayer = cc.Layer.extend({
         this.positionMarkerNode = new cc.LayerColor(cc.color(255,255,255,200));
         this.positionMarkerNode.visible = false;
         this.addChild(this.positionMarkerNode,10,345);
+        this.positionMarkerNode.retain();
 
         cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
         cc.textureCache.addImage("res/rails.png");
@@ -191,6 +192,7 @@ var settingsLayer = cc.Layer.extend({
                 return true;
             }
         });
+        this.listener.retain();
 
         //cc.eventManager.pauseTarget(this.positionMarkerNode, true);
         //this.positionMarkerEnd();
@@ -299,7 +301,12 @@ var settingsLayer = cc.Layer.extend({
                 this.voteTrueMenuHS.visible = true;
                 this.voteFalseMenuHS.visible = false;
             }
-        }
+        },
+    onExit:function() {
+        this.positionMarkerNode.release();
+        this.listener.release();
+        this._super();
+    }
 });
 
 

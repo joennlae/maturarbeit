@@ -1779,7 +1779,7 @@ var gameLayer = cc.Layer.extend({
         if (-this.spriteSheet.y>this.highest) this.highest = -this.spriteSheet.y;
         this.points.frames = this.points.frames + 1;
         if ( this.points.frames % 4 == 0) this.points.updatedFrames = this.points.frames; //every 20Fps sec at 60FPS
-        this.points.value = this.highest + this.quads.points + this.points.updatedFrames;
+        this.points.value = Math.ceil(this.highest) + this.quads.points /*+ this.points.updatedFrames*/;
 
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updateMoves(this.moves.value);
@@ -1795,7 +1795,7 @@ var gameLayer = cc.Layer.extend({
         } 
         if (levelsArray[this.ls.getItem(99)-1][6]-this.moves.value <= 0 && this.spriteSheet.getNumberOfRunningActions()==0){
             statusLayer.removeEverything();
-            this.levelOver.value = 1;
+            this.levelOver.value = 2;
             return this.gameOver();
         }
         if (this.switcher.tutorial == true && this.spriteSheet.getNumberOfRunningActions()==0){
@@ -1803,6 +1803,11 @@ var gameLayer = cc.Layer.extend({
             this.switcher.tutorial = false;
             this.switcher.loading = false;
         }
+        /*if (this.ls.getItem(209)==1 && this.spriteSheet.getNumberOfRunningActions()==0){
+            statusLayer.tutorial();
+            this.switcher.loading = false;
+            this.ls.setItem(209,2);
+        }*/
         if (this.switcher.loading == true && this.spriteSheet.getNumberOfRunningActions()==0 && this.switcher.tutorial==false){
             statusLayer.helpNodes();
             this.switcher.loading = false;
@@ -1829,6 +1834,7 @@ var gameLayer = cc.Layer.extend({
         ls.setItem(3, this.moves.value);
         if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3) ls.setItem(4, this.quads.blue);
         ls.setItem(5, levelsArray[ls.getItem(99)-1][6]-this.moves.value);
+        ls.setItem(13,this.levelOver.value);
         //this.spriteSheet.runAction(this.rightUp); //hack but fixes problem not anymore needed
         cc.director.pause();
         if(ls.getItem(999)==1){ //Beta switch

@@ -14,7 +14,9 @@ var menuLayer = cc.Layer.extend({
         if(ls.getItem(206)!=0) ls.setItem(206,1);//Tutorial activated default
         if(ls.getItem(207)<1) ls.setItem(207,1); //positionMarker
         if(ls.getItem(208)<1) ls.setItem(208,1); //Halfsize or Fullsize
+        if(ls.getItem(209)<1) ls.setItem(209,1); //Gamemode 2 tutorial
         this.winsize = cc.director.getWinSize();
+
         cc.log(ls.getItem(206));
         var centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
 

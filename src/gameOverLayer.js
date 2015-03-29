@@ -44,6 +44,12 @@ var gameOverLayer = cc.LayerColor.extend({
         this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.closeLabel.setColor(cc.color(0,0,0));*/
 
+        this.movesoverLabel = new cc.LabelTTF("Out of Moves", "Quicksand-Light", winsize.height/16);
+        this.movesoverLabel.setPosition(cc.p(winsize.width/4, winsize.height/6*4));
+        this.movesoverLabel.setColor(cc.color(150,0,0));
+        this.movesoverLabel.setRotation(-30);
+        if(this.ls.getItem(13)==2) this.addChild(this.movesoverLabel);
+
         this.successfulQuads = new cc.Sprite(res.vote_true);
         this.successfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
         this.successfulQuads.visible = false;
@@ -74,11 +80,11 @@ var gameOverLayer = cc.LayerColor.extend({
         this.unsuccessfulMoves.visible = false;
         this.addChild(this.unsuccessfulMoves);
 
-        if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
+        if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
             //this.addChild(this.levelCompleteLabel);
             this.save();
         }
-        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.quads >=saveArray[this.ls.getItem(99)-1][1] && this.moves <= saveArray[this.ls.getItem(99)-1][4] && this.points >= saveArray[this.ls.getItem(99)-1][0]){
+        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.quads >=saveArray[this.ls.getItem(99)-1][1] && this.moves <= saveArray[this.ls.getItem(99)-1][4] && this.points >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){
             //this.addChild(this.againLabel);
             this.save();
         }
@@ -141,13 +147,13 @@ var gameOverLayer = cc.LayerColor.extend({
             this.labelPoints.setString(this.points+" Points" /*+ " (" + "+" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
             this.labelPoints.setColor(cc.color(0,0,0));
 
-        if (this.moves <= levelsArray[this.ls.getItem(99)-1][6]){
+        if (this.moves < levelsArray[this.ls.getItem(99)-1][6]){
             this.movesLabel.setString(this.moves+" Moves"/* + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
             this.successfulMoves.visible = true;
             this.movesLabel.setColor(cc.color(0,0,0));
         }
         else{
-            this.movesLabel.setString(this.moves.value+" Moves"/* + " (" + "+" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
+            this.movesLabel.setString(this.moves+" Moves"/* + " (" + "+" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
             this.unsuccessfulMoves.visible = true;
             this.movesLabel.setColor(cc.color(0,0,0));
         }

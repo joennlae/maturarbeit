@@ -117,7 +117,7 @@ var statusLayer = cc.Layer.extend({
         this.addChild(this.pauseMenu,0,12);
         this.helpNodes();
     },
-    onExit : function(){
+    onExit:function(){
         this.pauseMenu.release();
         this.helpNodeLeft.release();
         this.helpNodeTop.release();

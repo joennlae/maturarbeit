@@ -88,10 +88,9 @@ var menuLayer = cc.Layer.extend({
         settingsMenu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/6));
         this.addChild(settingsMenu);
         //audio Eninge
-        if(cc.audioEngine.isMusicPlaying()){}
-        else{
+        if(cc.audioEngine.isMusicPlaying() == false){
         cc.audioEngine.playMusic(res.sound, true);
-        if (ls.getItem(211)==2) cc.audioEngine.pauseMusic();
+        if (ls.getItem(211)==2) cc.audioEngine.stopMusic();
         }
 
     },

@@ -98,7 +98,7 @@ var settingsLayer = cc.Layer.extend({
         this.soundHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*2));
         this.addChild(this.soundHelpLabel);
 
-        this.positionMarkerNode = new cc.LayerColor(cc.color(255,255,255,200));
+        this.positionMarkerNode = new cc.LayerColor(cc.color(255,255,255,240));
         this.positionMarkerNode.visible = false;
         this.addChild(this.positionMarkerNode,10,345);
         this.positionMarkerNode.retain();
@@ -117,10 +117,6 @@ var settingsLayer = cc.Layer.extend({
                 this.positionMarkerNode.addChild(sprite,11);
                 }
             }
-
-        this.backgroundMarker = new cc.Sprite(res.vote_false);
-        this.backgroundMarker.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*5));
-        this.addChild(this.backgroundMarker);
 
         this.halfLabel = new cc.LabelTTF("Half Size", "Quicksand-Light" , winsize.height/12);
         this.halfLabel.setColor(cc.color(0,0,0));
@@ -163,6 +159,15 @@ var settingsLayer = cc.Layer.extend({
         var spriteFrame = cc.spriteFrameCache.getSpriteFrame(ls.getItem(207)+".png");
         this.butPosMark = new cc.MenuItemSprite (new cc.Sprite(spriteFrame),new cc.Sprite(spriteFrame),this.positionMarker,this);
         this.posMarkMenu = new cc.Menu(this.butPosMark);
+
+        /*this.backgroundMarker = new cc.Sprite(res.vote_false);
+        this.backgroundMarker.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*5));
+        this.addChild(this.backgroundMarker);*/
+
+        this.backgroundButton = new cc.MenuItemSprite ( new cc.Sprite(res.vote_false), new cc.Sprite(res.vote_false), this.positionMarker, this);
+        this.backgroundMenu = new cc.Menu(this.backgroundButton);
+        this.backgroundMenu.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*5));
+        this.addChild(this.backgroundMenu);
 
         this.posMarkMenu.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*5));
         this.addChild(this.posMarkMenu,1,72);

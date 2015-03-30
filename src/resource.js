@@ -11,7 +11,7 @@ var res = {
 	arrow_ru	: "res/arrow_rightup.png",
 	sound		: "res/background.wav"
 };
-var posNumbers = [0.5,3];
+var posNumbers = [0.5,3,-1,1];
 var startUpMessages = ["yolo","My Name..","Pizza?","Hungry?","Good guy","Brou?","GG WP","Gl hf","RKO","invade?"];
 var messages = ["So close...","Next Time","Keep on","Never surrender", "Biip Biip","Hungry?","Pizzasalami?"];
 var ranks = ["uncompleted","Finisher","Silber","Global Master Elite"];

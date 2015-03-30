@@ -99,7 +99,7 @@ var levelSelector = cc.Layer.extend({
         this.addChild(menu);
 
         //stats preloading objects
-        this.maxLabel = new cc.LabelTTF("Morree..", "Quicksand-Light", this.winsize.height/8);
+        this.maxLabel = new cc.LabelTTF("Coming soon!", "Quicksand-Light", this.winsize.height/8);
         this.maxLabel.setColor(cc.color(0,0,0));
         this.maxLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
         this.maxLabel.visible = false;
@@ -134,6 +134,12 @@ var levelSelector = cc.Layer.extend({
         this.rankLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*8));
         this.rankLabel.visible = false;
         this.addChild(this.rankLabel);
+
+        this.questionLabel = new cc.LabelTTF("?", "Quicksand-Light", this.winsize.height/8);
+        this.questionLabel.setColor(cc.color(0,0,0));
+        this.questionLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/10*8.5));
+        this.questionLabel.visible = false;
+        this.addChild(this.questionLabel);
 
         if(this.levelNum.value<levelsArray.length+1){
         	this.pointsLabel.visible = true;
@@ -202,10 +208,21 @@ var levelSelector = cc.Layer.extend({
     		this.movesLabel.visible = false;
     		this.rankLabel.visible = false;
     		this.quadsBlueLabel.visible = false;
-    		this.maxLabel.visible = true; 	
+    		this.maxLabel.visible = true;
+    		this.questionLabel.visible = false; 	
+		}
+		else if (this.levelNum.value > this.ls.getItem(100)){
+			this.maxLabel.visible = false;
+		    this.pointsLabel.visible = false;
+		    this.quadsLabel.visible = false;
+		    this.movesLabel.visible = false;
+		    this.rankLabel.visible = false;
+		    this.questionLabel.visible = true;
+
 		}
     	else{
 	    	this.maxLabel.visible = false;
+	    	this.questionLabel.visible = false;
 		    this.pointsLabel.visible = true;
 		    this.quadsLabel.visible = true;
 		    this.movesLabel.visible = true;

@@ -214,7 +214,7 @@ var gameLayer = cc.Layer.extend({
  
         function infos(){
             this.ls = cc.sys.localStorage;
-            var possibleMovesArray = [level[row.y][column.x],level[row.y][column.x+1],level[row.y][column.x+1],level[row.y+1][column.x+1]]
+            var possibleMovesArray = [level[row.y][column.x],level[row.y][column.x+1],level[row.y+1][column.x],level[row.y+1][column.x+1]]
             this.ls.setItem(150, JSON.stringify(possibleMovesArray));
             cc.log(this.ls.getItem(150));
             //cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y][column.x+1] + "|" + level[row.y+1][column.x+1]);       

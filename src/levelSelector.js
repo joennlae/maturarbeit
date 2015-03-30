@@ -194,7 +194,8 @@ var levelSelector = cc.Layer.extend({
             movesLabel: this.movesLabel,
             rankLabel: this.rankLabel,
             maxLabel: this.maxLabel,
-            quadsBlueLabel: this.quadsBlueLabel
+            quadsBlueLabel: this.quadsBlueLabel,
+            questionLabel: this.questionLabel
         }, this);
     },
 

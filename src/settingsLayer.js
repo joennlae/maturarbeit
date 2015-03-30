@@ -20,8 +20,8 @@ var settingsLayer = cc.Layer.extend({
         this.voteFalseButton = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.helpLine,this);
         this.voteTrueMenu = new cc.Menu(this.voteTrueButton);
         this.voteFalseMenu = new cc.Menu(this.voteFalseButton);
-        this.voteTrueMenu.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*4));
-        this.voteFalseMenu.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*4));
+        this.voteTrueMenu.setPosition(cc.p(winsize.width/4*1.6,winsize.height/6*4));
+        this.voteFalseMenu.setPosition(cc.p(winsize.width/4*1.6,winsize.height/6*4));
         this.voteTrueMenu.visible = false;
         this.voteFalseMenu.visible = false;
         this.addChild(this.voteTrueMenu);
@@ -37,7 +37,7 @@ var settingsLayer = cc.Layer.extend({
         this.backLabelP.setColor(cc.color(0,0,150));
 
         this.helpLineLabel = new cc.LabelTTF("Lines", "Quicksand-Light" , winsize.height/10); 
-        this.helpLineLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*4))
+        this.helpLineLabel.setPosition(cc.p(winsize.width/4,winsize.height/6*4))
         this.helpLineLabel.setColor(cc.color(0,0,0));
         this.addChild(this.helpLineLabel);
 
@@ -45,8 +45,8 @@ var settingsLayer = cc.Layer.extend({
         this.voteFalseButtonBlink = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.blink,this);
         this.voteTrueMenuBlink = new cc.Menu(this.voteTrueButtonBlink);
         this.voteFalseMenuBlink = new cc.Menu(this.voteFalseButtonBlink);
-        this.voteTrueMenuBlink.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*3));
-        this.voteFalseMenuBlink.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*3));
+        this.voteTrueMenuBlink.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*4));
+        this.voteFalseMenuBlink.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*4));
         this.voteTrueMenuBlink.visible = false;
         this.voteFalseMenuBlink.visible = false;
         this.addChild(this.voteTrueMenuBlink);
@@ -55,7 +55,7 @@ var settingsLayer = cc.Layer.extend({
         else this.voteFalseMenuBlink.visible = true;
 
         this.blinkHelpLabel = new cc.LabelTTF("Blink", "Quicksand-Light" , winsize.height/10); //ls.getnumber(201)
-        this.blinkHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*3));
+        this.blinkHelpLabel.setPosition(cc.p(winsize.width/4*2.5,winsize.height/6*4));
         this.blinkHelpLabel.setColor(cc.color(0,0,0));
         this.addChild(this.blinkHelpLabel);
 
@@ -64,8 +64,8 @@ var settingsLayer = cc.Layer.extend({
         this.voteFalseButtonTutorial = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.tutorial,this);
         this.voteTrueMenuTutorial = new cc.Menu(this.voteTrueButtonTutorial);
         this.voteFalseMenuTutorial = new cc.Menu(this.voteFalseButtonTutorial);
-        this.voteTrueMenuTutorial.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*2));
-        this.voteFalseMenuTutorial.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*2));
+        this.voteTrueMenuTutorial.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*3));
+        this.voteFalseMenuTutorial.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*3));
         this.voteTrueMenuTutorial.visible = false;
         this.voteFalseMenuTutorial.visible = false;
         this.addChild(this.voteTrueMenuTutorial);
@@ -76,8 +76,27 @@ var settingsLayer = cc.Layer.extend({
 
         this.tutorialHelpLabel = new cc.LabelTTF("Tutorial", "Quicksand-Light" , winsize.height/10); //ls.getnumber(206) 
         this.tutorialHelpLabel.setColor(cc.color(0,0,0));
-        this.tutorialHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*2));
+        this.tutorialHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*3));
         this.addChild(this.tutorialHelpLabel);
+
+        this.voteTrueButtonSound = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.sound,this);
+        this.voteFalseButtonSound = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.sound,this);
+        this.voteTrueMenuSound = new cc.Menu(this.voteTrueButtonSound);
+        this.voteFalseMenuSound = new cc.Menu(this.voteFalseButtonSound);
+        this.voteTrueMenuSound.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*2));
+        this.voteFalseMenuSound.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*2));
+        this.voteTrueMenuSound.visible = false;
+        this.voteFalseMenuSound.visible = false;
+        this.addChild(this.voteTrueMenuSound);
+        this.addChild(this.voteFalseMenuSound);
+
+        if(ls.getItem(211)==1) this.voteTrueMenuSound.visible = true;
+        else this.voteFalseMenuSound.visible = true;
+
+        this.soundHelpLabel = new cc.LabelTTF("Music", "Quicksand-Light" , winsize.height/10); 
+        this.soundHelpLabel.setColor(cc.color(0,0,0));
+        this.soundHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*2));
+        this.addChild(this.soundHelpLabel);
 
         this.positionMarkerNode = new cc.LayerColor(cc.color(255,255,255,200));
         this.positionMarkerNode.visible = false;
@@ -140,8 +159,6 @@ var settingsLayer = cc.Layer.extend({
 
         if(ls.getItem(208)==2) this.voteTrueMenuFS.visible = true;
         else this.voteFalseMenuFS.visible = true;
-
-
 
         var spriteFrame = cc.spriteFrameCache.getSpriteFrame(ls.getItem(207)+".png");
         this.butPosMark = new cc.MenuItemSprite (new cc.Sprite(spriteFrame),new cc.Sprite(spriteFrame),this.positionMarker,this);
@@ -249,6 +266,23 @@ var settingsLayer = cc.Layer.extend({
             ls.setItem(206,1);
             this.voteTrueMenuTutorial.visible = true;
             this.voteFalseMenuTutorial.visible = false;
+        }
+    },
+        sound:function(){
+        var ls = cc.sys.localStorage;
+        cc.log("ausgeführt");
+        cc.log(ls.getItem(211));
+        if (ls.getItem(211)==1){
+            ls.setItem(211,2);
+            this.voteTrueMenuSound.visible = false;
+            this.voteFalseMenuSound.visible = true;
+            cc.audioEngine.pauseMusic();
+        }
+        else if (ls.getItem(211)==2){
+            ls.setItem(211,1);
+            this.voteTrueMenuSound.visible = true;
+            this.voteFalseMenuSound.visible = false;
+            cc.audioEngine.resumeMusic();
         }
     },
         positionMarker:function(){

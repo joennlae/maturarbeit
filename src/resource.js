@@ -8,7 +8,8 @@ var res = {
 	arrow_ld	: "res/arrow_leftdown.png",
 	arrow_lu	: "res/arrow_leftup.png",
 	arrow_rd	: "res/arrow_rightdown.png",
-	arrow_ru	: "res/arrow_rightup.png"
+	arrow_ru	: "res/arrow_rightup.png",
+	sound		: "res/background.wav"
 };
 var posNumbers = [0.5,3];
 var startUpMessages = ["yolo","My Name..","Pizza?","Hungry?","Good guy","Brou?","GG WP","Gl hf","RKO","invade?"];

@@ -25,12 +25,9 @@ var levelSelector = cc.Layer.extend({
         var background = new cc.LayerColor(cc.color(255,255,255,255), this.winsize.width, this.winsize.height);
         this.addChild(background);
 		//after background ;-) homofish
-		//cc.log(this.ls.getItem(100));
-        //cc.log("test");
         //first time loading iOS
 		if (this.ls.getItem(100) < 1){
 			this.ls.setItem(100, 1);
-            //if (this.ls.getItem(101) != 5){
             var saveArray = new Array();
             for(i=0; i<levelsArray.length; i++){
             saveArray.push( [] );
@@ -39,7 +36,6 @@ var levelSelector = cc.Layer.extend({
             }
             }
                 this.ls.setItem(101, JSON.stringify(saveArray));//points| redquads | bluequads | rank | moves | done-check
-            //}
 		}
 		
 
@@ -48,22 +44,19 @@ var levelSelector = cc.Layer.extend({
 
 		this.levelNum.value = this.ls.getItem(100);
 		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/8*5);
-        this.levelLabel.setColor(cc.color(0,0,0));//black color
+        this.levelLabel.setColor(cc.color(0,0,0));
         this.levelLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
         this.addChild(this.levelLabel);
 		
 		this.recognizer = new SimpleRecognizer();
 		
 		this.startLabel = new cc.LabelTTF("Play", "Quicksand-Light" , this.winsize.height/10);
-        this.startLabel.setColor(cc.color(0,0,0));//black color
-        //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+        this.startLabel.setColor(cc.color(0,0,0));
 		this.startLabelP = new cc.LabelTTF("Play", "Quicksand-Light", this.winsize.height/10);
-        this.startLabelP.setColor(cc.color(0,0,150));//black color
-        //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+        this.startLabelP.setColor(cc.color(0,0,150));
 		
 		this.controlRight = new cc.LabelTTF(">", "Quicksand-Light", this.winsize.height/4);
         this.controlRight.setColor(cc.color(120,120,120));
-		//this.controlRight.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/2));
 		this.controlRightP = new cc.LabelTTF(">", "Quicksand-Light", this.winsize.height/4);
         this.controlRightP.setColor(cc.color(0,0,0));
 		this.controlRight.retain();
@@ -71,7 +64,6 @@ var levelSelector = cc.Layer.extend({
 		
         this.controlLeft = new cc.LabelTTF("<", "Quicksand-Light", this.winsize.height/4);
         this.controlLeft.setColor(cc.color(120,120,120));
-		//this.controlLeft.setPosition(cc.p(this.winsize.width/4, this.winsize.height/2));
 		this.controlLeftP = new cc.LabelTTF("<", "Quicksand-Light", this.winsize.height/4);
         this.controlLeftP.setColor(cc.color(0,0,0));
 		this.controlLeft.retain();
@@ -85,6 +77,7 @@ var levelSelector = cc.Layer.extend({
         this.cR.setPosition(cc.p(this.winsize.width/8*7,this.winsize.height/2));
         this.addChild(this.cR,0,1);
         this.cR.retain();
+
 		var controlLeftLabel = new cc.MenuItemSprite(
             this.controlLeft,
             this.controlLeftP, 
@@ -92,6 +85,7 @@ var levelSelector = cc.Layer.extend({
         this.cL = new cc.Menu(controlLeftLabel);  
         this.cL.setPosition(cc.p(this.winsize.width/8,this.winsize.height/2));
         //this.addChild(cL);
+
 		if (this.ls.getItem(100) > 1){
 			this.addChild(this.cL,0,2);
         }
@@ -103,33 +97,65 @@ var levelSelector = cc.Layer.extend({
         var menu = new cc.Menu(menuItemLabel);  
         menu.setPosition(cc.p(this.winsize.width/8*5,this.winsize.height/6));
         this.addChild(menu);
-        //cc.log(this.levelNum.value);
 
         //stats preloading objects
-        this.pointsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][0]+"/"+levelsArray[this.levelNum.value-1][5], "Quicksand-Light", this.winsize.height/12);
-        this.pointsLabel.setColor(cc.color(0,0,0));//black color
+        this.maxLabel = new cc.LabelTTF("Morree..", "Quicksand-Light", this.winsize.height/8);
+        this.maxLabel.setColor(cc.color(0,0,0));
+        this.maxLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
+        this.maxLabel.visible = false;
+        this.addChild(this.maxLabel);
+
+        this.pointsLabel = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/12);
+        this.pointsLabel.setColor(cc.color(0,0,0));
         this.pointsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*9));
+        this.pointsLabel.visible = false;
         this.addChild(this.pointsLabel);
 
-        this.quadsLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3], "Quicksand-Light", this.winsize.height/12);
-        this.quadsLabel.setColor(cc.color(0,0,0));//black color
+        this.quadsLabel = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/12);
+        this.quadsLabel.setColor(cc.color(0,0,0));
         this.quadsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*8));
+        this.quadsLabel.visible = false;
         this.addChild(this.quadsLabel);
 
-        this.movesLabel = new cc.LabelTTF(saveArray[this.levelNum.value-1][4]+"/"+levelsArray[this.levelNum.value-1][6], "Quicksand-Light", this.winsize.height/12);
-        this.movesLabel.setColor(cc.color(0,0,0));//black color
+        this.quadsBlueLabel = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/12);
+        this.quadsBlueLabel.setColor(cc.color(0,0,0));
+        this.quadsBlueLabel.setPosition(cc.p(this.winsize.width/4*1.2, this.winsize.height/10*8));
+        this.quadsBlueLabel.visible = false;
+        this.addChild(this.quadsBlueLabel);
+
+        this.movesLabel = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/12);
+        this.movesLabel.setColor(cc.color(0,0,0));
         this.movesLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*9));
+        this.movesLabel.visible = false;
         this.addChild(this.movesLabel);
 
-       	this.rankLabel = new cc.LabelTTF(""/*saveArray[this.levelNum.value-1][0]*/, "Quicksand-Light", this.winsize.height/12);
-        this.rankLabel.setColor(cc.color(0,0,0));//black color
+       	this.rankLabel = new cc.LabelTTF("", "Quicksand-Light", this.winsize.height/12);
+        this.rankLabel.setColor(cc.color(0,0,0));
         this.rankLabel.setPosition(cc.p(this.winsize.width/4*3, this.winsize.height/10*8));
+        this.rankLabel.visible = false;
         this.addChild(this.rankLabel);
-        this.updateStats();
+
+        if(this.levelNum.value<levelsArray.length+1){
+        	this.pointsLabel.visible = true;
+        	this.quadsLabel.visible = true;
+        	this.movesLabel.visible = true;
+        	this.rankLabel.visible = true;
+        	if(levelsArray[this.levelNum.value-1][9]==2 || levelsArray[this.levelNum.value-1][9]==3){
+        		this.quadsBlueLabel.visible = true;
+        	}
+        	this.updateStats();
+    	}
+    	else{
+    		this.quadsBlueLabel.visible = false;
+    		this.pointsLabel.visible = false;
+    		this.quadsLabel.visible = false;
+    		this.movesLabel.visible = false;
+    		this.rankLabel.visible = false;
+    		this.maxLabel.visible = true;
+    	}
 
         this.backLabel = new cc.LabelTTF("Back", "Quicksand-Light" , this.winsize.height/10);
         this.backLabel.setColor(cc.color(0,0,0));//black color
-        //this.startLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
 		this.backLabelP = new cc.LabelTTF("Back", "Quicksand-Light", this.winsize.height/10);
         this.backLabelP.setColor(cc.color(0,0,150));
 
@@ -138,7 +164,6 @@ var levelSelector = cc.Layer.extend({
             this.backLabelP, 
             this.onBack, this);
         var backMenu = new cc.Menu(backItemLabel);  
-        //backMenu.setAnchorPoint(1,0); 
         backMenu.setPosition(cc.p(this.winsize.width/8*3,this.winsize.height/6));
         this.addChild(backMenu);
 
@@ -149,6 +174,7 @@ var levelSelector = cc.Layer.extend({
 			ls: this.ls,
 			levelSel: this,
 			cL: this.cL,
+			cR: this.cR,
 			winsize: this.winsize,
 			onPlay: this.onPlay,
 			levelLabel: this.levelLabel,
@@ -160,23 +186,35 @@ var levelSelector = cc.Layer.extend({
             pointsLabel: this.pointsLabel,
             quadsLabel: this.quadsLabel,
             movesLabel: this.movesLabel,
-            rankLabel: this.rankLabel
+            rankLabel: this.rankLabel,
+            maxLabel: this.maxLabel,
+            quadsBlueLabel: this.quadsBlueLabel
         }, this);
     },
 
     updateStats : function(){
+    	cc.log(this.levelNum.value);
+    	cc.log(levelsArray.length);
     	saveArray = JSON.parse(this.ls.getItem(101));
-    	if(this.levelNum.value>(saveArray.length)){
-    		this.pointsLabel.setString("level");
-    		this.quadsLabel.setString("does");
-    		this.movesLabel.setString("not");
-    		this.rankLabel.setString("exist");
-    		this.pointsLabel.setColor(cc.color(0,0,0));
-			this.quadsLabel.setColor(cc.color(0,0,0));
-			this.movesLabel.setColor(cc.color(0,0,0));
-			this.rankLabel.setColor(cc.color(0,0,0));    	
+    	if(this.levelNum.value>levelsArray.length){
+    		this.pointsLabel.visible = false;
+    		this.quadsLabel.visible = false;
+    		this.movesLabel.visible = false;
+    		this.rankLabel.visible = false;
+    		this.quadsBlueLabel.visible = false;
+    		this.maxLabel.visible = true; 	
 		}
     	else{
+	    	this.maxLabel.visible = false;
+		    this.pointsLabel.visible = true;
+		    this.quadsLabel.visible = true;
+		    this.movesLabel.visible = true;
+		    this.rankLabel.visible = true;
+		    if(levelsArray[this.levelNum.value-1][9]==2 || levelsArray[this.levelNum.value-1][9]==3){
+        		this.quadsBlueLabel.visible = true;
+        	}
+        	else this.quadsBlueLabel.visible = false;
+
 
     	if (saveArray[this.levelNum.value-1][0] >= levelsArray[this.levelNum.value-1][5]){
     		this.pointsLabel.setColor(cc.color(0,150,0));
@@ -187,13 +225,23 @@ var levelSelector = cc.Layer.extend({
     		this.pointsLabel.setString(saveArray[this.levelNum.value-1][0]/*+"/"+levelsArray[this.levelNum.value-1][5]*/);
     	}
 
-    	if (saveArray[this.levelNum.value-1][1] >= levelsArray[this.levelNum.value-1][3]){
+    	if (saveArray[this.levelNum.value-1][1] >= levelsArray[this.levelNum.value-1][3] || levelsArray[this.levelNum.value-1][9]==2 || levelsArray[this.levelNum.value-1][9]==3){
     		this.quadsLabel.setColor(cc.color(150,0,0));
     		this.quadsLabel.setString(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3]);
+    		this.quadsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*8));
+    		if(levelsArray[this.levelNum.value-1][9]==2 || levelsArray[this.levelNum.value-1][9]==3){
+    			this.quadsLabel.setPosition(cc.p(this.winsize.width/4*0.8, this.winsize.height/10*8));
+    		}
     	}
     	else {
+    		this.quadsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*8));
     		this.quadsLabel.setColor(cc.color(0,0,0));
     		this.quadsLabel.setString(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3]);
+    	}
+
+    	if (levelsArray[this.levelNum.value-1][9]==2 || levelsArray[this.levelNum.value-1][9]==3) {
+    		this.quadsBlueLabel.setColor(cc.color(0,0,150));
+    		this.quadsBlueLabel.setString(saveArray[this.levelNum.value-1][2]+"/"+levelsArray[this.levelNum.value-1][4]);
     	}
 
     	if (saveArray[this.levelNum.value-1][4] <= levelsArray[this.levelNum.value-1][6] && saveArray[this.levelNum.value-1][4]!=0){
@@ -210,8 +258,6 @@ var levelSelector = cc.Layer.extend({
     },
 	
 	controllingRight : function(){
-		cc.log(this.getChildrenCount());
-		//this.addChild(this.cL);
 		if (this.levelNum.value == 1) {
 			this.addChild(this.cL,0,2);
 			this.levelNum.value ++;
@@ -225,7 +271,7 @@ var levelSelector = cc.Layer.extend({
 			}
 			else this.levelLabel.setColor(cc.color(160,160,160));
 		}
-		else if (this.levelNum.value <= 1000){
+		else if (this.levelNum.value < levelsArray.length ){
 			this.levelNum.value ++;
 			this.levelLabel.setString(this.levelNum.value);
 			this.updateStats();
@@ -239,9 +285,15 @@ var levelSelector = cc.Layer.extend({
 			else if (this.levelNum.value == this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(0,0,0));
 				// load results	
-			}	
+			}
 		}
-	
+		else if(this.levelNum.value == levelsArray.length){
+				this.levelNum.value ++;
+				this.updateStats();
+				this.levelLabel.visible = false;
+				this.removeChildByTag(1);
+			}
+		
 
 	},
 
@@ -256,16 +308,14 @@ var levelSelector = cc.Layer.extend({
 			}
 			else if (this.levelNum.value < this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(0,150,0));
-				// and load results ls.getItem
 			}
 			else if (this.levelNum.value == this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(0,0,0));
-					// load results
 			}
 			
 		}
 
-		else if (this.levelNum.value > 2){
+		else if (this.levelNum.value > 2 && this.levelNum.value <= levelsArray.length){
 			this.levelNum.value --;
 			this.updateStats();
 			this.levelLabel.setString(this.levelNum.value);
@@ -274,12 +324,16 @@ var levelSelector = cc.Layer.extend({
 			}
 			else if (this.levelNum.value < this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(0,150,0));
-				// and load results ls.getItem
 			}
 			else if (this.levelNum.value == this.ls.getItem(100)){
 				this.levelLabel.setColor(cc.color(0,0,0));
-					// load results
 			}
+		}
+		else if (this.levelNum.value == levelsArray.length+1){
+				this.levelNum.value --;
+				this.updateStats();
+				this.levelLabel.visible = true;
+				this.addChild(this.cR,0,1);
 		}
 	},
 
@@ -311,74 +365,80 @@ var levelSelector = cc.Layer.extend({
 		//cc.log(rtn);
         switch (rtn) {
 			case "left":
-			if (this.levelNum.value == 1){
-				this.levelNum.value ++;
-				this.levelSel.addChild(this.cL,0,2);
-				this.levelLabel.setString(this.levelNum.value);
-				if (this.levelNum.value > this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(160,160,160));
-				}
-				else if (this.levelNum.value < this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(0,150,0));
-					// and load results ls.getItem
-				}
-				else if (this.levelNum.value == this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(0,0,0));
-					// load results
-				}
-				this.updateStats();
+			if (this.levelNum.value == 1) {
+			this.levelSel.addChild(this.cL,0,2);
+			this.levelNum.value ++;
+			this.updateStats();
+			this.levelLabel.setString(this.levelNum.value);
+			if (this.ls.getItem(100) == 2){
+				this.levelLabel.setColor(cc.color(0,0,0));
 			}
-			else if (this.levelNum.value <= 1000){
+			else if (this.ls.getItem(100) > 2){
+				this.levelLabel.setColor(cc.color(0,150,0));
+			}
+			else this.levelLabel.setColor(cc.color(160,160,160));
+			}
+			else if (this.levelNum.value < levelsArray.length ){
 				this.levelNum.value ++;
 				this.levelLabel.setString(this.levelNum.value);
-				if (this.levelNum.value > this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(160,160,160));
-				}
-				else if (this.levelNum.value < this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(0,150,0));
-					// and load results ls.getItem
-				}
-				else if (this.levelNum.value == this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(0,0,0));
-					// load results
-				}
 				this.updateStats();
+			if (this.levelNum.value > this.ls.getItem(100)){
+				this.levelLabel.setColor(cc.color(160,160,160));
+			}
+			else if (this.levelNum.value < this.ls.getItem(100)){
+				this.levelLabel.setColor(cc.color(0,150,0));
+				// and load results ls.getItem
+			}
+			else if (this.levelNum.value == this.ls.getItem(100)){
+				this.levelLabel.setColor(cc.color(0,0,0));
+				// load results	
+			}
+			}
+			else if(this.levelNum.value == levelsArray.length){
+				this.levelNum.value ++;
+				this.updateStats();
+				this.levelLabel.visible = false;
+				this.levelSel.removeChildByTag(1);
 			}
 				break;
 			case "right":
-			if (this.levelNum.value == 2){
-				this.levelNum.value --;
-				this.levelSel.removeChildByTag(2);
-				this.levelLabel.setString(this.levelNum.value);
-				if (this.levelNum.value > this.ls.getItem(100)){
-					this.levelLabel.setColor(cc.color(160,160,160));
+				if (this.levelNum.value == 2){
+					this.levelNum.value --;
+					this.updateStats();
+					this.levelSel.removeChildByTag(2);
+					this.levelLabel.setString(this.levelNum.value);
+				if (this.ls.getItem(100) == 1){
+					this.levelLabel.setColor(cc.color(0,0,0));
 				}
 				else if (this.levelNum.value < this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(0,150,0));
-					// and load results ls.getItem
 				}
 				else if (this.levelNum.value == this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(0,0,0));
-					// load results
 				}
-				this.updateStats();
-			}
-			else if (this.levelNum.value > 2){
-				this.levelNum.value --;
-				this.levelLabel.setString(this.levelNum.value);
+			
+				}
+
+				else if (this.levelNum.value > 2 && this.levelNum.value <= levelsArray.length){
+					this.levelNum.value --;
+					this.updateStats();
+					this.levelLabel.setString(this.levelNum.value);
 				if (this.levelNum.value > this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(160,160,160));
-				}
+					}
 				else if (this.levelNum.value < this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(0,150,0));
-					// and load results ls.getItem
-				}
+					}
 				else if (this.levelNum.value == this.ls.getItem(100)){
 					this.levelLabel.setColor(cc.color(0,0,0));
-					// load results
+					}
 				}
-				this.updateStats();
-			}
+				else if (this.levelNum.value == levelsArray.length+1){
+					this.levelNum.value --;
+					this.updateStats();
+					this.levelLabel.visible = true;
+					this.levelSel.addChild(this.cR,0,1);
+				}
 				break;			
             default:
             	var corX = touch.getLocationX();

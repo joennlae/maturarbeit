@@ -18,7 +18,7 @@ var ranks = ["uncompleted","Finisher","Silber","Global Master Elite"];
 
 var positionMarkerArray =   [[10,10,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,5,0.5],[0,0,0.5],[0,0,0.35],[-5,2,0.5],[0,-2,0.5],[0,0,0.5],[0,-5,0.5],/*11*/[0,0,0.5],[0,3,0.5],[0,-5,0.5],[0,2,0.45],[0,-2,0.5],[0,0,0.5],[0,3,0.5],[0,2,0.45],[0,0,1.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5]];
 
-//gen Levels with pointscalc https://jsfiddle.net/4hjsdcc9/
+//gen Levels with pointscalc https://jsfiddle.net/sye41f83/
 
 var levelsArray =  [[10,10,1,0,0,100,10,11000,12000,1],  //rows | columns | seed | red quads | blue quads | min points > 0 | max Moves | points for rank 2 | points for rank 3 | Gamemode
 					[15,15,101,1,0,1,25,5680,7680,1], 

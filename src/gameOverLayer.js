@@ -250,9 +250,9 @@ var gameOverLayer = cc.LayerColor.extend({
         return this.points + pointsOuh;
     },
     onRestart:function (sender) {
-
-        cc.director.resume();
+        cc.director.pause();
         cc.director.runScene(new levelSelectorScene());
+        cc.director.resume();
     },
     getPoints:function(){
         var ls = cc.sys.localStorage;

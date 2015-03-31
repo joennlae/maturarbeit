@@ -4,6 +4,7 @@ var gameBetaOverLayer = cc.LayerColor.extend({
     points: 0,
     quads: 0,
     moves: 0,
+    quadsBlue: 0,
 	ls: null,
     // constructor
     ctor:function () {
@@ -21,10 +22,20 @@ var gameBetaOverLayer = cc.LayerColor.extend({
         this.labelQuads.setPosition(cc.p(winsize.width/2, winsize.height/2));
         this.addChild(this.labelQuads);
 
+        this.labelQuadsBlue = new cc.LabelTTF(this.quadsBlue+ " QuadsBlue", "Quicksand-Light", 80);
+        this.labelQuadsBlue.setColor(cc.color(0,0,0));//black color
+        this.labelQuadsBlue.setPosition(cc.p(winsize.width/2, winsize.height/2+200));
+        this.labelQuadsBlue.visible = false;
+        this.addChild(this.labelQuadsBlue);
+
         this.labelPoints = new cc.LabelTTF(this.points+" Points", "Quicksand-Light", 80);
         this.labelPoints.setPosition(cc.p(winsize.width/2, winsize.height/2-100));
         this.labelPoints.setColor(cc.color(0,0,0));
         this.addChild(this.labelPoints);
+
+        if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+            this.labelQuadsBlue.visible = true;
+        }
 
         this.movesLabel = new cc.LabelTTF(this.moves+" Moves", "Quicksand-Light", 80);
         this.movesLabel.setPosition(cc.p(winsize.width/2, winsize.height/2+100));
@@ -57,6 +68,7 @@ var gameBetaOverLayer = cc.LayerColor.extend({
         this.quads = ls.getItem(2);
         this.points = ls.getItem(1);
         this.moves = ls.getItem(3);
+        if (ls.getItem(666)==2 || ls.getItem(666)==3) this.quadsBlue = JSON.parse(ls.getItem(4));
         cc.log(this.moves);
     },
 	onTouchBegan:function(touch, event) {

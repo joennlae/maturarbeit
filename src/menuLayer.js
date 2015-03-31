@@ -48,11 +48,21 @@ var menuLayer = cc.Layer.extend({
         this.settingsLabelP.setColor(cc.color(0,0,150));//blue color
         //this.startLabelP.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
         
-        this.messageLabel = new cc.LabelTTF(startUpMessages[Math.floor(Math.random()*10)], "Quicksand-Light", this.winsize.height/12);
+        this.messageLabel = new cc.LabelTTF(startUpMessages[Math.floor(Math.random()*(startUpMessages.length))], "Quicksand-Light", this.winsize.height/12);
         this.messageLabel.setColor(cc.color(150,0,0));
-        this.messageLabel.setPosition(cc.p(this.winsize.width/4*(posNumbers[Math.floor(Math.random()*2)]),this.winsize.height/4*(Math.random()*2+1)));
+        //this.messageLabel.setPosition(cc.p(this.winsize.width/4*(posNumbers[Math.floor(Math.random()*2)]),this.winsize.height/4*(Math.random()*2+1)));
+        this.messageLabel.setPosition(cc.p(this.winsize.width/2,this.winsize.height/6*5));
+        this.messageLabel.setRotation(posNumbers[Math.floor(Math.random()*2+2)]*Math.floor(Math.random()*45));
         this.messageLabel.setAnchorPoint(0,0);
-        this.addChild(this.messageLabel);
+        this.addChild(this.messageLabel,5);
+
+        var corX = this.winsize.width/4*(posNumbers[Math.floor(Math.random()*2)]);
+        var corY = this.winsize.height/4*(Math.random()*2+1);
+
+        this.actionMessage = new cc.JumpTo(2, cc.p(corX, corY), 150, 4);
+        this.actionMessage.retain();
+
+        this.messageLabel.runAction(this.actionMessage);
 
         var menuItemLabel = new cc.MenuItemSprite(
             this.startLabel,
@@ -78,11 +88,11 @@ var menuLayer = cc.Layer.extend({
         settingsMenu.setPosition(cc.p(this.winsize.width/2,this.winsize.height/6));
         this.addChild(settingsMenu);
         //audio Eninge
-        if(cc.audioEngine.isMusicPlaying()){}
-        else{
+        if(cc.audioEngine.isMusicPlaying() == false){
         cc.audioEngine.playMusic(res.sound, true);
-        if (ls.getItem(211)==2) cc.audioEngine.pauseMusic();
+        if (ls.getItem(211)==2) cc.audioEngine.stopMusic();
         }
+
     },
 
     onPlay : function(){
@@ -94,6 +104,10 @@ var menuLayer = cc.Layer.extend({
     },
     onSettings : function(){
         cc.director.runScene(new settingsScene());
+    },
+    onExit:function() {
+        this.actionMessage.release();
+        this._super();
     }
 });
 

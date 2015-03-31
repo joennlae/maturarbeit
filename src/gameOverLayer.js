@@ -241,7 +241,7 @@ var gameOverLayer = cc.LayerColor.extend({
         var saveMovesLeft = this.movesLeft;
         var pointsOuh = 0;
         for ( i = this.movesLeft; i>0; i--){
-            pointsOuh = ((Math.floor(saveMovesLeft/10)+1) * 1000) + pointsOuh;
+            pointsOuh = ((Math.floor(saveMovesLeft/3)+1) * 1000) + pointsOuh;
             saveMovesLeft = saveMovesLeft - 1;
             }
         this.pointsContainer = pointsOuh;
@@ -339,7 +339,7 @@ var gameOverLayer = cc.LayerColor.extend({
             this.movesLeftLabel.visible = false;
         }
         if(this.frameCounter.value % 4 == 0 && this.pointsContainer>0){
-            this.labelPoints.setString(Math.floor(this.points) + " Points");
+            this.labelPoints.setString(Math.ceil(this.points) + " Points");
             this.movesLeftLabel.setString(Math.ceil(this.movesLeft)+ " Left");
         }
         

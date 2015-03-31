@@ -214,7 +214,7 @@ var gameLayer = cc.Layer.extend({
  
         function infos(){
             this.ls = cc.sys.localStorage;
-            var possibleMovesArray = [level[row.y][column.x],level[row.y][column.x+1],level[row.y][column.x+1],level[row.y+1][column.x+1]]
+            var possibleMovesArray = [level[row.y][column.x],level[row.y][column.x+1],level[row.y+1][column.x],level[row.y+1][column.x+1]]
             this.ls.setItem(150, JSON.stringify(possibleMovesArray));
             cc.log(this.ls.getItem(150));
             //cc.log("Aktuelle Optionen:" + level[row.y][column.x] + "|" + level[row.y][column.x+1] + "||"  + level[row.y][column.x+1] + "|" + level[row.y+1][column.x+1]);       
@@ -969,7 +969,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 1; //color blue
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==14){
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
@@ -980,7 +980,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 1; //color blue
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==36 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 ){
                             if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX-0.5)!=null){
@@ -999,7 +999,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==46){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
@@ -1008,7 +1008,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==12 ){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
@@ -1040,7 +1040,7 @@ var gameLayer = cc.Layer.extend({
                         }
 
                         // check for blue
-                        else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                        if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX-0.5)*sizeOfSprite), y:((level.length-pY-0.5)*sizeOfSprite), scale: scaleFactor});//-0,5,-0,5
@@ -1066,7 +1066,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX-0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 0;
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==142){
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
@@ -1077,7 +1077,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX+0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 0;
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==1 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY-1][pX]+level[pY-1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==108 ){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
@@ -1124,7 +1124,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==3 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110 || level[pY][pX]==4 && level[pY][pX+1]+level[pY+1][pX+1]+level[pY+1][pX]+level[pY][pX]==110){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX+0.5)!=null){
@@ -1133,7 +1133,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else this.quadsCombo(0);
                             break;
@@ -1165,7 +1165,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 1;
-                            break;
+                            //break;
                         }
                         else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==14){
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+1+"_edges.png");
@@ -1176,7 +1176,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 1;
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==36 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==46 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
@@ -1195,7 +1195,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==36 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46 || level[pY][pX]==35 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==46){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
@@ -1204,7 +1204,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==12 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==12){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
@@ -1236,7 +1236,8 @@ var gameLayer = cc.Layer.extend({
                         }
 
                         //check blue
-                        else if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==142 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
+                        
+                        if (level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==142 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
                             var sprite = new cc.Sprite(spriteFrame);
                                 sprite.attr({x: ((pX+0.5)*sizeOfSprite), y:((level.length-pY-(1-0.5))*sizeOfSprite), scale: scaleFactor});//+0.5,-0,5
@@ -1262,7 +1263,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY-0.5)*1000+pX+0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 0;
-                            break;
+                            //break;
                         }
                         else if (level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==142){
                             var spriteFrame = cc.spriteFrameCache.getSpriteFrame("quad_"+2+"_edges.png");
@@ -1273,7 +1274,7 @@ var gameLayer = cc.Layer.extend({
                             spriteSheet.addChild(sprite,0,1*10000+(pY+0.5)*1000+pX-0.5);
                             this.quadsCombo(1);
                             this.switcher.gameModeThree = 0;
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==1 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108 || level[pY][pX]==2 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==108 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==108){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){
@@ -1311,7 +1312,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==4 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY][pX+1]+level[pY-1][pX+1]+level[pY-1][pX]+level[pY][pX]==110){
                             if(spriteSheet.getChildByTag(1*10000+(pY-0.5)*1000+pX+0.5)!=null){
@@ -1320,7 +1321,7 @@ var gameLayer = cc.Layer.extend({
                             this.quadsCombo(10);
                             }
                             else this.quadsCombo(0);
-                            break;
+                            //break;
                         }
                         else if (level[pY][pX]==4 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110 || level[pY][pX]==3 && level[pY+1][pX]+level[pY+1][pX-1]+level[pY][pX-1]+level[pY][pX]==110){
                             if(spriteSheet.getChildByTag(1*10000+(pY+0.5)*1000+pX-0.5)!=null){

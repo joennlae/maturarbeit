@@ -282,7 +282,7 @@ var gameOverLayer = cc.LayerColor.extend({
 		else {
 			var levelNum = JSON.parse(this.ls.getItem(99))-1;
 			var saveArray = JSON.parse(this.ls.getItem(101));
-			if (saveArray[levelNum][0] < this.finalPoints) saveArray[levelNum][0] = JSON.parse(this.points);
+			if (saveArray[levelNum][0] < this.finalPoints) saveArray[levelNum][0] = JSON.parse(this.finalPoints);
 			if (saveArray[levelNum][1] < this.ls.getItem(2)) saveArray[levelNum][1] = JSON.parse(this.ls.getItem(2));
             if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
 			if (saveArray[levelNum][2] < this.ls.getItem(4)) saveArray[levelNum][2] = this.ls.getItem(4);

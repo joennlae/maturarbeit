@@ -35,7 +35,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.actionTo = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*4), 150, 4);
         this.actionTo.retain();
         this.actionToRank = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*3), 150, 4);
-        this.actionTo.retain();
+        this.actionToRank.retain();
         this.actionIn = new cc.FadeIn(1.5);
         this.actionIn.retain();
 
@@ -128,7 +128,7 @@ var gameOverLayer = cc.LayerColor.extend({
             if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
                 this.newrankLabel.visible = true;
                 this.newrankLabel.runAction(this.actionToRank);
-                //this.newrankLabel.runAction(this.actionIn);
+                this.newrankLabel.runAction(this.actionIn);
             }    
         }
         else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){

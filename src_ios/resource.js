@@ -12,9 +12,9 @@ var res = {
 	sound		: "res/background.wav"
 };
 var posNumbers = [0.5,3,-1,1];
-var startUpMessages = ["Feel it!","Ouuuh","Pizza?","Hungry?","Good guy","Bro?","Tüüüt","Gl hf","RKO","invade?"];
-var messages = ["So close...","Next Time","Keep on","/ff ?", "Biip Biip","Hungry?","Pizzasalami?"];
-var ranks = ["#DNF","#Finisher","#QuiteGood","#SüperElite"];
+var startUpMessages = ["Feel it!","Ouuuh","Pizza?","Your time!","Good guy","Bro?","Tüüüt","Gl hf","Enjoy!","Nice Day!"];
+var messages = ["So close...","Next Time","Keep on!","The Quads?", "Good Try","Quads?","Pizzasalami?"];
+var ranks = ["DNF","Finisher","QuiteGood","SüperElite"];
 
 var positionMarkerArray =   [[10,10,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,5,0.5],[0,0,0.5],[0,0,0.35],[-5,2,0.5],[0,-2,0.5],[0,0,0.5],[0,-5,0.5],/*11*/[0,0,0.5],[0,3,0.5],[0,-5,0.5],[0,2,0.45],[0,-2,0.5],[0,0,0.5],[0,3,0.5],[0,2,0.45],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5]];
 

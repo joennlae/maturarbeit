@@ -1,0 +1,2 @@
+next Gamemode ?:
+nightmode eingeschränkte vision mit layer der in der mit transparent ist,

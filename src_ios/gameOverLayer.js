@@ -291,7 +291,7 @@ var gameOverLayer = cc.LayerColor.extend({
 			saveArray[levelNum-1][0] = JSON.parse(this.finalPoints);//points
 			saveArray[levelNum-1][1] = JSON.parse(this.ls.getItem(2));//redquads
             if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
-			saveArray[levelNum][2] = JSON.parse(this.ls.getItem(4));//bluequads
+			saveArray[levelNum-1][2] = JSON.parse(this.ls.getItem(4));//bluequads
             }
 			saveArray[levelNum-1][3] = JSON.parse(this.checkRank()); //rank function
             saveArray[levelNum-1][4] = JSON.parse(this.ls.getItem(3));

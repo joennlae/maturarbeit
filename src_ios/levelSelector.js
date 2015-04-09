@@ -218,7 +218,8 @@ var levelSelector = cc.Layer.extend({
 		    this.quadsLabel.visible = false;
 		    this.movesLabel.visible = false;
 		    this.rankLabel.visible = false;
-		    this.questionLabel.visible = true;
+            this.quadsBlueLabel.visible = false;
+            this.questionLabel.visible = true;
 
 		}
     	else{

@@ -9,9 +9,13 @@ var menuLayer = cc.Layer.extend({
         this._super();
         //global variables
         var ls = cc.sys.localStorage;
-        if(ls.getItem(200)!=0) ls.setItem(200,1);//Helplines
-        if(ls.getItem(201)!=0) ls.setItem(201,1);//Blinkhelp
-        if(ls.getItem(206)!=0) ls.setItem(206,1);//Tutorial activated default
+        if(ls.getItem(203)<1) ls.setItem(203,1);
+        if(ls.getItem(203)==1){
+            ls.setItem(200,1);//Helplines
+            ls.setItem(201,1);//Blinkhelp
+            ls.setItem(206,1);//Tutorial activated default
+            ls.setItem(203,2);
+        }
         if(ls.getItem(207)<1) ls.setItem(207,6); //positionMarker 6=default
         if(ls.getItem(208)<1) ls.setItem(208,2); //Halfsize or Fullsize=default
         if(ls.getItem(209)<1) ls.setItem(209,1); //Gamemode 2 tutorial

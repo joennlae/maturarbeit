@@ -1,0 +1,29 @@
+{
+    "project_type": "javascript",
+
+    "debugMode" : 0,
+    "showFPS" : false,
+    "frameRate" : 60,
+    "id" : "gameCanvas",
+    "renderMode" : 0,
+    "engineDir":"frameworks/cocos2d-html5",
+
+    "modules" : ["cocos2d"],
+
+    "jsList" : [
+        "src/resource.js",
+        "src/menuLayer.js",
+        "src/gameLayer.js",
+        "src/backgroundLayer.js",
+        "src/statusLayer.js",
+        "src/PlayScene.js",
+        "src/gameOverLayer.js",
+		"src/SimpleRecognizer.js",
+		"src/simpleMoveRecognizer.js",
+		"src/levelSelector.js",
+        "src/pauseLayer.js",
+        "src/settingsLayer.js",
+        "src/tutorialLayer.js"
+    ]
+
+}

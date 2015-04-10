@@ -35,7 +35,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.actionTo = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*4), 150, 4);
         this.actionTo.retain();
         this.actionToRank = new cc.JumpTo(3, cc.p(winsize.width/5, winsize.height/6*3), 150, 4);
-        this.actionTo.retain();
+        this.actionToRank.retain();
         this.actionIn = new cc.FadeIn(1.5);
         this.actionIn.retain();
 
@@ -250,9 +250,9 @@ var gameOverLayer = cc.LayerColor.extend({
         return this.points + pointsOuh;
     },
     onRestart:function (sender) {
-
-        cc.director.resume();
+        cc.director.pause();
         cc.director.runScene(new levelSelectorScene());
+        cc.director.resume();
     },
     getPoints:function(){
         var ls = cc.sys.localStorage;
@@ -282,7 +282,7 @@ var gameOverLayer = cc.LayerColor.extend({
 		else {
 			var levelNum = JSON.parse(this.ls.getItem(99))-1;
 			var saveArray = JSON.parse(this.ls.getItem(101));
-			if (saveArray[levelNum][0] < this.finalPoints) saveArray[levelNum][0] = JSON.parse(this.points);
+			if (saveArray[levelNum][0] < this.finalPoints) saveArray[levelNum][0] = JSON.parse(this.finalPoints);
 			if (saveArray[levelNum][1] < this.ls.getItem(2)) saveArray[levelNum][1] = JSON.parse(this.ls.getItem(2));
             if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
 			if (saveArray[levelNum][2] < this.ls.getItem(4)) saveArray[levelNum][2] = this.ls.getItem(4);

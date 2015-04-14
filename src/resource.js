@@ -9,6 +9,7 @@ var res = {
 	arrow_lu	: "res/arrow_leftup.png",
 	arrow_rd	: "res/arrow_rightdown.png",
 	arrow_ru	: "res/arrow_rightup.png",
+	retry		: "res/retry.png",
 	sound		: "res/background.mp3"
 };
 var posNumbers = [0.5,3,-1,1];

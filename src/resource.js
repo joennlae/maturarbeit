@@ -9,14 +9,14 @@ var res = {
 	arrow_lu	: "res/arrow_leftup.png",
 	arrow_rd	: "res/arrow_rightdown.png",
 	arrow_ru	: "res/arrow_rightup.png",
-	sound		: "res/background.wav"
+	sound		: "res/background.mp3"
 };
 var posNumbers = [0.5,3,-1,1];
-var startUpMessages = ["Feel it!","Ouuuh","Pizza?","Hungry?","Good guy","Bro?","Tüüüt","Gl hf","RKO","invade?"];
-var messages = ["So close...","Next Time","Keep on","/ff ?", "Biip Biip","Hungry?","Pizzasalami?"];
+var startUpMessages = ["Feel it!","Ouuuh","Pizza?","Your time!","Good guy","Bro?","Tüüüt","Gl hf","Enjoy!","Nice Day!"];
+var messages = ["So close...","Next Time","Keep on!","The Quads?", "Good Try","Quads?","Pizzasalami?"];
 var ranks = ["DNF","Finisher","QuiteGood","SüperElite"];
 
-var positionMarkerArray =   [[10,10,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,5,0.5],[0,0,0.5],[0,0,0.35],[-5,2,0.5],[0,-2,0.5],[0,0,0.5],[0,-5,0.5],/*11*/[0,0,0.5],[0,3,0.5],[0,-5,0.5],[0,2,0.45],[0,-2,0.5],[0,0,0.5],[0,3,0.5],[0,2,0.45],[0,0,1.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5]];
+var positionMarkerArray =   [[10,10,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,5,0.5],[0,0,0.5],[0,0,0.35],[-5,2,0.5],[0,-2,0.5],[0,0,0.5],[0,-5,0.5],/*11*/[0,0,0.5],[0,3,0.5],[0,-5,0.5],[0,2,0.45],[0,-2,0.5],[0,0,0.5],[0,3,0.5],[0,2,0.45],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5],[0,0,0.5]];
 
 //gen Levels with pointscalc https://jsfiddle.net/sye41f83/
 

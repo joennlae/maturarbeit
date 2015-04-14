@@ -15,34 +15,41 @@ var pauseLayer = cc.LayerColor.extend({
         var winSize = cc.director.getWinSize();
         this.getPoints();
 		this.ls = cc.sys.localStorage;
+                                      var scaleFactor = winSize.height/1080;
 
         this.successfulQuads = new cc.Sprite(res.vote_true);
         this.successfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+                                      this.successfulQuads.scale = scaleFactor;
         this.successfulQuads.visible = false;
         this.addChild(this.successfulQuads);
 
         this.unsuccessfulQuads = new cc.Sprite(res.vote_false);
         this.unsuccessfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+                                      this.unsuccessfulQuads.scale = scaleFactor;
         this.unsuccessfulQuads.visible = false;
         this.addChild(this.unsuccessfulQuads);
 
         this.successfulQuadsBlue = new cc.Sprite(res.vote_true);
         this.successfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
+                                      this.successfulQuadsBlue.scale = scaleFactor;
         this.successfulQuadsBlue.visible = false;
         this.addChild(this.successfulQuadsBlue);
 
         this.unsuccessfulQuadsBlue = new cc.Sprite(res.vote_false);
         this.unsuccessfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
+                                      this.unsuccessfulQuadsBlue.scale = scaleFactor;
         this.unsuccessfulQuadsBlue.visible = false;
         this.addChild(this.unsuccessfulQuadsBlue);
 
         this.successfulMoves = new cc.Sprite(res.vote_true);
         this.successfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
+                                      this.successfulMoves.scale = scaleFactor;
         this.successfulMoves.visible = false;
         this.addChild(this.successfulMoves);
 
         this.unsuccessfulMoves = new cc.Sprite(res.vote_false);
         this.unsuccessfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
+                                      this.unsuccessfulMoves.scale = scaleFactor;
         this.unsuccessfulMoves.visible = false;
         this.addChild(this.unsuccessfulMoves);
 
@@ -124,9 +131,10 @@ var pauseLayer = cc.LayerColor.extend({
             this.backLabel,
             this.backLabelP, 
             this.onBack, this);
+                                      backItemLabel.setAnchorPoint(0,1);
         var backMenu = new cc.Menu(backItemLabel);  
         //backMenu.setAnchorPoint(1,0); 
-        backMenu.setPosition(cc.p(170,winsize.height-(winsize.height/16+10)));
+        backMenu.setPosition(cc.p(0,winsize.height));
         this.addChild(backMenu,0,13);
 		
 		cc.eventManager.addListener({

@@ -44,20 +44,26 @@ var tutorialLayer = cc.LayerColor.extend({
         this.ls.setItem(201,1);
 		this.scheduleUpdate();
         this.winSize = cc.director.getWinSize();
+                                         var scalerY = winSize.height/1080;
+                                         var scalerX = winSize.width/1920;
         var backItemLabel = new cc.MenuItemSprite(
             new cc.Sprite(res.forward),
             new cc.Sprite(res.forward), 
             this.onRestart, this);
+                                         backItemLabel.scale = scalerY;
         var backMenu = new cc.Menu(backItemLabel);  
         backMenu.setPosition(cc.p(winSize.width/8*7.5,winSize.height/8));
         this.addChild(backMenu,0,15);
 
         this.leswitcher = {gameModeThree: 0};
 
+
         this.counter = 0;
         this.animations = 0;
         this.helpRightUp = new cc.Sprite(res.arrow_ru);
         this.helpRightUp.setAnchorPoint(0,0);
+                                         this.helpRightUp.scaleY = scalerY;
+                                         this.helpRightUp.scaleX = scalerX;
         this.helpRightUp.setPosition(cc.p(winSize.width/2,winSize.height/2));
         this.helpRightUp.visible = false;
         this.addChild(this.helpRightUp);
@@ -65,18 +71,24 @@ var tutorialLayer = cc.LayerColor.extend({
         this.helpLeftUp = new cc.Sprite(res.arrow_lu);
         this.helpLeftUp.setAnchorPoint(0,0);
         this.helpLeftUp.setPosition(cc.p(0,winSize.height/2));
+                                         this.helpLeftUp.scaleY = scalerY;
+                                         this.helpLeftUp.scaleX = scalerX;
         this.helpLeftUp.visible = false;
         this.addChild(this.helpLeftUp);
 
         this.helpLeftDown = new cc.Sprite(res.arrow_ld);
         this.helpLeftDown.setAnchorPoint(0,0);
         this.helpLeftDown.setPosition(cc.p(0,0));
+                                         this.helpLeftDown.scaleY = scalerY;
+                                         this.helpLeftDown.scaleX = scalerX;
         this.helpLeftDown.visible = false;
         this.addChild(this.helpLeftDown);
 
         this.helpRightDown = new cc.Sprite(res.arrow_rd);
         this.helpRightDown.setAnchorPoint(0,0);
         this.helpRightDown.setPosition(cc.p(winSize.width/2,0));
+                                         this.helpRightDown.scaleY = scalerY;
+                                         this.helpRightDown.scaleX = scalerX;
         this.helpRightDown.visible = false;
         this.addChild(this.helpRightDown);
 
@@ -93,6 +105,8 @@ var tutorialLayer = cc.LayerColor.extend({
         this.helpNodeHor.retain();
 
         this.pointsLabel = new cc.LabelTTF("Points", "Quicksand-Light" , winsize.height/8);
+                                         if(this.ls.getItem(212)==2) this.pointsLabel.fontSize = winsize.height/10;
+                                         if(this.ls.getItem(212)==3) this.pointsLabel.fontSize = winsize.height/12;
         this.pointsLabel.setAnchorPoint(0,0);
         this.pointsLabel.setColor(cc.color(0,0,0));
         this.pointsLabel.setPosition(cc.p(winSize.width/4*3,winSize.height/6*4));
@@ -100,6 +114,8 @@ var tutorialLayer = cc.LayerColor.extend({
         this.addChild(this.pointsLabel);
 
         this.quadsLabel = new cc.LabelTTF("Quads", "Quicksand-Light" , winsize.height/8);
+                                         if(this.ls.getItem(212)==2) this.quadsLabel.fontSize = winsize.height/10;
+                                         if(this.ls.getItem(212)==3) this.quadsLabel.fontSize = winsize.height/12;
         this.quadsLabel.setAnchorPoint(0,0);
         this.quadsLabel.setColor(cc.color(0,0,0));
         this.quadsLabel.setPosition(cc.p(winSize.width/4*3,winSize.height/6*3));
@@ -107,6 +123,8 @@ var tutorialLayer = cc.LayerColor.extend({
         this.addChild(this.quadsLabel);
 
         this.movesLabel = new cc.LabelTTF("Moves", "Quicksand-Light" , winsize.height/8);
+                                         if(this.ls.getItem(212)==2) this.movesLabel.fontSize = winsize.height/10;
+                                         if(this.ls.getItem(212)==3) this.movesLabel.fontSize = winsize.height/12;
         this.movesLabel.setAnchorPoint(0,0);
         this.movesLabel.setColor(cc.color(0,0,0));
         this.movesLabel.setPosition(cc.p(winSize.width/4*3,winSize.height/6*2));
@@ -138,8 +156,12 @@ var tutorialLayer = cc.LayerColor.extend({
         var spriteFrame = cc.spriteFrameCache.getSpriteFrame(this.ls.getItem(207)+".png");
         this.positionMarker = new cc.Sprite(spriteFrame);
         this.positionMarker.opacity = 200;
-        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208);
+                                         var schnuggelFactor = winSize.height/1080;
+        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208)*scalerY;
         this.positionMarker.setPosition(cc.p(winSize.width/2+positionMarkerArray[this.ls.getItem(207)-1][0],2*this.sizeOfSprite+positionMarkerArray[this.ls.getItem(207)-1][1]+winSize.height/12));
+                                         if(this.ls.getItem(212)==2) this.positionMarker.y += -winSize.height/12 + winSize.height/14;
+                                         if(this.ls.getItem(212)==3) this.positionMarker.y += -winSize.height/12 + winSize.height/16;
+                                         
         this.tutLayer.addChild(this.positionMarker,1);
     }
     },
@@ -150,10 +172,12 @@ var tutorialLayer = cc.LayerColor.extend({
         this.leswitcher = {gameModeThree: 0};
         this.winSize = cc.director.getWinSize();
         this.scheduleUpdate();
+                                         var scalerY = winSize.height/1080;
         var backItemLabel = new cc.MenuItemSprite(
             new cc.Sprite(res.forward),
             new cc.Sprite(res.forward), 
             this.onRestartTwo, this);
+                                         backItemLabel.scale = scalerY;
         var backMenu = new cc.Menu(backItemLabel);  
         backMenu.setPosition(cc.p(winSize.width/8*7.5,winSize.height/8));
         this.addChild(backMenu,0,13);
@@ -182,8 +206,11 @@ var tutorialLayer = cc.LayerColor.extend({
         var spriteFrame = cc.spriteFrameCache.getSpriteFrame(this.ls.getItem(207)+".png");
         this.positionMarker = new cc.Sprite(spriteFrame);
         this.positionMarker.opacity = 200;
-        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208);
+                                         var schnuggelFactor = winSize.height/1080;
+        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208)*schnuggelFactor;
         this.positionMarker.setPosition(cc.p(winSize.width/2+positionMarkerArray[this.ls.getItem(207)-1][0],2*this.sizeOfSprite+positionMarkerArray[this.ls.getItem(207)-1][1]+winSize.height/12));
+                                         if(this.ls.getItem(212)==2) this.positionMarker.y += -winSize.height/12 + winSize.height/14;
+                                         if(this.ls.getItem(212)==3) this.positionMarker.y += -winSize.height/12 + winSize.height/16;
         this.tutLayer.addChild(this.positionMarker,1);
 
 

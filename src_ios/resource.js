@@ -9,7 +9,7 @@ var res = {
 	arrow_lu	: "res/arrow_leftup.png",
 	arrow_rd	: "res/arrow_rightdown.png",
 	arrow_ru	: "res/arrow_rightup.png",
-	sound		: "res/background.wav"
+	sound		: "res/background.m4a"
 };
 var posNumbers = [0.5,3,-1,1];
 var startUpMessages = ["Feel it!","Ouuuh","Pizza?","Your time!","Good guy","Bro?","Tüüüt","Gl hf","Enjoy!","Nice Day!"];

@@ -10,16 +10,23 @@ var settingsLayer = cc.Layer.extend({
     	this._super();
 
         var winsize = cc.director.getWinSize();
+                                    cc.log("Winsize="+winsize.height);
 		var ls = cc.sys.localStorage;
         this.ls = cc.sys.localStorage;
         this.switcher = {value: 0};
 		var background = new cc.LayerColor(cc.color(255,255,255,255), winsize.width, winsize.height);
         this.addChild(background);
+                                    
+        var scaleFactor = winsize.height/1080;
+        var scaleFactorTwo = winsize.width/1920;
+                                    cc.log("second"+scaleFactorTwo);
 
         this.voteTrueButton = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.helpLine,this);
         this.voteFalseButton = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.helpLine,this);
         this.voteTrueMenu = new cc.Menu(this.voteTrueButton);
+                                    this.voteTrueButton.scale = scaleFactor;
         this.voteFalseMenu = new cc.Menu(this.voteFalseButton);
+                                    this.voteFalseButton.scale = scaleFactor;
         this.voteTrueMenu.setPosition(cc.p(winsize.width/4*1.6,winsize.height/6*4));
         this.voteFalseMenu.setPosition(cc.p(winsize.width/4*1.6,winsize.height/6*4));
         this.voteTrueMenu.visible = false;
@@ -44,7 +51,9 @@ var settingsLayer = cc.Layer.extend({
         this.voteTrueButtonBlink = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.blink,this);
         this.voteFalseButtonBlink = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.blink,this);
         this.voteTrueMenuBlink = new cc.Menu(this.voteTrueButtonBlink);
+                                    this.voteTrueButtonBlink.scale = scaleFactor;
         this.voteFalseMenuBlink = new cc.Menu(this.voteFalseButtonBlink);
+                                    this.voteFalseButtonBlink.scale = scaleFactor;
         this.voteTrueMenuBlink.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*4));
         this.voteFalseMenuBlink.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*4));
         this.voteTrueMenuBlink.visible = false;
@@ -63,7 +72,9 @@ var settingsLayer = cc.Layer.extend({
         this.voteTrueButtonTutorial = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.tutorial,this);
         this.voteFalseButtonTutorial = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.tutorial,this);
         this.voteTrueMenuTutorial = new cc.Menu(this.voteTrueButtonTutorial);
+                                    this.voteTrueButtonTutorial.scale = scaleFactor;
         this.voteFalseMenuTutorial = new cc.Menu(this.voteFalseButtonTutorial);
+                                    this.voteFalseButtonTutorial.scale = scaleFactor;
         this.voteTrueMenuTutorial.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*3));
         this.voteFalseMenuTutorial.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*3));
         this.voteTrueMenuTutorial.visible = false;
@@ -82,7 +93,9 @@ var settingsLayer = cc.Layer.extend({
         this.voteTrueButtonSound = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.sound,this);
         this.voteFalseButtonSound = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.sound,this);
         this.voteTrueMenuSound = new cc.Menu(this.voteTrueButtonSound);
+                                    this.voteTrueButtonSound.scale = scaleFactor;
         this.voteFalseMenuSound = new cc.Menu(this.voteFalseButtonSound);
+                                    this.voteFalseButtonSound.scale = scaleFactor;
         this.voteTrueMenuSound.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*2));
         this.voteFalseMenuSound.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*2));
         this.voteTrueMenuSound.visible = false;
@@ -105,20 +118,24 @@ var settingsLayer = cc.Layer.extend({
 
         cc.spriteFrameCache.addSpriteFrames(res.rails_plist);
         cc.textureCache.addImage("res/rails.png");
+                                    var scalerY = winsize.height/1080;
+                                    var scalerX = winsize.width/1920;
 
-        for (i = 0; i < 3; i++) {  
+        for (i = 0; i < 3; i++) {
             for (j = 0; j < 8; j++) { 
                 var spriteFrame = cc.spriteFrameCache.getSpriteFrame((i*8+j+1)+".png");
                 var sprite = new cc.Sprite(spriteFrame);
-                    sprite.attr({x: (204+164+j*164), y:(winsize.height/6*(4-i))});
+                                    sprite.attr({x: ((204+164)*scaleFactorTwo+j*(164*scaleFactorTwo)), y:(winsize.height/6*(4-i)), scaleX: scalerX, scaleY: scalerY});
                 this.positionMarkerNode.addChild(sprite,15,i*8+j+1);
                 var sprite = new cc.Sprite(res.vote_false);
-                    sprite.attr({x: (204+164+j*164), y:(winsize.height/6*(4-i))});
+                                    sprite.attr({x: (204+164)*scaleFactorTwo+j*(164*scaleFactorTwo), y:(winsize.height/6*(4-i)), scaleX: scalerX, scaleY: scalerY});
                 this.positionMarkerNode.addChild(sprite,11);
                 }
             }
 
         this.halfLabel = new cc.LabelTTF("Half Size", "Quicksand-Light" , winsize.height/12);
+                                    if(ls.getItem(212)==2) this.halfLabel.fontSize = winsize.height/14;
+                                    if(ls.getItem(212)==3) this.halfLabel.fontSize = winsize.height/17;
         this.halfLabel.setColor(cc.color(0,0,0));
         this.halfLabel.setPosition(cc.p(winsize.width/4,winsize.height/6));
         this.positionMarkerNode.addChild(this.halfLabel);
@@ -126,7 +143,9 @@ var settingsLayer = cc.Layer.extend({
         this.voteTruehS = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.hS,this);
         this.voteFalsehS = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.hS,this);
         this.voteTrueMenuHS = new cc.Menu(this.voteTruehS);
+                                    this.voteTruehS.scale = scaleFactor;
         this.voteFalseMenuHS = new cc.Menu(this.voteFalsehS);
+                                    this.voteFalsehS.scale = scaleFactor;
         this.voteTrueMenuHS.setPosition(cc.p(winsize.width/4*1.6,winsize.height/6));
         this.voteFalseMenuHS.setPosition(cc.p(winsize.width/4*1.6,winsize.height/6));
         this.voteTrueMenuHS.visible = false;
@@ -138,6 +157,8 @@ var settingsLayer = cc.Layer.extend({
         else this.voteFalseMenuHS.visible = true;
 
         this.fullLabel = new cc.LabelTTF("Full Size", "Quicksand-Light" , winsize.height/12);
+                                    if(ls.getItem(212)==2) this.fullLabel.fontSize = winsize.height/14;
+                                    if(ls.getItem(212)==3) this.fullLabel.fontSize = winsize.height/17;
         this.fullLabel.setColor(cc.color(0,0,0));
         this.fullLabel.setPosition(cc.p(winsize.width/4*2.5,winsize.height/6));
         this.positionMarkerNode.addChild(this.fullLabel);
@@ -145,7 +166,9 @@ var settingsLayer = cc.Layer.extend({
         this.voteTruefS = new cc.MenuItemSprite( new cc.Sprite(res.vote_true),new cc.Sprite(res.vote_true),this.fS,this);
         this.voteFalsefS = new cc.MenuItemSprite( new cc.Sprite(res.vote_false),new cc.Sprite(res.vote_false),this.fS,this);
         this.voteTrueMenuFS = new cc.Menu(this.voteTruefS);
+                                    this.voteTruefS.scale = scaleFactor;
         this.voteFalseMenuFS = new cc.Menu(this.voteFalsefS);
+                                    this.voteFalsefS.scale = scaleFactor;
         this.voteTrueMenuFS.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6));
         this.voteFalseMenuFS.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6));
         this.voteTrueMenuFS.visible = false;
@@ -166,6 +189,7 @@ var settingsLayer = cc.Layer.extend({
 
         this.backgroundButton = new cc.MenuItemSprite ( new cc.Sprite(res.vote_false), new cc.Sprite(res.vote_false), this.positionMarker, this);
         this.backgroundMenu = new cc.Menu(this.backgroundButton);
+        this.backgroundButton.scale = scaleFactor;
         this.backgroundMenu.setPosition(cc.p(winsize.width/4*3.1,winsize.height/6*5));
         this.addChild(this.backgroundMenu);
 
@@ -173,6 +197,8 @@ var settingsLayer = cc.Layer.extend({
         this.addChild(this.posMarkMenu,1,72);
 
         this.positionMarkerHelpLabel = new cc.LabelTTF("Position Marker", "Quicksand-Light" , winsize.height/10); //ls.getnumber(201)
+                                    if(ls.getItem(212)==2) this.positionMarkerHelpLabel.fontSize = winsize.height/12;
+                                    if(ls.getItem(212)==3) this.positionMarkerHelpLabel.fontSize = winsize.height/14;
         this.positionMarkerHelpLabel.setPosition(cc.p(winsize.width/2,winsize.height/6*5));
         this.positionMarkerHelpLabel.setColor(cc.color(0,0,0));
         this.addChild(this.positionMarkerHelpLabel);
@@ -187,23 +213,23 @@ var settingsLayer = cc.Layer.extend({
             onTouchBegan: function (touch, event) {
                 var corX = touch.getLocationX();
                 var corY = touch.getLocationY();
-                cc.log(corX+"     "+(corX-336));
-                if (corY<752 && corY>698){ //top row
-                    var num = 1+Math.floor((corX-336)/164);
+                cc.log(corX+"     "+(corX-(336*scaleFactorTwo)));
+                if (corY<(752*scalerY) && corY>(698*scalerY)){ //top row
+                    var num = 1+Math.floor((corX-(336*scaleFactorTwo))/(164*scaleFactorTwo));
                     if(num>0 && num<9){
                     ls.setItem(207,num);
                     this.positionMarkerEnd();
                     }
                 }
-                else if (corY<572 && corY>508){//second row
-                    var num = 9+Math.floor((corX-336)/164);
+                else if (corY<(572*scalerY) && corY>(508*scalerY)){//second row
+                    var num = 9+Math.floor((corX-(336*scaleFactorTwo))/(164*scaleFactorTwo));
                     if(num>8 && num<17){
                     ls.setItem(207,num);
                     this.positionMarkerEnd();
                     }
                 }
-                else if (corY<392 && corY>328){//third row
-                    var num = 17+Math.floor((corX-336)/164);
+                else if (corY<(392*scalerY) && corY>(scalerY*328)){//third row
+                    var num = 17+Math.floor((corX-(336*scaleFactorTwo))/(164*scaleFactorTwo));
                     if(num>16 && num<25){
                     ls.setItem(207,num);
                     this.positionMarkerEnd();

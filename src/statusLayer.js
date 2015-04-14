@@ -51,8 +51,9 @@ var statusLayer = cc.Layer.extend({
             this.pauseLabel,
             this.pauseLabelP, 
             this.onPause, this);
+                                  pauseItemLabel.setAnchorPoint(0,1);
         this.pauseMenu = new cc.Menu(pauseItemLabel);  
-        this.pauseMenu.setPosition(cc.p(160,this.winsize.height-(this.winsize.height/16+10)));
+        this.pauseMenu.setPosition(cc.p(0,this.winsize.height));
         this.addChild(this.pauseMenu,0,12);
         this.pauseMenu.retain();
 

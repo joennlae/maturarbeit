@@ -116,7 +116,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.unsuccessfulQuadsBlue = new cc.Sprite(res.vote_false);
         this.unsuccessfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
         this.unsuccessfulQuadsBlue.visible = false;
-                                         this.unsuccessfulQuads.scale = scaleFactor;
+                                         this.unsuccessfulQuadsBlue.scale = scaleFactor;
         this.addChild(this.unsuccessfulQuadsBlue);
 
         this.successfulMoves = new cc.Sprite(res.vote_true);

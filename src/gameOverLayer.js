@@ -40,6 +40,8 @@ var gameOverLayer = cc.LayerColor.extend({
         this.actionIn.retain();
 
         this.levelCompleteLabel = new cc.LabelTTF("Level Completed", "Quicksand-Light", winsize.height/12);
+                                         if(this.ls.getItem(212)==2) this.levelCompleteLabel.fontSize = winsize.height/14;
+                                         if(this.ls.getItem(212)==3) this.levelCompleteLabel.fontSize = winsize.height/16;
         this.levelCompleteLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.levelCompleteLabel.setRotation(-30);
         this.levelCompleteLabel.setColor(cc.color(0,150,0));
@@ -47,6 +49,8 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.levelCompleteLabel);
 
         this.againLabel = new cc.LabelTTF("You did it again!", "Quicksand-Light", winsize.height/12);
+                                         if(this.ls.getItem(212)==2) this.againLabel.fontSize = winsize.height/14;
+                                         if(this.ls.getItem(212)==3) this.againLabel.fontSize = winsize.height/16;
         this.againLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.againLabel.setRotation(-30);
         this.againLabel.setColor(cc.color(0,150,0));
@@ -54,6 +58,8 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.againLabel);
 
         this.highscoreLabel = new cc.LabelTTF("New Highscore!", "Quicksand-Light", winsize.height/12);
+                                         if(this.ls.getItem(212)==2) this.highscoreLabel.fontSize = winsize.height/14;
+                                         if(this.ls.getItem(212)==3) this.highscoreLabel.fontSize = winsize.height/16;
         this.highscoreLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.highscoreLabel.setRotation(-30);
         this.highscoreLabel.setColor(cc.color(0,150,0));
@@ -61,6 +67,8 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.highscoreLabel);
 
         this.newrankLabel = new cc.LabelTTF("New Rank!", "Quicksand-Light", winsize.height/12);
+                                         if(this.ls.getItem(212)==2) this.newrankLabel.fontSize = winsize.height/14;
+                                         if(this.ls.getItem(212)==3) this.newrankLabel.fontSize = winsize.height/16;
         this.newrankLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.newrankLabel.setRotation(-30);
         this.newrankLabel.setColor(cc.color(0,150,0));
@@ -68,6 +76,8 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.newrankLabel);
 
         this.closeLabel = new cc.LabelTTF(messages[Math.floor(Math.random()*7)], "Quicksand-Light", winsize.height/12);
+                                         if(this.ls.getItem(212)==2) this.closeLabel.fontSize = winsize.height/14;
+                                         if(this.ls.getItem(212)==3) this.closeLabel.fontSize = winsize.height/16;
         this.closeLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.closeLabel.setRotation(-30);
         this.closeLabel.setColor(cc.color(150,0,0));
@@ -75,40 +85,50 @@ var gameOverLayer = cc.LayerColor.extend({
         this.addChild(this.closeLabel);
 
         this.movesoverLabel = new cc.LabelTTF("Out of Moves", "Quicksand-Light", winsize.height/12);
+                                         if(this.ls.getItem(212)==2) this.movesoverLabel.fontSize = winsize.height/14;
+                                         if(this.ls.getItem(212)==3) this.movesoverLabel.fontSize = winsize.height/16;
         this.movesoverLabel.setPosition(cc.p(winsize.width/2, winsize.height/6*5));
         this.movesoverLabel.setColor(cc.color(150,0,0));
         this.movesoverLabel.setRotation(-30);
         this.movesoverLabel.visible = false;
         if(this.ls.getItem(13)==2) this.addChild(this.movesoverLabel);
+                                         
+                                         var scaleFactor = winsize.height/1080;
 
         this.successfulQuads = new cc.Sprite(res.vote_true);
         this.successfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+                                         this.successfulQuads.scale = scaleFactor;
         this.successfulQuads.visible = false;
         this.addChild(this.successfulQuads);
 
         this.unsuccessfulQuads = new cc.Sprite(res.vote_false);
         this.unsuccessfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
+                                         this.unsuccessfulQuads.scale = scaleFactor;
         this.unsuccessfulQuads.visible = false;
         this.addChild(this.unsuccessfulQuads);
 
         this.successfulQuadsBlue = new cc.Sprite(res.vote_true);
         this.successfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
         this.successfulQuadsBlue.visible = false;
+                                         this.successfulQuadsBlue.scale = scaleFactor;
         this.addChild(this.successfulQuadsBlue);
 
         this.unsuccessfulQuadsBlue = new cc.Sprite(res.vote_false);
         this.unsuccessfulQuadsBlue.setPosition(cc.p(winsize.width/4*3,winsize.height/6*5));
         this.unsuccessfulQuadsBlue.visible = false;
+                                         this.unsuccessfulQuadsBlue.scale = scaleFactor;
         this.addChild(this.unsuccessfulQuadsBlue);
 
         this.successfulMoves = new cc.Sprite(res.vote_true);
         this.successfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
         this.successfulMoves.visible = false;
+                                         this.successfulMoves.scale = scaleFactor;
         this.addChild(this.successfulMoves);
 
         this.unsuccessfulMoves = new cc.Sprite(res.vote_false);
         this.unsuccessfulMoves.setPosition(cc.p(winsize.width/4*3,winsize.height/6*3));
         this.unsuccessfulMoves.visible = false;
+                                         this.unsuccessfulMoves.scale = scaleFactor;
         this.addChild(this.unsuccessfulMoves);
 
         if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
@@ -223,6 +243,7 @@ var gameOverLayer = cc.LayerColor.extend({
             new cc.Sprite(res.forward),
             new cc.Sprite(res.forward), 
             this.onRestart, this);
+                                         backItemLabel.scale = scaleFactor;
         var backMenu = new cc.Menu(backItemLabel);  
         backMenu.setPosition(cc.p(winsize.width/2,winsize.height/6));
         this.addChild(backMenu,0,13);
@@ -270,7 +291,7 @@ var gameOverLayer = cc.LayerColor.extend({
 			saveArray[levelNum-1][0] = JSON.parse(this.finalPoints);//points
 			saveArray[levelNum-1][1] = JSON.parse(this.ls.getItem(2));//redquads
             if(this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
-			saveArray[levelNum][2] = JSON.parse(this.ls.getItem(4));//bluequads
+			saveArray[levelNum-1][2] = JSON.parse(this.ls.getItem(4));//bluequads
             }
 			saveArray[levelNum-1][3] = JSON.parse(this.checkRank()); //rank function
             saveArray[levelNum-1][4] = JSON.parse(this.ls.getItem(3));

@@ -1407,7 +1407,8 @@ var gameLayer = cc.Layer.extend({
         var spriteFrame = cc.spriteFrameCache.getSpriteFrame(this.ls.getItem(207)+".png");
         this.positionMarker = new cc.Sprite(spriteFrame);
         this.positionMarker.opacity = 200;
-        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208);
+                                var schnuggelFactor = this.winsize.height/1080;
+        this.positionMarker.scale = positionMarkerArray[this.ls.getItem(207)-1][2]*this.ls.getItem(208)*schnuggelFactor;
         this.positionMarker.setPosition(cc.p(this.winsize.width/2+positionMarkerArray[this.ls.getItem(207)-1][0],2*this.sizeOfSprite+positionMarkerArray[this.ls.getItem(207)-1][1]));
         this.touchNode.addChild(this.positionMarker,1);
     },  

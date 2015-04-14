@@ -137,6 +137,14 @@ var pauseLayer = cc.LayerColor.extend({
         backMenu.setPosition(cc.p(0,winsize.height));
         this.addChild(backMenu,0,13);
 		
+        var retryItemLabel = new cc.MenuItemSprite(
+            new cc.Sprite(res.retry),
+            new cc.Sprite(res.retry), 
+        retryItemLabel.scale = scaleFactor;
+        var retryMenu = new cc.Menu(retryItemLabel);  
+        retryMenu.setPosition(cc.p(winsize.width/6,winsize.height/2));
+        this.addChild(retryMenu);
+
 		cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
             swallowTouches: true,
@@ -151,6 +159,14 @@ var pauseLayer = cc.LayerColor.extend({
         cc.director.resume();
         this.getParent().addPauseLabel();
         this.removeFromParent();
+    },
+    onReplay : function(){
+        //this.ls.setItem(99, this.levelNum.value); //current Level
+        //this.ls.setItem(999,1); // Beta switch
+        //this.ls.setItem(666,levelsArray[this.levelNum.value-1][9]); // mode One
+        cc.director.pause();
+        cc.director.runScene(new PlayScene());
+        cc.director.resume();
     },
     onBack : function(){
         cc.director.resume();

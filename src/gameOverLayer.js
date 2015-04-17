@@ -200,7 +200,7 @@ var gameOverLayer = cc.LayerColor.extend({
             else {
                 this.movesoverLabel.visible = true;
                 this.movesoverLabel.runAction(this.actionTo);
-                this.ls.setItem(13,1);  
+                //this.ls.setItem(13,1);  
             } 
         }
 

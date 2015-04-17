@@ -164,7 +164,7 @@ var gameOverLayer = cc.LayerColor.extend({
             else {
                 this.movesoverLabel.visible = true;
                 this.movesoverLabel.runAction(this.actionTo);
-                this.ls.setItem(13,1);  
+                //this.ls.setItem(13,1);  
             }
         }
         else if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
@@ -260,13 +260,13 @@ var gameOverLayer = cc.LayerColor.extend({
             this.labelPoints.setString(this.points+" Points" /*+ " (" + "+" + (this.points-levelsArray[this.ls.getItem(99)-1][5]) + ")"*/);
             this.labelPoints.setColor(cc.color(0,0,0));
 
-        if (this.moves < levelsArray[this.ls.getItem(99)-1][6]){
+        if (this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
             this.movesLabel.setString(this.moves+" Moves"/* + " (" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
             this.successfulMoves.visible = true;
             this.movesLabel.setColor(cc.color(0,0,0));
         }
         else{
-            this.movesLabel.setString(this.moves+" Moves"/* + " (" + "+" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
+            this.movesLabel.setString(this.moves+"+ Moves"/* + " (" + "+" + (this.moves-levelsArray[this.ls.getItem(99)-1][6]) + ")"*/);
             this.unsuccessfulMoves.visible = true;
             this.movesLabel.setColor(cc.color(0,0,0));
         }

@@ -140,6 +140,7 @@ var pauseLayer = cc.LayerColor.extend({
         var retryItemLabel = new cc.MenuItemSprite(
             new cc.Sprite(res.retry),
             new cc.Sprite(res.retry), 
+            this.onReplay, this);
         retryItemLabel.scale = scaleFactor;
         var retryMenu = new cc.Menu(retryItemLabel);  
         retryMenu.setPosition(cc.p(winsize.width/6,winsize.height/2));

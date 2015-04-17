@@ -3,6 +3,7 @@ var gameOverLayer = cc.LayerColor.extend({
     labelMeter: null,
     points: 0,
     quads: 0,
+    quadsBlue: 0,
     moves: 0,
     movesLeft: 0,
 	ls: null,
@@ -93,7 +94,7 @@ var gameOverLayer = cc.LayerColor.extend({
         this.movesoverLabel.visible = false;
         if(this.ls.getItem(13)==2) this.addChild(this.movesoverLabel);
                                          
-                                         var scaleFactor = winsize.height/1080;
+        var scaleFactor = winsize.height/1080;
 
         this.successfulQuads = new cc.Sprite(res.vote_true);
         this.successfulQuads.setPosition(cc.p(winsize.width/4*3,winsize.height/6*4));
@@ -130,39 +131,77 @@ var gameOverLayer = cc.LayerColor.extend({
         this.unsuccessfulMoves.visible = false;
                                          this.unsuccessfulMoves.scale = scaleFactor;
         this.addChild(this.unsuccessfulMoves);
-
-        if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
-            this.levelCompleteLabel.visible = true;
-            this.levelCompleteLabel.runAction(this.actionTo);
-            this.save();
-            if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
-                this.newrankLabel.visible = true;
-                this.newrankLabel.runAction(this.actionToRank);
-                this.newrankLabel.runAction(this.actionIn);
+        if(this.ls.getItem(666)==1){
+            if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
+                this.levelCompleteLabel.visible = true;
+                this.levelCompleteLabel.runAction(this.actionTo);
+                this.save();
+                //this.ls.setItem(99, JSON.parse(this.ls.getItem(99)) + 1)
+                if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
+                    this.newrankLabel.visible = true;
+                    this.newrankLabel.runAction(this.actionToRank);
+                    this.newrankLabel.runAction(this.actionIn);
+                }
+            }
+            else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){ //only points countä für highscore
+                this.highscoreLabel.visible = true;
+                this.highscoreLabel.runAction(this.actionTo);
+                this.save();
+                if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
+                    this.newrankLabel.visible = true;
+                    this.newrankLabel.runAction(this.actionToRank);
+                    this.newrankLabel.runAction(this.actionIn);
+                }    
+            }
+            else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
+                this.againLabel.visible = true;
+                this.againLabel.runAction(this.actionTo);
+            }
+            else if (this.ls.getItem(13)==1){
+                this.closeLabel.visible = true;
+                this.closeLabel.runAction(this.actionTo);
+            }
+            else {
+                this.movesoverLabel.visible = true;
+                this.movesoverLabel.runAction(this.actionTo);
+                this.ls.setItem(13,1);  
             }
         }
-        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){ //only points countä für highscore
-            this.highscoreLabel.visible = true;
-            this.highscoreLabel.runAction(this.actionTo);
-            this.save();
-            if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
-                this.newrankLabel.visible = true;
-                this.newrankLabel.runAction(this.actionToRank);
-                this.newrankLabel.runAction(this.actionIn);
-            }    
-        }
-        else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1){
-            this.againLabel.visible = true;
-            this.againLabel.runAction(this.actionTo);
-        }
-        else if (this.ls.getItem(13)==1){
-            this.closeLabel.visible = true;
-            this.closeLabel.runAction(this.actionTo);
-        }
-        else {
-            this.movesoverLabel.visible = true;
-            this.movesoverLabel.runAction(this.actionTo);
-            this.ls.setItem(13,1);  
+        else if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
+            if (saveArray[this.ls.getItem(99)-1][5] == 0 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1 && this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4]){
+                this.levelCompleteLabel.visible = true;
+                this.levelCompleteLabel.runAction(this.actionTo);
+                this.save();
+                this.ls.setItem(99, JSON.parse(this.ls.getItem(99)) + 1);
+                if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
+                    this.newrankLabel.visible = true;
+                    this.newrankLabel.runAction(this.actionToRank);
+                    this.newrankLabel.runAction(this.actionIn);
+                }
+            }
+            else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1 && this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4]){ 
+                this.highscoreLabel.visible = true;
+                this.highscoreLabel.runAction(this.actionTo);
+                this.save();
+                if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
+                    this.newrankLabel.visible = true;
+                    this.newrankLabel.runAction(this.actionToRank);
+                    this.newrankLabel.runAction(this.actionIn);
+                }    
+            }
+            else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.ls.getItem(13)==1 && this.quadsBlue >= levelsArray[this.ls.getItem(99)-1][4]){
+                this.againLabel.visible = true;
+                this.againLabel.runAction(this.actionTo);
+            }
+            else if (this.ls.getItem(13)==1){
+                this.closeLabel.visible = true;
+                this.closeLabel.runAction(this.actionTo);
+            }
+            else {
+                this.movesoverLabel.visible = true;
+                this.movesoverLabel.runAction(this.actionTo);
+                this.ls.setItem(13,1);  
+            } 
         }
 
 

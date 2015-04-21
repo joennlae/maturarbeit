@@ -109,7 +109,7 @@ var statusLayer = cc.Layer.extend({
         ls.setItem(1, parseFloat(this.labelPoints.getString()));
         ls.setItem(2, parseFloat(this.labelQuads.getString()));
         ls.setItem(3, parseFloat(this.labelMoves.getString()));
-        if (ls.getItem(666)==2 || ls.getItem(666)==3) ls.setItem(4, parseFloat(this.labelQuadsBlue.getString()));
+        if (ls.getItem(666)==2) ls.setItem(4, parseFloat(this.labelQuadsBlue.getString()));
         this.removeChildByTag(12);
         cc.director.pause();
         this.addChild(new pauseLayer());

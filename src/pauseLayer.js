@@ -3,6 +3,7 @@ var pauseLayer = cc.LayerColor.extend({
     labelMeter: null,
     points: 0,
     quads: 0,
+    quadsBlue: 0,
     moves: 0,
 	ls: null,
     // constructor
@@ -62,7 +63,7 @@ var pauseLayer = cc.LayerColor.extend({
         this.labelQuads.setAnchorPoint(1,0.5);
         this.addChild(this.labelQuads);
 
-        this.labelQuadsBlue = new cc.LabelTTF(this.quads+ " Quads" , "Quicksand-Light", winsize.height/8);
+        this.labelQuadsBlue = new cc.LabelTTF(this.quadsBlue + " Quads" , "Quicksand-Light", winsize.height/8);
         this.labelQuadsBlue.setColor(cc.color(0,0,150));//black color
         this.labelQuadsBlue.setPosition(cc.p(winsize.width/8*5, winsize.height/6*5));
         this.labelQuadsBlue.setAnchorPoint(1,0.5);
@@ -94,7 +95,7 @@ var pauseLayer = cc.LayerColor.extend({
                 this.labelQuadsBlue.setString(this.quadsBlue+ " Quads");
         }
         else if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
-            this.labelQuadsBlue.setString(this.quads+ " Quads");
+            this.labelQuadsBlue.setString(this.quadsBlue+ " Quads");
             this.unsuccessfulQuadsBlue.visible = true;
         }
 
@@ -178,7 +179,7 @@ var pauseLayer = cc.LayerColor.extend({
         this.quads = ls.getItem(2);
         this.points = ls.getItem(1);
         this.moves = ls.getItem(3);
-        if (ls.getItem(666)==2 || ls.getItem(666)==3) quadsBlue = ls.getItem(4);
+        if (ls.getItem(666)==2 || ls.getItem(666)==3) this.quadsBlue = ls.getItem(4);
     },
 	onTouchBegan:function(touch, event) {
         var pos = touch.getLocation();

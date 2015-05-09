@@ -45,7 +45,7 @@ var levelSelector = cc.Layer.extend({
 
 		this.levelNum.value = this.ls.getItem(99);
 		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/8*5);
-        if(this.levelNum.value < this.ls.getItem(100)){
+        if(this.levelNum.value < JSON.parse(this.ls.getItem(100))){
             this.levelLabel.setColor(cc.color(0,150,0));
             //this.updateStats();
         } else {

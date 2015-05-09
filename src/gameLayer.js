@@ -1817,10 +1817,10 @@ var gameLayer = cc.Layer.extend({
     update:function (dt) {
         //Points
         if(this.levelOver.value == 0){
-        if (-this.spriteSheet.y>this.highest) this.highest = -this.spriteSheet.y;
-        this.points.frames = this.points.frames + 1;
-        if ( this.points.frames % 4 == 0) this.points.updatedFrames = this.points.frames; //every 20Fps sec at 60FPS
-        this.points.value = Math.ceil(this.highest) + this.quads.points /*+ this.points.updatedFrames*/;
+        if (-this.spriteSheet.y>this.highest) this.highest = Math.floor((Math.floor((-this.spriteSheet.y)*10+2))/10);
+        //this.points.frames = this.points.frames + 1;
+        //if ( this.points.frames % 4 == 0) this.points.updatedFrames = this.points.frames; //every 20Fps sec at 60FPS
+        this.points.value = this.highest + this.quads.points /*+ this.points.updatedFrames*/;
 
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updateMoves(this.moves.value);

@@ -397,6 +397,7 @@ var gameOverLayer = cc.LayerColor.extend({
             this.points = this.finalPoints;
             this.movesLeft = 0;
             this.movesLeftLabel.visible = false;
+            this.labelPoints.setString(this.finalPoints+ "Points");
         }
         if(this.frameCounter.value % 4 == 0 && this.pointsContainer>0){
             this.labelPoints.setString(Math.ceil(this.points) + " Points");

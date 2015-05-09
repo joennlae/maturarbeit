@@ -47,6 +47,7 @@ var gameLayer = cc.Layer.extend({
 		this.winsize = cc.director.getWinSize();
 		this.scaleFactor = this.winsize.width/this.railsPerRow/240;      //240 size of sprite ursprünglich :-P 1920/8
         this.sizeOfSprite = this.winsize.width/this.railsPerRow;
+        cc.log("sizeoflesprite "+ this.sizeOfSprite);
         this.switcher = {value: false, tutorial: false, loading: true, tutorialRunning: false, gameModeThree: 0};
         if (this.ls.getItem(206)==1){
             this.switcher.tutorial = true;
@@ -1817,10 +1818,8 @@ var gameLayer = cc.Layer.extend({
     update:function (dt) {
         //Points
         if(this.levelOver.value == 0){
-        if (-this.spriteSheet.y>this.highest) this.highest = Math.floor((Math.floor((-this.spriteSheet.y)*10+2))/10);
-        //this.points.frames = this.points.frames + 1;
-        //if ( this.points.frames % 4 == 0) this.points.updatedFrames = this.points.frames; //every 20Fps sec at 60FPS
-        this.points.value = this.highest + this.quads.points /*+ this.points.updatedFrames*/;
+        if (-this.spriteSheet.y>this.highest) this.highest = Math.floor(Math.floor((((-this.spriteSheet.y/this.sizeOfSprite)*160)*10)+2)/10);
+        this.points.value = this.highest + this.quads.points;
 
         var statusLayer = this.getParent().getChildByTag(3);
         statusLayer.updateMoves(this.moves.value);

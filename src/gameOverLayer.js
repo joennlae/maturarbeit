@@ -143,7 +143,7 @@ var gameOverLayer = cc.LayerColor.extend({
                     this.newrankLabel.runAction(this.actionIn);
                 }
             }
-            else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints >= saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){ //only points countä für highscore
+            else if (saveArray[this.ls.getItem(99)-1][5] == 1 && this.quads >= levelsArray[this.ls.getItem(99)-1][3] && this.moves <= levelsArray[this.ls.getItem(99)-1][6] && this.finalPoints > saveArray[this.ls.getItem(99)-1][0] && this.ls.getItem(13)==1){ //only points countä für highscore
                 this.highscoreLabel.visible = true;
                 this.highscoreLabel.runAction(this.actionTo);
                 this.save();
@@ -172,7 +172,7 @@ var gameOverLayer = cc.LayerColor.extend({
                 this.levelCompleteLabel.visible = true;
                 this.levelCompleteLabel.runAction(this.actionTo);
                 this.save();
-                this.ls.setItem(99, JSON.parse(this.ls.getItem(99)) + 1);
+                //this.ls.setItem(99, JSON.parse(this.ls.getItem(99)) + 1);
                 if (saveArray[this.ls.getItem(99)-1][3] < this.checkRank()){
                     this.newrankLabel.visible = true;
                     this.newrankLabel.runAction(this.actionToRank);

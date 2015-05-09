@@ -47,6 +47,7 @@ var levelSelector = cc.Layer.extend({
 		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/8*5);
         if(this.levelNum.value < this.ls.getItem(100)){
             this.levelLabel.setColor(cc.color(0,150,0));
+            //this.updateStats();
         } else {
         this.levelLabel.setColor(cc.color(0,0,0));
         }
@@ -86,7 +87,7 @@ var levelSelector = cc.Layer.extend({
         //check for finished state
 
         if(this.levelNum.value <= levelsArray.length){
-            this.levelLabel.visible  = true
+            this.levelLabel.visible = true;
         }
         else {
             this.levelLabel.visible = false;
@@ -156,7 +157,7 @@ var levelSelector = cc.Layer.extend({
         this.questionLabel.visible = false;
         this.addChild(this.questionLabel);
 
-        if(this.levelNum.value<levelsArray.length+1){
+        if(this.levelNum.value < levelsArray.length+1){
         	this.pointsLabel.visible = true;
         	this.quadsLabel.visible = true;
         	this.movesLabel.visible = true;
@@ -217,8 +218,9 @@ var levelSelector = cc.Layer.extend({
     updateStats : function(){
     	cc.log(this.levelNum.value);
     	cc.log(levelsArray.length);
+        cc.log(this.ls.getItem(100));
     	saveArray = JSON.parse(this.ls.getItem(101));
-    	if(this.levelNum.value>levelsArray.length){
+    	if(this.levelNum.value > levelsArray.length){
     		this.pointsLabel.visible = false;
     		this.quadsLabel.visible = false;
     		this.movesLabel.visible = false;
@@ -227,7 +229,7 @@ var levelSelector = cc.Layer.extend({
     		this.maxLabel.visible = true;
     		this.questionLabel.visible = false; 	
 		}
-		else if (this.levelNum.value > this.ls.getItem(100)){
+		else if (this.levelNum.value > JSON.parse(this.ls.getItem(100))){ //fail
 			this.maxLabel.visible = false;
 		    this.pointsLabel.visible = false;
 		    this.quadsLabel.visible = false;
@@ -235,6 +237,7 @@ var levelSelector = cc.Layer.extend({
 		    this.rankLabel.visible = false;
             this.quadsBlueLabel.visible = false;
             this.questionLabel.visible = true;
+            cc.log("ausgeführt");
 
 		}
     	else{

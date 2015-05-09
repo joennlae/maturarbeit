@@ -1818,7 +1818,7 @@ var gameLayer = cc.Layer.extend({
     update:function (dt) {
         //Points
         if(this.levelOver.value == 0){
-        if (-this.spriteSheet.y>this.highest) this.highest = Math.floor(Math.floor((((-this.spriteSheet.y/this.sizeOfSprite)*160)*10)+2)/10);
+        if ((-this.spriteSheet.y)/this.sizeOfSprite*160>this.highest) this.highest = Math.floor(Math.floor(((-this.spriteSheet.y/this.sizeOfSprite*1600)+2)/10));
         this.points.value = this.highest + this.quads.points;
 
         var statusLayer = this.getParent().getChildByTag(3);

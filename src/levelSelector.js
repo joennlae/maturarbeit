@@ -376,7 +376,7 @@ var levelSelector = cc.Layer.extend({
 	},
 
     onPlay : function(){
-    	if (this.levelNum.value <= this.ls.getItem(100)){
+    	if (this.levelNum.value <= JSON.parse(this.ls.getItem(100))){
 		this.ls.setItem(99, this.levelNum.value); //current Level
         this.ls.setItem(999,1); // Beta switch
         this.ls.setItem(666,levelsArray[this.levelNum.value-1][9]); // mode One

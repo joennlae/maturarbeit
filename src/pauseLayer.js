@@ -3,6 +3,7 @@ var pauseLayer = cc.LayerColor.extend({
     labelMeter: null,
     points: 0,
     quads: 0,
+    quadsBlue: 0,
     moves: 0,
 	ls: null,
     // constructor
@@ -62,7 +63,7 @@ var pauseLayer = cc.LayerColor.extend({
         this.labelQuads.setAnchorPoint(1,0.5);
         this.addChild(this.labelQuads);
 
-        this.labelQuadsBlue = new cc.LabelTTF(this.quads+ " Quads" , "Quicksand-Light", winsize.height/8);
+        this.labelQuadsBlue = new cc.LabelTTF(this.quadsBlue + " Quads" , "Quicksand-Light", winsize.height/8);
         this.labelQuadsBlue.setColor(cc.color(0,0,150));//black color
         this.labelQuadsBlue.setPosition(cc.p(winsize.width/8*5, winsize.height/6*5));
         this.labelQuadsBlue.setAnchorPoint(1,0.5);
@@ -94,7 +95,7 @@ var pauseLayer = cc.LayerColor.extend({
                 this.labelQuadsBlue.setString(this.quadsBlue+ " Quads");
         }
         else if (this.ls.getItem(666)==2 || this.ls.getItem(666)==3){
-            this.labelQuadsBlue.setString(this.quads+ " Quads");
+            this.labelQuadsBlue.setString(this.quadsBlue+ " Quads");
             this.unsuccessfulQuadsBlue.visible = true;
         }
 
@@ -137,6 +138,15 @@ var pauseLayer = cc.LayerColor.extend({
         backMenu.setPosition(cc.p(0,winsize.height));
         this.addChild(backMenu,0,13);
 		
+        var retryItemLabel = new cc.MenuItemSprite(
+            new cc.Sprite(res.retry),
+            new cc.Sprite(res.retry), 
+            this.onReplay, this);
+        retryItemLabel.scale = scaleFactor;
+        var retryMenu = new cc.Menu(retryItemLabel);  
+        retryMenu.setPosition(cc.p(winsize.width/6,winsize.height/2));
+        this.addChild(retryMenu);
+
 		cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
             swallowTouches: true,
@@ -152,6 +162,14 @@ var pauseLayer = cc.LayerColor.extend({
         this.getParent().addPauseLabel();
         this.removeFromParent();
     },
+    onReplay : function(){
+        //this.ls.setItem(99, this.levelNum.value); //current Level
+        //this.ls.setItem(999,1); // Beta switch
+        //this.ls.setItem(666,levelsArray[this.levelNum.value-1][9]); // mode One
+        cc.director.pause();
+        cc.director.runScene(new PlayScene());
+        cc.director.resume();
+    },
     onBack : function(){
         cc.director.resume();
         cc.director.runScene(new levelSelectorScene());
@@ -161,7 +179,7 @@ var pauseLayer = cc.LayerColor.extend({
         this.quads = ls.getItem(2);
         this.points = ls.getItem(1);
         this.moves = ls.getItem(3);
-        if (ls.getItem(666)==2 || ls.getItem(666)==3) quadsBlue = ls.getItem(4);
+        if (ls.getItem(666)==2 || ls.getItem(666)==3) this.quadsBlue = ls.getItem(4);
     },
 	onTouchBegan:function(touch, event) {
         var pos = touch.getLocation();

@@ -36,15 +36,21 @@ var levelSelector = cc.Layer.extend({
             }
             }
                 this.ls.setItem(101, JSON.stringify(saveArray));//points| redquads | bluequads | rank | moves | done-check
+                this.ls.setItem(99,1);
 		}
 		
 
 		saveArray = JSON.parse(this.ls.getItem(101));
 		cc.log(saveArray);
 
-		this.levelNum.value = this.ls.getItem(100);
+		this.levelNum.value = this.ls.getItem(99);
 		this.levelLabel = new cc.LabelTTF(this.levelNum.value, "Quicksand-Light", this.winsize.height/8*5);
+        if(this.levelNum.value < JSON.parse(this.ls.getItem(100))){
+            this.levelLabel.setColor(cc.color(0,150,0));
+            //this.updateStats();
+        } else {
         this.levelLabel.setColor(cc.color(0,0,0));
+        }
         this.levelLabel.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2));
         this.addChild(this.levelLabel);
 		
@@ -78,6 +84,16 @@ var levelSelector = cc.Layer.extend({
         this.addChild(this.cR,0,1);
         this.cR.retain();
 
+        //check for finished state
+
+        if(this.levelNum.value <= levelsArray.length){
+            this.levelLabel.visible = true;
+        }
+        else {
+            this.levelLabel.visible = false;
+            this.removeChildByTag(1);
+        }
+
 		var controlLeftLabel = new cc.MenuItemSprite(
             this.controlLeft,
             this.controlLeftP, 
@@ -86,7 +102,7 @@ var levelSelector = cc.Layer.extend({
         this.cL.setPosition(cc.p(this.winsize.width/8,this.winsize.height/2));
         //this.addChild(cL);
 
-		if (this.ls.getItem(100) > 1){
+		if (this.levelNum.value > 1){
 			this.addChild(this.cL,0,2);
         }
         this.cL.retain();
@@ -141,7 +157,7 @@ var levelSelector = cc.Layer.extend({
         this.questionLabel.visible = false;
         this.addChild(this.questionLabel);
 
-        if(this.levelNum.value<levelsArray.length+1){
+        if(this.levelNum.value < levelsArray.length+1){
         	this.pointsLabel.visible = true;
         	this.quadsLabel.visible = true;
         	this.movesLabel.visible = true;
@@ -202,8 +218,9 @@ var levelSelector = cc.Layer.extend({
     updateStats : function(){
     	cc.log(this.levelNum.value);
     	cc.log(levelsArray.length);
+        cc.log(this.ls.getItem(100));
     	saveArray = JSON.parse(this.ls.getItem(101));
-    	if(this.levelNum.value>levelsArray.length){
+    	if(this.levelNum.value > levelsArray.length){
     		this.pointsLabel.visible = false;
     		this.quadsLabel.visible = false;
     		this.movesLabel.visible = false;
@@ -212,7 +229,7 @@ var levelSelector = cc.Layer.extend({
     		this.maxLabel.visible = true;
     		this.questionLabel.visible = false; 	
 		}
-		else if (this.levelNum.value > this.ls.getItem(100)){
+		else if (this.levelNum.value > JSON.parse(this.ls.getItem(100))){ //fail
 			this.maxLabel.visible = false;
 		    this.pointsLabel.visible = false;
 		    this.quadsLabel.visible = false;
@@ -220,6 +237,7 @@ var levelSelector = cc.Layer.extend({
 		    this.rankLabel.visible = false;
             this.quadsBlueLabel.visible = false;
             this.questionLabel.visible = true;
+            cc.log("ausgeführt");
 
 		}
     	else{
@@ -249,7 +267,7 @@ var levelSelector = cc.Layer.extend({
     		this.quadsLabel.setString(saveArray[this.levelNum.value-1][1]+"/"+levelsArray[this.levelNum.value-1][3]);
     		this.quadsLabel.setPosition(cc.p(this.winsize.width/4, this.winsize.height/10*8));
     		if(levelsArray[this.levelNum.value-1][9]==2 || levelsArray[this.levelNum.value-1][9]==3){
-    			this.quadsLabel.setPosition(cc.p(this.winsize.width/4*0.8, this.winsize.height/10*8));
+    			this.quadsLabel.setPosition(cc.p(this.winsize.width/4*0.7, this.winsize.height/10*8));
     		}
     	}
     	else {
@@ -351,13 +369,14 @@ var levelSelector = cc.Layer.extend({
 		else if (this.levelNum.value == levelsArray.length+1){
 				this.levelNum.value --;
 				this.updateStats();
+                this.levelLabel.setString(this.levelNum.value);
 				this.levelLabel.visible = true;
 				this.addChild(this.cR,0,1);
 		}
 	},
 
     onPlay : function(){
-    	if (this.levelNum.value <= this.ls.getItem(100)){
+    	if (this.levelNum.value <= JSON.parse(this.ls.getItem(100))){
 		this.ls.setItem(99, this.levelNum.value); //current Level
         this.ls.setItem(999,1); // Beta switch
         this.ls.setItem(666,levelsArray[this.levelNum.value-1][9]); // mode One
@@ -455,6 +474,7 @@ var levelSelector = cc.Layer.extend({
 				else if (this.levelNum.value == levelsArray.length+1){
 					this.levelNum.value --;
 					this.updateStats();
+                    this.levelLabel.setString(this.levelNum.value);
 					this.levelLabel.visible = true;
 					this.levelSel.addChild(this.cR,0,1);
 				}
@@ -462,7 +482,8 @@ var levelSelector = cc.Layer.extend({
             default:
             	var corX = touch.getLocationX();
                 var corY = touch.getLocationY();
-                if (corX > this.winsize.width/4 && corX < this.winsize.width/4*3 && corY > this.winsize.height/4 && corY < this.winsize.height/4*3) this.onPlay();
+                if (this.levelNum.value <= levelsArray.length);
+                    if (corX > this.winsize.width/4 && corX < this.winsize.width/4*3 && corY > this.winsize.height/4 && corY < this.winsize.height/4*3) if (this.levelNum.value <= levelsArray.length) this.onPlay();
                 break;
         }
     },	
